@@ -1,0 +1,90 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Yanfei web editor — Yanfei</title><style>body{max-width:900px;margin:32px auto;padding:0 20px;font:16px/1.65 system-ui,sans-serif;color:#222}a{color:inherit}img{max-width:100%;height:auto}figure{margin:24px 0}figcaption{color:#444;font-size:15px;max-width:60ch}img.screen{image-rendering:pixelated}h2,h3{scroll-margin-top:100px}nav{display:flex;flex-wrap:wrap;gap:8px 20px;position:sticky;top:0;background:#fff;padding:8px 0;border-bottom:1px solid #ddd;z-index:1}pre{overflow:auto;background:#f4f4f4;padding:16px}table{border-collapse:collapse;display:block;overflow:auto}td,th{border:1px solid #ccc;padding:8px;text-align:left}</style><nav><a href="../index.html">Yanfei home</a><a href="VISUAL_GUIDE.html">Visual guide</a><a href="TRACKER_QUICK_REFERENCE.html">Controls</a></nav><main><h1 id="yanfei-web-editor">Yanfei web editor</h1>
+<p>Use the <a href="../webapp/editor/">editor</a> in Chrome or Edge.
+Connect the FM-1 by USB. Select <strong>Connect</strong> and allow MIDI access.
+The top bar shows the firmware version reported by the device.</p>
+<figure>
+<a href="images/editor/sound.png"><img src="images/editor/sound.png" alt="The Sound page: track buttons in the top bar, navigation on the left, and four columns of parameter cards. Envelope and LFO are on the left. The engine and modulation matrix are next. Voice, effects, and scale are in the third column. Arpeggiator controls are on the right."></a>
+<figcaption>The Sound page, shown with a simulated DMG sound. Select the picture to open it at full size.</figcaption>
+</figure>
+
+<h2 id="select-a-track-and-sound">Select a track and sound</h2>
+<ol>
+<li>Select a track number in the top bar.</li>
+<li>Select <strong>Sound</strong> on the left.</li>
+<li>Select an engine below the sound name.</li>
+<li>Select a preset, or use <strong>Prev</strong> and <strong>Next</strong>.</li>
+</ol>
+<p><strong>Init sound</strong> resets the current sound. Preset changes replace the sound settings.
+Save a sound that you want to keep before you select another preset.</p>
+<h2 id="change-a-parameter">Change a parameter</h2>
+<p>Each card contains related controls. Select a tab in the card to see more controls.
+For example, the FX card has tabs for the insert, delay, reverb, and chorus.
+The PSG chip selector is in the <strong>CHIP</strong> card.</p>
+<ul>
+<li>For a numeric value, drag across its row.</li>
+<li>For a list, select the value and choose an item.</li>
+<li>For a small numeric change, focus the row and use the arrow keys.</li>
+<li>Hold Shift with an arrow key to change the value by ten steps.</li>
+<li>Double-click a numeric row to restore its default value.</li>
+</ul>
+<p>The lower-left status area shows the parameter name and value.
+The envelope and LFO pictures show approximate shapes from the settings.
+They do not show measured audio. Their horizontal scales do not indicate time.</p>
+<p>Changes go to the connected device. Save a project on the FM-1 to keep the current work.</p>
+<h2 id="save-or-load-a-sound-file">Save or load a sound file</h2>
+<p>Open <strong>Files</strong>, beside <strong>Init sound</strong>.
+Select <strong>Save to file</strong> to download the current sound, or <strong>Load file</strong> to load a file.
+<strong>Copy to library</strong> loads the factory version of the selected preset and copies it to the browser library.
+Save any edits before you use this command.
+The browser library stays on this browser and computer.</p>
+<h2 id="open-another-page">Open another page</h2>
+<table>
+<thead>
+<tr>
+<th>Page</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sequencer</td>
+<td>Edit notes, timing, and automation in the current pattern.</td>
+</tr>
+<tr>
+<td>Tracks</td>
+<td>Set track levels, pan, sends, and mute.</td>
+</tr>
+<tr>
+<td>Library</td>
+<td>Manage the browser library and device user presets.</td>
+</tr>
+<tr>
+<td>Projects</td>
+<td>Save or load project slots and complete backups.</td>
+</tr>
+<tr>
+<td>6-OP FM</td>
+<td>Import, edit, and send FM6 voices.</td>
+</tr>
+<tr>
+<td>Samples</td>
+<td>Manage available user sample slots.</td>
+</tr>
+<tr>
+<td>Settings</td>
+<td>Set global parameters and supported display settings.</td>
+</tr>
+</tbody>
+</table>
+<p>Use the FM-1 or <a href="../webapp/try/">emulator</a> for tracker instruments and song sections.
+The web sequencer does not expose all tracker fields.
+Only supported device features are available.</p>
+<h2 id="use-a-smaller-screen">Use a smaller screen</h2>
+<p>On a phone, the page buttons move to a horizontal strip at the top.
+Scroll that strip to find more pages. The sound cards form one column.
+Scroll the page to reach the other cards.</p>
+<p><strong>Light / dark</strong> changes the editor appearance. It does not change the FM-1 screen.
+The language button switches between English and Japanese.</p>
+<p><strong>Try a demo</strong> opens the editor's simulated device. It uses the legacy test engine set.
+Connect inside that page to try the controls. It does not produce audio or use the FM-1.</p>
+<p>For backup and restore instructions, see the <a href="USER_GUIDE.html#save-a-complete-backup-to-a-computer">user guide</a>.</p></main></html>

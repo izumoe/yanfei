@@ -882,6 +882,7 @@ Undoing a new reference retains its created phrase or chain in the library.
 ### Save a complete backup to a computer
 
 Use the [current web editor](https://izumoe.github.io/yanfei/webapp/editor/) in Chrome or Edge.
+See the [illustrated editor guide](WEB_EDITOR.md) for its layout and controls.
 An older editor can reject the larger tracker projects.
 Connect the FM-1, stop playback, open Projects, and select Save backup.
 For a local copy of the editor, use the procedure below.
