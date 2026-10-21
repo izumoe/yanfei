@@ -317,11 +317,22 @@ static int32_t drum_keys(const track_t *t, uint32_t k)
 
 /* {KIT, TUNE, TONE, DECY, SNAP, ACC, KICK, DRV}; every kit suggests the BEAT pattern (GM notes) */
 static const preset_t DRUM_PRESETS[] = {
+#if FELUCCA_CORE
+    {"DRUM KIT", DRUM_KIT_E, {0, 100, 127, 100}, 0, 0, FX(0, 0, 0, 20), PAT(12)},   /* (core.h: SAMPLE PERC's too) */
+    {"DEEP KIT", {DK_DEEP, 64, 64, 64, 64, 100, 0, 0}, {0, 100, 127, 100}, 0, 0, FX(0, 0, 0, 28), PAT(12)},
+    {"TIGHT KIT", {DK_TIGHT, 64, 64, 56, 64, 100, 0, 16}, {0, 100, 127, 100}, 0, 0, FX(0, 0, 0, 8), PAT(12)},
+    {"ELECTRO KIT",{DK_80,66,100,59,92,100,0,12},{0,100,127,100},0,0,FX(0,0,0,20),PAT(12)},
+    {"HOUSE KIT",{DK_DEEP,58,76,80,82,104,1,12},{0,100,127,100},0,0,FX(0,0,0,20),PAT(12)},
+    {"ARCADE KIT",{DK_TIGHT,81,108,40,104,100,0,30},{0,100,127,100},0,0,FX(0,0,0,12),PAT(12)},
+    {"DUB KIT",{DK_DEEP,50,55,88,54,102,1,4},{0,100,127,100},0,0,FX(0,0,30,30),PAT(12)},
+    {"MINIMAL KIT",{DK_PERC,68,86,48,58,100,0,0},{0,100,127,100},0,0,FX(0,0,0,16),PAT(12)},
+#else
     {"DRUM KIT", DRUM_KIT_E, {0, 100, 127, 100}, 0, 0, FX(0, 0, 0, 20), PAT(12)},   /* (core.h: SAMPLE PERC's too) */
     /* 1.5.6 (Discussion #216): the new kits, appended */
     {"DEEP KIT", {DK_DEEP, 64, 64, 64, 64, 100, 0, 0}, {0, 100, 127, 100}, 0, 0, FX(0, 0, 0, 28), PAT(12)},
     {"TIGHT KIT", {DK_TIGHT, 64, 64, 56, 64, 100, 0, 16}, {0, 100, 127, 100}, 0, 0, FX(0, 0, 0, 8), PAT(12)},
     {"PERC KIT", {DK_PERC, 64, 64, 64, 64, 100, 0, 0}, {0, 100, 127, 100}, 0, 0, FX(0, 0, 0, 24), PAT(12)},
+#endif
 };
 
 static const engine_t ENG_DRUM = {

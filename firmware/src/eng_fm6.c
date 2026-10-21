@@ -399,14 +399,28 @@ static void fm6_render(track_t *t, voice_t *v, int32_t *out, uint32_t len, const
 static const char *const N_FM6_ALG[] = {"PAT", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13",
                                         "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25",
                                         "26", "27", "28", "29", "30", "31", "32", 0};
-static const char *const N_FM6_PATCH[] = {"F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "OWN",
+static const char *const N_FM6_PATCH[] = {"F1", "F2", "F3",
+#if !FELUCCA_CORE
+                                          "F4", "F5", "F6", "F7", "F8",
+#endif
+                                          "OWN",
                                           "B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8", "B9", "B10", "B11", "B12",
                                           "B13", "B14", "B15", "B16", "B17", "B18", "B19", "B20", "B21", "B22", "B23",
                                           "B24", "B25", "B26", "B27", "B28", "B29", "B30", "B31", "B32", 0};
 _Static_assert(NELEM(N_FM6_PATCH) == FM6_OWN + FM6_NBANK + 2u, "a SLOT name per value");
 
-/* {ALG, FB, MLVL, MRAT, MEG, VMOD, DTUN, SLOT}: the factory patch F1..F8 as it is, DTUN on the pad */
+/* {ALG, FB, MLVL, MRAT, MEG, VMOD, DTUN, SLOT}: factory patches (core F1..F3, reference F1..F8), DTUN on pad */
 static const preset_t FM6_PRESETS[] = {
+#if FELUCCA_CORE
+    {"TINE EP", {0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 127, 0}, 0, 0, FX(0, 45, 25, 35), PAT(6)},
+    {"FM BASS", {0, 0, 0, 0, 0, 0, 0, 1}, {0, 0, 127, 0}, 0, 1, FX(0, 0, 10, 10), PAT(2)},
+    {"PAD", {0, 0, 0, 0, 0, 0, 30, 2}, {0, 0, 127, 0}, 0, 0, FX(0, 60, 30, 70), PAT(5)},
+    {"TX RUBBER",{0,0,0,0,0,0,0,FM6_OWN},{0,0,127,0},0,1,FX(0,0,8,8),PAT(2)},
+    {"DX GLASS",{0,0,0,0,0,0,0,FM6_OWN},{0,0,127,0},0,0,FX(0,8,24,42),PAT(7)},
+    {"DX MALLET",{0,0,0,0,0,0,0,FM6_OWN},{0,0,127,0},0,0,FX(0,4,16,26),PAT(3)},
+    {"DX BRASS",{0,0,0,0,0,0,8,FM6_OWN},{0,0,127,0},0,0,FX(0,18,16,28),PAT(4)},
+    {"DX ORGAN",{0,0,0,0,0,0,0,FM6_OWN},{0,0,127,0},0,0,FX(0,28,0,24),PAT(6)},
+#else
     {"TINE EP", {0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 127, 0}, 0, 0, FX(0, 45, 25, 35), PAT(6)},
     {"BELL", {0, 0, 0, 0, 0, 0, 0, 1}, {0, 0, 127, 0}, 0, 0, FX(0, 10, 30, 70), PAT(7)},
     {"FM BASS", {0, 0, 0, 0, 0, 0, 0, 2}, {0, 0, 127, 0}, 0, 1, FX(0, 0, 10, 10), PAT(2)},
@@ -415,6 +429,7 @@ static const preset_t FM6_PRESETS[] = {
     {"MARIMBA", {0, 0, 0, 0, 0, 0, 0, 5}, {0, 0, 127, 0}, 0, 0, FX(0, 0, 25, 40), PAT(3)},
     {"ORGAN", {0, 0, 0, 0, 0, 0, 0, 6}, {0, 0, 127, 0}, 0, 0, FX(10, 40, 0, 30), PAT(6)},
     {"PLUCK", {0, 0, 0, 0, 0, 0, 0, 7}, {0, 0, 127, 0}, 0, 0, FX(0, 20, 35, 30), PAT(13)},
+#endif
 };
 
 static const engine_t ENG_FM6 = {

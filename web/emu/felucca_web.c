@@ -461,7 +461,11 @@ EXPORT uint8_t *web_anim_levels(void)
  * steps, held; T4 DRUM, kick snare and hats. PLAY is the page's (or the test's) to press */
 EXPORT void web_test_heavy(void)
 {
+    #if FELUCCA_CORE
+    static const uint8_t ENG[3][2] = {{12, 2}, {ENGI_STRING, 1}, {ENGI_WAVE, 0}};
+#else
     static const uint8_t ENG[3][2] = {{12, 4}, {ENGI_PHYS, 7}, {8, 0}};
+#endif
     static const uint8_t CH[4][4] = {{48, 55, 60, 64}, {45, 52, 57, 60}, {41, 48, 53, 57}, {43, 50, 55, 59}};
     uint32_t p, i;
     for (p = 0; p < 3u; p++) {
@@ -476,6 +480,10 @@ EXPORT void web_test_heavy(void)
             put_step(t, i, 4, n, ST_NOTE, 0);
         }
     }
+#if FELUCCA_CORE
+    /* Exercise all three vintage banks through normal sequencer automation. */
+    for(i=0;i<16u;i+=4u)motion_put(&trk[2],i,P_E0,(int16_t)(2u+(i/4u)%3u),0);
+#endif
     host_drums(&trk[3]);
     for (i = 0; i < 16u; i++) {
         uint8_t n[4];
@@ -490,10 +498,78 @@ EXPORT void web_test_heavy(void)
     ui.force = 1;
 }
 
+/* The new chip engines through the same sequencer, mixer and UI as the page. */
+EXPORT uint32_t web_test_opn(void)
+{
+#if FELUCCA_CORE
+    web_test_heavy();
+    host_preset(&trk[0],ENGI_YM,0);host_preset(&trk[1],ENGI_PSG,2);
+    trk[0].p[P_VOICE]=V_POLY;trk[1].p[P_VOICE]=V_POLY;
+    ui.force=1;return 1;
+#else
+    return 0;
+#endif
+}
+EXPORT void web_test_core_sound(uint32_t e,uint32_t pr)
+{
+    if(eng_ok(e)) {set_engine_of(TSEL,e);apply_preset_to(TSEL,pr);ui.force=1;}
+}
+
 EXPORT uint32_t web_test_user_preset(uint32_t i) { return (uint32_t)up_used(i); }
+EXPORT uint32_t web_test_tracker_state(void)
+{
+    return ui.cursor | (uint32_t)tracker.col << 6 | (uint32_t)tracker.notes << 10 |
+           (uint32_t)tracker.follow << 11 | (uint32_t)song.grid << 12 |
+           (uint32_t)song.rec << 16 | (uint32_t)song.sel << 24;
+}
+EXPORT uint32_t web_test_tracker_section_state(void)
+{
+#if FELUCCA_CORE
+    return tracker.page | (uint32_t)tracker.section << 2 | (uint32_t)ts_section[tracker.song_row].beats << 3 |
+        (uint32_t)ts_section[tracker.song_row].loop << 8 | (uint32_t)ts_run.clock_row << 12 |
+        (uint32_t)ts_run.mode << 20 | (uint32_t)ts_run.waiting << 24;
+#else
+    return 0;
+#endif
+}
+EXPORT const step_t *web_test_steps(uint32_t i) { return trk[i % NTRK].step; }
+EXPORT uint32_t web_test_tracker_library_state(void)
+{
+#if FELUCCA_CORE
+    return tracker.view | (uint32_t)tracker.chain << 2 | (uint32_t)tracker.chain_row << 6 |
+        (uint32_t)tracker.song_row << 10 | (uint32_t)tracker.song_col << 15 | (uint32_t)ts_bank.edit[song.sel] << 17;
+#else
+    return 0;
+#endif
+}
+EXPORT const void *web_test_tracker_bank(void)
+{
+#if FELUCCA_CORE
+    return &ts_bank;
+#else
+    return 0;
+#endif
+}
+EXPORT uint32_t web_test_tracker_bank_size(void)
+{
+#if FELUCCA_CORE
+    return sizeof ts_bank;
+#else
+    return 0;
+#endif
+}
+EXPORT uint32_t web_test_tracker_order(uint32_t row, uint32_t part)
+{
+#if FELUCCA_CORE
+    return row < TS_SONG_ROWS && part < NTRK ? ts_bank.order[row][part] : TS_NONE;
+#else
+    return 255u;
+#endif
+}
 
 EXPORT uint16_t *web_screen(void) { return web_fb; }
 EXPORT uint32_t web_screen_draws(void) { return web_draws; }
 EXPORT uint32_t web_now_ms(void) { return fm1_ms; }
 EXPORT uint32_t web_playing(void) { return song.playing; }
+EXPORT uint32_t web_core_profile(void) { return FELUCCA_CORE; }
 EXPORT uint32_t web_sample_rate(void) { return FS; }

@@ -1642,7 +1642,11 @@ static void draw(int s)
     }
     if (s == S_SPLASH) {                          /* the power-on splash (main.c, before the UI): its lines, the version
                                                    * shown FELUCCA_VERSION (run_tests.sh: src/felucca.c's) */
+        #if FELUCCA_CORE
+        static const char WANT[] = "YANFEI|" FELUCCA_VERSION "|Based on Felucca|H\xFCgelton Instruments";
+#else
         static const char WANT[] = "Felucca|" FELUCCA_VERSION "|H\xFCgelton Instruments|with community";
+#endif
         splash_seen[0] = 0;
         in_splash = 1;
         draw_splash();
@@ -2225,6 +2229,7 @@ static void al_table(void)
             al_count, al_nst, al_fail, al_lost);
 }
 
+#ifndef UI_RENDER_NO_MAIN
 int main(int argc, char **argv)
 {
     const char *out = argc > 1 ? argv[1] : "build/ui_new";
@@ -2531,3 +2536,4 @@ int main(int argc, char **argv)
            al_fail ? " (see align.txt)" : "");
     return nfind || nink || mono_bad || al_fail ? 1 : 0;
 }
+#endif

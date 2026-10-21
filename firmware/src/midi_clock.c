@@ -58,6 +58,10 @@ static __attribute__((noinline)) void midi_clock_pulse(uint32_t ms)
                     if (trk[i].nd_early)
                         trk[i].nd_early = (uint32_t)(((uint64_t)(trk[i].nd_early - 1u) * ratio + 2048u) >> 12) + 1u;
                 }
+#if FELUCCA_CORE
+                if (ts_run.mode >= TS_SONG)
+                    ts_run.clock_pos = (uint32_t)(((uint64_t)ts_run.clock_pos * ratio + 2048u) >> 12);
+#endif
                 if (clk_pos < (uint32_t)FS * 2u)   /* (the metronome's beat as the steps) */
                     clk_pos = (uint32_t)(((uint64_t)clk_pos * ratio + 2048u) >> 12);
             }

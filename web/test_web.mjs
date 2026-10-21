@@ -33,6 +33,7 @@ const FW_ROOT = process.env.FELUCCA_ROOT || join(HERE, "..");
 
 /* ------------------------------------------------------------ editor protocol --- */
 const html = readFileSync(join(HERE, "editor.html"), "utf8");
+const css = readFileSync(join(HERE, "editor.css"), "utf8");
 const proto = html.slice(html.indexOf("/*PROTO-BEGIN*/"), html.indexOf("/*PROTO-END*/"));
 const E = vm.runInNewContext(proto + `
 ;({ frame, unframe, parse, req, Link, parseWav, resample, normalize, takeSample, autoTrim, zoomView, rootFromName, buildSlot, makeMockDevice, CMD, SMP,
@@ -162,6 +163,9 @@ async function editorMock() {
        E.engineOrder(info.engines)[1] === 12 && E.engineOrder(info.engines)[12] === 10,
        "editor: engines listed FM6 second, DRUM last (indices kept)");
     ok(E.engineOrder(["ANALOG", "X", "-", "DRUM", "FM6"]).join() === "0,4,3,1", "editor: an unknown engine follows the known ones");
+    const coreNames = ["ANALOG", "-", "PHASE", "NES", "DMG", "PSG", "TRIO", "WAVE", "STRING", "MODAL", "DRUM", "-", "FM6", "YM"];
+    ok(E.engineOrder(coreNames).map((i) => coreNames[i]).join() === "ANALOG,NES,DMG,PSG,TRIO,FM6,YM,WAVE,PHASE,STRING,MODAL,DRUM",
+       "editor: the core profile follows the device's eleven-engine order");
     m.state.favorites[10][0] = m.state.favorites[12][0] = true;
     await rq(E.req.uiSet(3, 0));
     prefs = await E.readDevicePreferences(rq, info, names, prefs);
@@ -500,6 +504,16 @@ async function editorFm4() {
   const pdesc = [];
   for (let i = 0; i < info.pcount; i++) pdesc.push(E.parse[C.DESC](await rq(E.req.desc(0, i))));
   const keys = E.paramKeys(pdesc, info.pe0, info.pcount);
+  const yd = pdesc.map(d=>({...d}));
+  yd[8].label="AMOPS";
+  for(let k=0;k<20;k++)yd[61+k].label=["AR","D1R","D1L","RR","TL"][k%5];
+  for(let k=0;k<8;k++)yd[83+k].label=k<4?"MUL":"DT";
+  yd[101].label="KS";
+  const sd=pdesc.map(d=>({...d}));sd[8].label="CHIP";
+  ok(E.paramKeys(yd,info.pe0,info.pcount,true).join()===keys.join() &&
+     E.paramKeys(sd,info.pe0,info.pcount,true).join()===keys.join(),
+     "core library: YM/PSG descriptor labels retain the original common parameter keys");
+
   const fm6Of = async () => E.parse[C.FM6_GET](await rq(E.req.fm6Get(0, 0))).packed;
   /* the DIGITAL values of preset k on top of the track's: what the device converts */
   const digital = (k, base) => E.FM4.presetValues(base.map((v, i) => (i < info.pe0 && ![0, 39, 40].includes(i) && !(i >= 17 && i <= 32) &&
@@ -1512,6 +1526,7 @@ async function editorSessions() {
 }
 
 function editorTabs() {
+  ok(html.includes('href="editor.css"') && !html.includes("<style>"), "editor: all presentation lives in editor.css");
   const tabs = [...html.matchAll(/<button role="tab" data-tab="(\w+)"/g)].map((x) => x[1]);
   const panels = [...html.matchAll(/<section class="panel" id="p-(\w+)" data-tab="(\w+)"/g)].map((x) => [x[1], x[2]]);
   const TABS = JSON.parse((/const TABS = (\[[^\]]*\]);/.exec(html) || [])[1] || "[]");
@@ -1533,7 +1548,7 @@ function editorTabs() {
   let err = null;
   try { new vm.Script(script); } catch (e) { err = e.message; }
   ok(!err, "editor: page script compiles" + (err ? ` (${err})` : ""));
-  ok(!/#[0-9a-f]{3,6}\b/i.test(html.slice(html.indexOf("[hidden]") - 6000, html.indexOf("[hidden]")).replace(/:root[^}]*\}/g, "")),
+  ok(!/#[0-9a-f]{3,6}\b/i.test(css.replace(/:root[^}]*\}/g, "")),
     "editor: no colours beyond the black / white tokens in the new styles");
 }
 
@@ -1547,7 +1562,7 @@ function editorIcons() {
   const ttf = existsSync(join(HERE, "fukiai.ttf")) && readFileSync(join(HERE, "fukiai.ttf"));
   ok(ttf && ttf.readUInt32BE(0) === 0x00010000 && existsSync(join(HERE, "FUKIAI-LICENSE.txt")) && html.includes('href="FUKIAI-LICENSE.txt"'),
     "editor: fukiai.ttf and FUKIAI-LICENSE.txt next to editor.html");
-  ok(/html:not\(\.fk\) \.ic \{ display: none; \}/.test(html) && html.includes('classList.add("fk")'), "editor: icons hidden until the font has loaded");
+  ok(/html:not\(\.fk\) \.ic \{ display: none; \}/.test(css) && html.includes('classList.add("fk")'), "editor: icons hidden until the font has loaded");
 }
 
 /* ------------------------------------------- user samples: JS == sampleio.py --- */
@@ -1622,7 +1637,7 @@ function samplesMatch() {
 
 /* ------------------------------------------------------- packages: JS == Python --- */
 async function packages() {
-  const pkg = join(FW_ROOT, "build/felucca.fwsc");
+  const pkg = existsSync(join(FW_ROOT, "build/yanfei.fwsc")) ? join(FW_ROOT, "build/yanfei.fwsc") : join(FW_ROOT, "build/felucca.fwsc");
   if (!existsSync(pkg)) {
     console.log("packages: skipped (run ./build.sh first)");
     return;
@@ -1677,8 +1692,8 @@ class FakeFM1 {
       this.waiting = null;
       this.served++;
       if (this.served >= this.unplugAfter) { this.input.state = this.output.state = "disconnected"; return; }
-      if (addr === 0xE0000000) setTimeout(() => this.boot("ota-FM-1_900", "Felucca Update"), 300);
-      else if (addr === 0xF0000000) setTimeout(() => this.boot("FM-1_900", "Felucca"), 300);
+      if (addr === 0xE0000000) setTimeout(() => this.boot("ota-FM-1_900", "Yanfei Update"), 300);
+      else if (addr === 0xF0000000) setTimeout(() => this.boot("FM-1_900", "Yanfei"), 300);
       else this.next();
     }
   }

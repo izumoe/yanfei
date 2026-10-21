@@ -128,10 +128,9 @@ static void phys_reset(phys_slot_t *S, uint32_t md, uint32_t seed)
     }
 }
 
-static void phys_note_on(track_t *t, voice_t *v)
+static void phys_note_model(track_t *t, voice_t *v, uint32_t md)
 {
     phys_slot_t *S = phys_slot_of(t, v);
-    uint32_t md = (uint32_t)t->p[P_E0] % PM_COUNT;
     if (!S)
         return;
     if ((!v->env && !v->env_out) || S->model != md)     /* a fresh voice (not a retrigger): from rest */
@@ -159,11 +158,11 @@ static __attribute__((noinline)) void phys_symp_pitches(const track_t *t, const 
     }
 }
 
-static void phys_render(track_t *t, voice_t *v, int32_t *out, uint32_t n, const vmod_t *m)
+static void phys_render_model(track_t *t, voice_t *v, int32_t *out, uint32_t n, const vmod_t *m, uint32_t md)
 {
     const int16_t *p = t->p;
     phys_slot_t *S = phys_slot_of(t, v);
-    uint32_t md = (uint32_t)p[P_E0] % PM_COUNT, i, f0 = m->inc;
+    uint32_t i, f0 = m->inc;
     int32_t y[CTL], ax[CTL];
     int32_t strc = p[P_E1] * 516, brit = clamp(p[P_E2] * 516 + m->cutoff * 2, 0, 65536);   /* Q16 0..1 */
     int32_t damp = p[P_E3] * 516, pos = p[P_E4], exc = p[P_E7] * 258;   /* exc Q15 */
@@ -218,6 +217,10 @@ static void phys_render(track_t *t, voice_t *v, int32_t *out, uint32_t n, const 
     }
 }
 
+static void phys_note_on(track_t *t, voice_t *v) { phys_note_model(t, v, (uint32_t)t->p[P_E0] % PM_COUNT); }
+static void phys_render(track_t *t, voice_t *v, int32_t *out, uint32_t n, const vmod_t *m)
+{ phys_render_model(t, v, out, n, m, (uint32_t)t->p[P_E0] % PM_COUNT); }
+
 /* MODAL partials by STRC: 34 harmonic, 70 1 : 2.83 : 5.48 : 8.90 (a free bar, a chime: 1 : 2.76 : 5.40 : 8.93),
  * 98 1 : 3.57 : 7.65, 116 1 : 4.0 : 9.0 (a tuned bar: 1 : 4 : 10) */
 static const preset_t PHYS_PRESETS[] = {
@@ -257,3 +260,82 @@ static const engine_t ENG_PHYS = {
     .desc = phys_desc,
     .mem = sizeof(phys_slot_t) * PHYS_POLY,
 };
+
+#if FELUCCA_CORE
+static const preset_t STRING_PRESETS[] = {
+    {"PLUCK", {0, 56, 72, 84, 40, 96, 0, 0}, {0, 100, 127, 58}, 0, 0, FX(0, 10, 30, 30), PAT(3)},
+    {"DRONE STRING", {1, 127, 80, 88, 64, 100, 92, 0}, {0, 100, 127, 90}, 0, 0, FX(0, 10, 20, 50), PAT(3)},
+    {"HARP", {1, 8, 62, 74, 60, 90, 0, 0}, {0, 100, 127, 80}, 0, 0, FX(0, 20, 20, 60), PAT(3)},
+    {"KOTO PICK",{0,108,98,68,12,106,0,0},{0,100,127,46},0,0,FX(0,4,18,28),PAT(3)},
+    {"SITAR BUZZ",{1,20,94,89,74,94,80,10},{0,100,127,62},0,0,FX(0,6,18,34),PAT(3)},
+    {"ZITHER",{1,46,80,78,56,96,22,0},{0,100,127,58},0,0,FX(0,12,22,32),PAT(3)},
+    {"CLAVI PLUCK",{0,84,80,42,98,108,0,0},{0,96,127,34},0,0,FX(2,6,8,12),PAT(6)},
+    {"BOWED WIRE",{0,92,68,96,44,58,58,14},{52,100,127,70},0,0,FX(0,20,24,42),PAT(5)},
+};
+static uint32_t string_model(const track_t *t) { return t->p[P_E0]&1 ? PM_SYMP : PM_STRING; }
+static void string_note_on(track_t *t, voice_t *v) { phys_note_model(t,v,string_model(t)); }
+static void string_render(track_t *t, voice_t *v, int32_t *o, uint32_t n, const vmod_t *m) { phys_render_model(t,v,o,n,m,string_model(t)); }
+static const param_desc_t *string_desc(const track_t *t, uint32_t k) { return k<8u ? PHYS_DESC[string_model(t)][k] : 0; }
+static const char *const STRING_MODELS[] = {"PLUCK","SYMP"};
+static const engine_t ENG_STRING = {
+    .name = "STRING",
+    .page_title = {"BODY", "EXCT"},
+    .edit = {
+        {"MODEL", F_ENUM, 0, 1, 0, STRING_MODELS, 0},
+        {"STRC", F_PCT, 0, 127, 64, 0, 0},
+        {"BRIT", F_PCT, 0, 127, 80, 0, 0},
+        {"DAMP", F_PCT, 0, 127, 80, 0, 0},
+        {"POS", F_PCT, 0, 127, 20, 0, 0},
+        {"ACC", F_PCT, 0, 127, 90, 0, 0},
+        {"BOW", F_PCT, 0, 127, 0, 0, 0},
+        {"EXC", F_PCT, 0, 127, 0, 0, 0},
+    },
+    .presets = STRING_PRESETS,
+    .npresets = NELEM(STRING_PRESETS),
+    .note_on = string_note_on,
+    .render = string_render,
+    .knob = {P_E1, P_E2, P_E3, P_E4},
+    .poly = PHYS_POLY,
+    .desc = string_desc,
+    .mem = sizeof(phys_slot_t) * PHYS_POLY,
+};
+#endif
+#if FELUCCA_CORE
+static const preset_t MODAL_PRESETS[] = {
+    {"BELL TREE", {0, 70, 100, 106, 12, 100, 0, 6}, {0, 100, 127, 96}, 0, 0, FX(0, 20, 30, 60), PAT(7)},
+    {"MARIMBA", {0, 116, 38, 40, 24, 90, 0, 30}, {0, 90, 127, 52}, 0, 0, FX(0, 0, 15, 30), PAT(6)},
+    {"HAND DRUM", {1, 112, 76, 56, 44, 100, 14, 24}, {0, 100, 127, 64}, 0, 0, FX(0, 0, 10, 30), PAT(6)},
+    {"VIBE KEYS",{0,30,64,94,24,95,0,8},{0,100,127,68},0,0,FX(0,12,18,38),PAT(6)},
+    {"TOY BELL",{0,76,116,82,8,96,0,8},{0,100,127,62},0,0,FX(0,6,22,38),PAT(7)},
+    {"GAMELAN",{0,102,100,96,46,98,0,16},{0,100,127,72},0,0,FX(0,8,22,44),PAT(7)},
+    {"STEEL TINE",{0,92,82,78,38,100,0,20},{0,100,127,56},0,0,FX(0,6,16,28),PAT(3)},
+    {"SYNTH TOM",{1,88,64,62,34,104,42,22},{0,100,127,44},0,0,FX(0,0,10,18),PAT(12)},
+};
+static uint32_t modal_model(const track_t *t) { return t->p[P_E0]&1 ? PM_MEMB : PM_MODAL; }
+static void modal_note_on(track_t *t, voice_t *v) { phys_note_model(t,v,modal_model(t)); }
+static void modal_render(track_t *t, voice_t *v, int32_t *o, uint32_t n, const vmod_t *m) { phys_render_model(t,v,o,n,m,modal_model(t)); }
+static const param_desc_t *modal_desc(const track_t *t, uint32_t k) { return k<8u ? PHYS_DESC[modal_model(t)][k] : 0; }
+static const char *const MODAL_MODELS[] = {"BAR","MEMB"};
+static const engine_t ENG_MODAL = {
+    .name = "MODAL",
+    .page_title = {"BODY", "EXCT"},
+    .edit = {
+        {"MODEL", F_ENUM, 0, 1, 0, MODAL_MODELS, 0},
+        {"STRC", F_PCT, 0, 127, 64, 0, 0},
+        {"BRIT", F_PCT, 0, 127, 80, 0, 0},
+        {"DAMP", F_PCT, 0, 127, 80, 0, 0},
+        {"POS", F_PCT, 0, 127, 20, 0, 0},
+        {"ACC", F_PCT, 0, 127, 90, 0, 0},
+        {"BOW", F_PCT, 0, 127, 0, 0, 0},
+        {"EXC", F_PCT, 0, 127, 0, 0, 0},
+    },
+    .presets = MODAL_PRESETS,
+    .npresets = NELEM(MODAL_PRESETS),
+    .note_on = modal_note_on,
+    .render = modal_render,
+    .knob = {P_E1, P_E2, P_E3, P_E4},
+    .poly = PHYS_POLY,
+    .desc = modal_desc,
+    .mem = sizeof(phys_slot_t) * PHYS_POLY,
+};
+#endif

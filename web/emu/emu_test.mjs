@@ -203,6 +203,16 @@ for (let i = 0; i < 3; i++) {
   best = Math.min(best, performance.now() - t0);
 }
 const ratio = best / 1000, max = +(process.env.BENCH_MAX || 0.5);
-check(`1 s of the heavy song (FM6 PHYS GRAIN chords + DRUM) in ${best.toFixed(1)} ms: ${(ratio * 100).toFixed(1)} % of real time`, ratio < max);
+const families = a.ex.web_core_profile?.() ? "FM6 STRING WAVE" : "FM6 PHYS GRAIN";
+check(`1 s of the heavy song (${families} chords + DRUM) in ${best.toFixed(1)} ms: ${(ratio * 100).toFixed(1)} % of real time`, ratio < max);
+if(a.ex.web_core_profile() && process.argv[4]) {
+  const opn=await device(null);opn.render(500);opn.ex.web_test_opn();opn.tap(B.PLAY);
+  opn.rec=true;opn.render(2000);
+  const b=fs.readFileSync(process.argv[4]);
+  const native=new Float32Array(b.buffer,b.byteOffset,b.byteLength/4);
+  const samples=opn.samples;
+  const same=samples.length===native.length && samples.every((x,i)=>x===native[i]);
+  check(`YM/SEGA/WAVE/DRUM: native/WASM ${samples.length/2} frames identical, peak ${opn.peak.toFixed(3)}`,same && opn.peak>0.01 && opn.peak<1);
+}
 console.log(fails ? `emu: ${fails} FAILED` : "emu: all ok");
 process.exit(fails ? 1 : 0);

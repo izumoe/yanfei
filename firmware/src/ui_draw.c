@@ -1337,7 +1337,11 @@ static void draw_columns(void)
 #define SPL_X0 ((240u - SPL_SQ) / 2u)               /* its top-left on the screen (x and y) */
 #define SPL_PAD 16                                  /* the text's inset: left (its ink), top and bottom (the capitals) */
 #define SPL_PITCH 20                                /* line to line */
-static const char *const SPLASH_LINES[] = {"Felucca", FELUCCA_VERSION, "H\xFCgelton Instruments", "with community"};
+#if FELUCCA_CORE
+static const char *const SPLASH_LINES[] = {FIRMWARE_NAME_UPPER, FELUCCA_VERSION, "Based on Felucca", "H\xFCgelton Instruments"};
+#else
+static const char *const SPLASH_LINES[] = {FIRMWARE_NAME, FELUCCA_VERSION, "H\xFCgelton Instruments", "with community"};
+#endif
 /* a band of two lines, h tall, at y on the screen: the first line's top at ly; the two lines' capitals declared
  * against al0..al1 (mode: AL_V the band centred there, AL_B the last baseline on al1) */
 static void splash_band(uint32_t y, uint32_t h, int32_t ly, const char *const *l, uint32_t mode, int32_t al0,
@@ -1551,11 +1555,19 @@ static void style_apply(void)
     }
 }
 
+#include "ui_tracker_draw.c"
 static void ui_draw_page(uint32_t counting);
 static void ui_draw(void)
 {
     static uint8_t counting;
     style_apply();
+#if FELUCCA_CORE
+    if (ts_run.enabled) {
+        uint32_t error = (uint32_t)ts_sync();
+        if (error && error != ts_run.error) ui_message("AUTOMATION BANK FULL");
+        ts_run.error = (uint8_t)error;
+    }
+#endif
     ui.frame++;
     if (counting != (uint8_t)seq_counting()) {          /* a count-in began or ended: the page drawn again after it */
         counting = (uint8_t)seq_counting();
@@ -1617,7 +1629,11 @@ static void ui_draw_page(uint32_t counting)
         ui.page = (uint8_t)page_first(FAM_EDIT);
         page_entered();
     }
-    cursor_fix();
+    if (!tracker_on() || !tracker_section_on()) cursor_fix();
+    if (tracker_on()) {
+        tracker_draw_page();
+        return;
+    }
     if (ui.force)
         draw_frame();
     felucca_dbg.stage = 3;

@@ -1,0 +1,72 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: GPL-3.0-only -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Yanfei firmware for the M-VAVE FM-1: editor, browser emulator, installer, and user guide.">
+  <title>Yanfei — FM-1 firmware</title>
+  <style>
+    :root { color-scheme: light dark; --bg:#f7f6f2; --fg:#222; --muted:#555; --line:#ccc9c0; --card:#fff; }
+    @media(prefers-color-scheme:dark) { :root { --bg:#171717; --fg:#eee; --muted:#b3b3b3; --line:#444; --card:#222; } }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.6 system-ui,sans-serif; }
+    main { max-width:960px; margin:auto; padding:48px 24px; }
+    h1 { margin:0; font-size:clamp(44px,8vw,72px); line-height:1.1; letter-spacing:-.04em; }
+    h2 { font-size:22px; margin:0 0 8px; }
+    a { color:inherit; text-underline-offset:3px; }
+    a:focus-visible { outline:3px solid currentColor; outline-offset:5px; }
+    .version,footer { color:var(--muted); font-size:14px; }
+    .intro { max-width:660px; margin:24px 0 32px; }
+    .tools { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:40px; }
+    .tool { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:24px; }
+    .tool p { font-size:15px; }
+    .tool a { display:inline-block; font-weight:650; }
+    .links { padding:24px 0; border-top:1px solid var(--line); }
+    .links p { margin:8px 0; }
+    footer { border-top:1px solid var(--line); padding-top:24px; margin-top:24px; }
+    @media(max-width:680px) { main { padding:32px 20px; } .tools { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <p class="version">Preview firmware · @VERSION@</p>
+    <h1>Yanfei</h1>
+    <p class="intro">Firmware for the M-VAVE FM-1. Twelve sound engines, 96 factory presets, and a four-track tracker.</p>
+  </header>
+  <section class="tools" aria-label="Tools">
+    <article class="tool">
+      <h2>Editor</h2>
+      <p>Connect your FM-1 by USB. Edit sounds and steps, manage presets, and save a complete backup.</p>
+      <a href="webapp/editor/">Open editor</a>
+    </article>
+    <article class="tool">
+      <h2>Emulator</h2>
+      <p>Try Yanfei in your browser. Use the on-screen controls to play sounds and explore the tracker.</p>
+      <a href="webapp/try/">Try in browser</a>
+    </article>
+    <article class="tool">
+      <h2>Installer</h2>
+      <p>Install this build on your FM-1, or save the firmware package for later.</p>
+      <a href="webapp/installer/">Open installer</a>
+    </article>
+  </section>
+  <p>Use Chrome or Edge for the USB editor and installer. Connect the FM-1, then select Connect in the editor.</p>
+  <p>Use the device or emulator for tracker phrase, chain, and song editing. The editor has basic step controls.</p>
+  <section class="links" aria-label="Documentation and downloads">
+    <h2>Read and download</h2>
+    <p><a href="docs/VISUAL_GUIDE.html">Visual guide: start here</a> · <a href="docs/USER_GUIDE.html">User guide</a> · <a href="docs/TRACKER_QUICK_REFERENCE.html">Tracker controls</a></p>
+    <p><a href="docs/MODE_GUIDE.html">Modes and shared controls</a> · <a href="docs/ENGINE_GUIDE.html">Engine guide</a> · <a href="docs/WEB_EDITOR.html">Web editor guide</a></p>
+    <p><a href="@FIRMWARE@" download>Firmware package</a> · <a href="@SOURCE@" download>Source for this build</a> · <a href="SHA256SUMS">Checksums</a></p>
+    <p><a href="https://github.com/izumoe/yanfei">GitHub repository</a> · <a href="BUILDING.html">Build instructions</a></p>
+    <p class="version">The source archive includes the firmware and engine code used for this build.</p>
+  </section>
+  <footer>
+    <p>Yanfei is based on <a href="https://github.com/hugelton/Felucca">Felucca</a> by Leo Kuroshita and Hügelton Instruments.</p>
+    <p><a href="LICENSING.html">Licences and credits</a> · GPL-3.0-only. Component notices are included with the downloads.</p>
+    <p>M-VAVE and FM-1 are trademarks of their respective owners. Yanfei is not affiliated with or endorsed by M-VAVE.</p>
+  </footer>
+</main>
+</body>
+</html>

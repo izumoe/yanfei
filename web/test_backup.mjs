@@ -49,6 +49,12 @@ function device(objs, opt = {}) {
 const objs = [[0, rnd(3388, 2)], [1, rnd(1200, 3)], [2, rnd(3388, 4)], [6, rnd(3080, 5)]];
 const dev = device(objs);
 const file = await captureBackup(dev.request, "TEST");
+const trackerData = rnd(15728, 8);
+const trackerFile = await captureBackup(device([[0, trackerData], [1, rnd(1200, 3)], [2, trackerData]]).request, "v1.6.1-core8");
+ok(readBackup(trackerFile).objects[0].bytes.length === 15728 && trackerFile.objects[2].size === 15728,
+  "backup: complete core8 working and stored tracker libraries accepted");
+const tooLarge = JSON.parse(JSON.stringify(trackerFile)); tooLarge.objects[0].size = 16129;
+ok(throws(() => readBackup(tooLarge)), "backup: oversized tracker payload refused");
 ok(file.objects.length === BACKUP_IDS.length && file.objects[0].size === 3388 && file.objects[3].size === 0, "backup: capture lists every object, empty ones as 0");
 ok(readBackup(JSON.stringify(file)).objects[2].bytes.every((v, i) => v === objs[2][1][i]), "backup: capture -> file -> bytes round trip");
 ok(await athrows(() => captureBackup(device(objs.map(([i, v]) => [i, v.slice()]), { changeOnGet: 2 }).request, "TEST")), "backup: a device that changes during capture fails the capture");

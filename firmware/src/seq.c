@@ -756,7 +756,11 @@ static __attribute__((noinline)) void kb_lat(uint32_t k)
 }
 #endif
 
-static void keyboard_block(void)
+/* Main-loop tracker key routing, published as one atomic word. The audio side
+ * only ORs it into its existing mute mask, once when the keys change. */
+static volatile uint32_t kb_tracker_mute;
+/* Keep the key-change work out of the ISR's nested sample/render loops. */
+static __attribute__((noinline)) void keyboard_block(void)
 {
     uint32_t cur = fm1_in.notes, ch, k;
     uint32_t lay, fx, mute;
@@ -774,7 +778,10 @@ static void keyboard_block(void)
     }
     lay = (fm1_in.buttons & kb_mask) || kb_lock;  /* (#83: kb_lock, a layer locked open with no button held) */
     fx = (fm1_in.buttons & perf_mask) || (kb_lock & 2u);
-    mute = song.grid == 2u ? ~0u : song.grid == 3u ? SONG_KEYS : 0u;   /* the keys that never sound here */
+    mute = song.grid == 2u ? ~0u : song.grid == 3u ? SONG_KEYS : 0u;
+#if FELUCCA_CORE
+    mute |= kb_tracker_mute;
+#endif
     for (k = 0; k < 27u; k++) {
         if (!((ch >> k) & 1u))
             continue;
@@ -823,6 +830,9 @@ static void seq_start(void)
     uint32_t i;
     motion_begin();
     chain_start();
+#if FELUCCA_CORE
+    if (!chain.running) ts_start();
+#endif
     for (i = 0; i < NTRK; i++) {                   /* every track from its step 0, together */
         track_t *t = &trk[i];
         t->seq_idx = (uint16_t)(t->p[P_SLEN] - 1);
@@ -873,6 +883,9 @@ static void seq_stop(void)
     }
     chain_stop();
     motion_end();
+#if FELUCCA_CORE
+    ts_stop();
+#endif
 }
 
 /* play one step: TIE extends, REST releases, NOTE (re)triggers its notes, then its lane hits (their GM
@@ -918,10 +931,19 @@ static __attribute__((noinline)) void seq_step(track_t *t, const step_t *s, uint
 {
     uint32_t i, j, gate = period * (uint32_t)t->p[P_SGATE] / 128u;
     uint32_t vel = (s->flags & SF_ACCENT) ? 127u : (s->vel ? s->vel : 96u);
-    uint32_t slide_in = t->seq_hold && t->seq_n && !(skip & SEQ_REP);
+    uint32_t slide_in = t->seq_hold == 1u && t->seq_n && !(skip & SEQ_REP);
     uint32_t len = t->p[P_SLEN] ? (uint32_t)t->p[P_SLEN] : 1u;
+#if FELUCCA_CORE
+    if (ts_run.mode && len > TS_ROWS) len = TS_ROWS;
+#endif
     uint32_t next_tie = seq_steps(t)[(idx + 1u) % len].time == ST_TIE;
     uint32_t hits = step_ratchet(s);
+#if FELUCCA_CORE
+    const ts_phrase_t *phrase = ts_play_phrase(t);
+    uint32_t row_gate = phrase && idx < TS_ROWS ? phrase->gate[idx] : (uint32_t)t->p[P_SGATE];
+    gate = period * row_gate / 128u;
+    if (phrase && idx < TS_ROWS && s->time == ST_REST && !(phrase->off & (1u << idx))) return;
+#endif
     uint8_t nn[4 + NLANE], vv[4 + NLANE];           /* the notes it plays: its notes, then its hits */
     uint32_t m = 0, sk = 0;
     /* QNT SEQ: the step's notes (not the lane hits) snap to the scale as they play; never on a drum kit, the slices
@@ -949,12 +971,22 @@ static __attribute__((noinline)) void seq_step(track_t *t, const step_t *s, uint
         return;
     }
     if (hits > 1u) {                                /* RATCH: the gate of a part, no slide or tie out */
-        gate = step_samples(t, period, idx) / hits * (uint32_t)t->p[P_SGATE] / 128u;
+        gate = step_samples(t, period, idx) / hits *
+#if FELUCCA_CORE
+            (phrase ? (row_gate ? row_gate : 128u) : (uint32_t)t->p[P_SGATE])
+#else
+            (uint32_t)t->p[P_SGATE]
+#endif
+            / 128u;
         if (!(skip & SEQ_REP))
             t->rat_left = (uint8_t)(hits - 1u);
     }
     for (i = 0; i < s->n && i < 4u; i++) {
         uint32_t x = s->note[i];
+#if FELUCCA_CORE
+        if (ts_run.mode && e != &ENG_DRUM)
+            x = (uint32_t)clamp((int32_t)x + ts_run.transpose[(uint32_t)(t - trk)], 0, 127);
+#endif
         if (qseq) {                                 /* QNT SEQ: onto the scale now; two notes snapping */
             x = (uint32_t)clamp(scale_snap(t, (int32_t)x + qtrn), 0, 127);   /* together play once */
             for (j = 0; j < m && nn[j] != x; j++)
@@ -993,6 +1025,9 @@ static __attribute__((noinline)) void seq_step(track_t *t, const step_t *s, uint
             t->seq_notes[t->seq_n++] = nn[i];
     t->seq_off = gate;
     t->seq_hold = hits == 1u && ((s->flags & SF_SLIDE) != 0 || next_tie);   /* next step a TIE: keep the notes to it */
+#if FELUCCA_CORE
+    if (phrase && !row_gate && hits == 1u) t->seq_hold = 2; /* HOLD without an implicit slide */
+#endif
 }
 
 /* MENU > CONTROL > STEP PREVIEW (1.2, Discussion #169): the UI asks for a step of a track to sound once (aud_req: step
@@ -1058,6 +1093,9 @@ static __attribute__((noinline)) uint32_t seq_time(track_t *t, uint32_t idx, uin
 /* the automation a track plays: its slot's while a song plays (song_chain.c lanes; 0: a silent lane, none) */
 static const motion_store_t *chain_motion(const track_t *t)
 {
+#if FELUCCA_CORE
+    if (ts_run.mode) return ts_motion(t);
+#endif
     uint32_t s = chain.lane[trk_index(t)];
     return !chain.running ? &motion : s < 4u ? &chain.source[s].motion : 0;
 }
@@ -1072,6 +1110,9 @@ static __attribute__((noinline)) void seq_play(track_t *t, uint32_t idx, uint32_
     uint32_t skip = SEQ_ROLLED, i, k;
     if (seq_miss(t, s, idx))
         skip = SEQ_MISS;
+#if FELUCCA_CORE
+    if (ts_run.mode && skip != SEQ_MISS && s->time == ST_NOTE && (s->n || s->hit)) ts_row_sound(t, idx);
+#endif
     if (m)
         motion_step(t, idx, m, skip == SEQ_ROLLED);
     if (t->rskip_n && t->rskip_idx == idx) {
@@ -1138,7 +1179,7 @@ static __attribute__((noinline)) void seq_nd_start(track_t *t, uint32_t period, 
             seq_play(t, t->seq_idx, period);
     }
     t->nd_fired = 0;
-    if ((!chain.running || nx) && (d = seq_nudge(t, &seq_steps(t)[nx])) < 0) {
+    if (((!chain.running && !ts_arranging()) || nx) && (d = seq_nudge(t, &seq_steps(t)[nx])) < 0) {
         uint32_t at = step_samples(t, period, t->seq_idx), back = (uint32_t)-d * period / NUDGE_DIV;
         at = (at > back ? at - back : 0u) + 1u;
         t->nd_early = at < t->nd_late ? t->nd_late : at;   /* (never before this step's own late play) */
@@ -1149,12 +1190,16 @@ static __attribute__((noinline)) void seq_nd_start(track_t *t, uint32_t period, 
  * recorded note held ties into it (not inlined: once a step, off the audio ISR's loop) */
 static __attribute__((noinline)) void seq_enter(track_t *t, uint32_t top, uint32_t len)
 {
-    if (!t->seq_idx)
+    if (!t->seq_idx
+#if FELUCCA_CORE
+        && (!ts_run.mode || top || ts_run.cycle[(uint32_t)(t - trk)])
+#endif
+    )
         t->cond_loop = (uint8_t)(top || t->cond_loop + 1u >= COND_LOOPS ? 0u : t->cond_loop + 1u);
     rec_hold(t, t->seq_idx, len);
 }
 
-static void seq_tick(track_t *t, uint32_t n)
+static __attribute__((noinline)) void seq_tick(track_t *t, uint32_t n)
 {
     uint32_t period, len, top;
     if (t->seq_n && !t->seq_hold) {
@@ -1165,9 +1210,15 @@ static void seq_tick(track_t *t, uint32_t n)
     }
     if (!song.playing)
         return;
+#if FELUCCA_CORE
+    if (ts_run.mode && (!(ts_run.active & (1u << (uint32_t)(t - trk))) || (ts_run.waiting & (1u << (uint32_t)(t - trk))))) return;
+#endif
     period = div_samples((uint32_t)t->p[P_SDIV]);
     len = (uint32_t)t->p[P_SLEN];
     len = len ? len : 1u;
+#if FELUCCA_CORE
+    if (ts_run.mode && len > TS_ROWS) len = TS_ROWS;
+#endif
     t->seq_pos += n;
     for (;;) {
         uint32_t cur_len = step_samples(t, period, t->seq_idx);
@@ -1176,7 +1227,18 @@ static void seq_tick(track_t *t, uint32_t n)
         if (t->seq_pos < cur_len && t->seq_pos != 0x7FFFFFFFu + n)
             break;
         top = t->seq_pos >= 0x7FFFFFFFu;            /* (PLAY, a SONG section: its first step) */
-        t->seq_pos = top ? (chain.running ? chain.carry : 0u) : t->seq_pos - cur_len;
+        t->seq_pos = top ? (chain.running ? chain.carry :
+#if FELUCCA_CORE
+                            ts_run.mode >= TS_SONG ? ts_run.carry :
+#endif
+                            0u) : t->seq_pos - cur_len;
+#if FELUCCA_CORE
+        if (ts_run.mode && !top && t->seq_idx + 1u >= len) {
+            if (!ts_advance((uint32_t)(t - trk))) return;
+            len = (uint32_t)t->p[P_SLEN];
+            t->seq_idx = (uint16_t)(len - 1u);
+        }
+#endif
         t->seq_idx = (uint16_t)((t->seq_idx + 1u) % len);
         seq_enter(t, top, len);
         if (t->p[P_SQNT] && !t->nd_fired)
@@ -1399,6 +1461,9 @@ static void events_block(uint32_t n)
     if (aud_req)
         seq_audition();                               /* (STEP PREVIEW: a step sounds, stopped) */
     chain_tick(seq_n);
+#if FELUCCA_CORE
+    ts_section_tick(seq_n);
+#endif
     for (i = 0; i < NTRK; i++)
         seq_tick(&trk[i], seq_n);
     if (cin_flush)

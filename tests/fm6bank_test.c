@@ -396,8 +396,8 @@ static int slot_test(void)
     const param_desc_t *d = &ENG_FM6.edit[7];
     uint32_t k;
     reset();
-    ok = param_turn(d, FM6_OWN, 1) == FM6_OWN && param_turn(d, FM6_OWN, -1) == 7 && param_turn(d, 7, 1) == FM6_OWN &&
-         param_turn(d, 7, 5) == FM6_OWN;
+    ok = param_turn(d, FM6_OWN, 1) == FM6_OWN && param_turn(d, FM6_OWN, -1) == FM6_OWN - 1 && param_turn(d, FM6_OWN - 1, 1) == FM6_OWN &&
+         param_turn(d, FM6_OWN - 1, 5) == FM6_OWN;
     slot_to(0, FM6_OWN + 3);
     ok &= trk[0].p[P_E7] == FM6_OWN && fm6_slot[0] == FM6_OWN;
     bad += check("no bank: the knob stops at OWN (B1..B32 skipped); a B value from elsewhere is refused (SLOT back)", ok);
@@ -422,7 +422,7 @@ static int slot_test(void)
     {
         uint8_t own[FM6_PACKED];
         slot_to(2, FM6_OWN);
-        fm6_load_slot(2, 3);
+        fm6_load_slot(2, FM6_NFACTORY - 1u);
         fm6_adopt(2);
         trk[2].p[P_E7] = FM6_OWN;
         fm6_slot[2] = FM6_OWN;
@@ -498,7 +498,7 @@ static int keep_test(void)
         int32_t s;
         uint8_t x[FM6_PACKED];
         project_capture(p);
-        memcpy(x, FM6_FACTORY[3], FM6_PACKED);
+        memcpy(x, FM6_FACTORY[FM6_NFACTORY - 1u], FM6_PACKED);
         x[110] = 17;                                      /* (an own patch) */
         ok = 1;
         for (s = FM6_OWN + 1; s <= (int32_t)(FM6_OWN + FM6_NBANK); s++) {
@@ -563,6 +563,38 @@ static int keep_test(void)
     return bad;
 }
 
+#if FELUCCA_CORE
+static int core_presets(void)
+{
+    int bad=0;
+    for(uint32_t n=0;n<NENG_SHOWN;n++)for(uint32_t pr=0;pr<(ENGINES[eng_vis(n)]->npresets+(eng_vis(n)==ENGI_WAVE?WAVE_NBANKS:0u));pr++) {
+        reset();song.sel=0;
+        uint32_t e=eng_vis(n);
+        set_engine_of(&trk[0],e);apply_preset_to(&trk[0],pr<ENGINES[e]->npresets?pr:0);
+        if(e==ENGI_WAVE && pr>=ENGINES[e]->npresets)trk[0].p[P_E0]=(int16_t)(pr-ENGINES[e]->npresets);
+        fm6_poll();
+        int16_t want[P_COUNT];memcpy(want,trk[0].p,sizeof want);
+        uint8_t patch[FM6_PACKED];fm6_pack(fm6_patch[0],patch);
+        int ok=!project_save(0) && !up_store(3,"CORE PATCH");
+        set_engine_of(&trk[0],e==0?ENGI_NES:0);
+        memset(up_bank,0,sizeof up_bank);up_boot();
+        ok&=up_used(3) && !up_load(3) && trk[0].eng_req==e &&
+            !memcmp(want,trk[0].p,sizeof want);
+        if(e==ENGI_FM6)ok&=patch_is(0,patch);
+        set_engine_of(&trk[0],e==0?ENGI_NES:0);
+        memset(proj_slot,0,sizeof proj_slot);
+        project_load(0);
+        ok&=trk[0].eng_req==e &&
+            !memcmp(want,trk[0].p,sizeof want);
+        if(e==ENGI_FM6)ok&=patch_is(0,patch);
+        if(!ok)fprintf(stderr,"core NOR round trip failed: %s preset %u\n",ENGINES[e]->name,pr);
+        bad+=!ok;
+    }
+    bad+=check("core: all 96 presets and five WAVE banks survive user-bank reboot and project load through NOR",!bad);
+    return bad;
+}
+#endif
+
 int main(void)
 {
     int bad = 0;
@@ -570,6 +602,9 @@ int main(void)
     bad += cut_test();
     bad += slot_test();
     bad += keep_test();
+#if FELUCCA_CORE
+    bad += core_presets();
+#endif
     printf(bad ? "fm6bank: FAILED (%d)\n" : "fm6bank: all ok\n", bad);
     return bad ? 1 : 0;
 }

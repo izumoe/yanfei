@@ -1,4 +1,8 @@
-# Felucca licensing
+# Yanfei licensing
+
+Yanfei is a modified version of [Felucca](https://github.com/hugelton/Felucca).
+The fork source is <https://github.com/izumoe/yanfei>.
+The upstream notices and component licences below remain applicable.
 
 Felucca is free software, licensed under the GNU General Public License, version 3 only
 (`GPL-3.0-only`, full text in `LICENSE`). That covers the code and its own assets. A few
@@ -115,3 +119,15 @@ by those owners.
 ## Radio
 
 Felucca never enables the Bluetooth / Wi-Fi radio of the hardware.
+
+## Core profile: OPN-1 chip cores
+
+Core4 includes the BSD-3-Clause YM2612 and Sega PSG C cores from
+[OPN-1](https://github.com/putchdev/opn-1), pinned at
+3319da44abc76fd0ce208de7c37405feef5770fd. See [OPN_CORES.md](docs/OPN_CORES.md)
+for attribution, modifications and test-only reference licenses. The complete
+BSD notices are retained in `firmware/src/opn2/opn2.c` and
+`firmware/engines/src/segapsg/psg.c` and accompany the core4 package. The shared
+engine wrapper remains MIT; its Sega core retains BSD-3-Clause. Comparison tests
+from OPN-1 are GPL-3.0-only. ymfm, Nuked-OPN2 and the MAME reference sources in
+the tests are not linked into firmware.

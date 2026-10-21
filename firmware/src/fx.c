@@ -864,12 +864,18 @@ static __attribute__((noinline)) void mix_spread(track_t *t, int32_t *b, uint32_
  * when built, nothing when retired. An estimate: it only steers the split, the sound does not depend on it */
 #if FELUCCA_CPU2
 static uint16_t part_cost[NTRK];                        /* the last block's, per part */
+#if FELUCCA_CORE
+/* Conservative initial split estimates, not device cycle measurements. Physical
+ * engines retain PHYS's worst-case estimate; unused engines cost nothing. */
+static const uint16_t ENG_VCOST[NENGINES] = {163,0,162,163,163,163,144,280,309,309,113,0,181,320};
+#else
 static const uint16_t ENG_VCOST[NENGINES] = {163, FELUCCA_FM4 ? 181 : 0, 162, 67, 70, 174, 144, 143, 189, 309, 113, 134,
                                              181,
 #if FELUCCA_SLICE
                                              129
 #endif
 };
+#endif
 #endif
 
 /* one synth part into the dry mix and the sends of sm (mx[0]; mx[1] on the second core); a part with no voice sounding costs

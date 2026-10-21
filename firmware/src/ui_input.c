@@ -581,6 +581,7 @@ static uint32_t song_leds(void)
  * Armed and playing, STEP's keys record live (at the play head) instead of writing the cursor step */
 static int rec_tap(void)                                /* 1: the arming changed */
 {
+    if (tracker_on()) { tracker_rec(); return 1; }
     uint8_t bit = (uint8_t)(1u << song.sel);
     if (chain_busy()) {
         ui_message("STOP TO RECORD");
@@ -1422,7 +1423,8 @@ static void midi_take(void)
  * roll, a grid hit waiting for its key's release, a dialog */
 static int mf_busy(void)
 {
-    return lock_held() || (ui.entry_open && (fm1_in.notes & ~kb_layer)) || ui.plk_rm || ui.confirm;
+    return lock_held() || (ui.entry_open && (fm1_in.notes & ~kb_layer)) || ui.plk_rm || ui.confirm ||
+           (tracker_on() && (fm1_in.notes & ~kb_layer));
 }
 static int midi_follow(void)
 {
@@ -1480,7 +1482,7 @@ static void ui_input(void)
     midi_take();                                        /* (MIDI IN notes: lights, SCREEN WAKE, AUTO SELECT's) */
     midi_pc_poll();                                     /* MIDI Program Change (before fm6_poll: a bank voice) */
     fm6_poll();                                         /* FM6: PTCH turned -> its patch */
-#if !FELUCCA_FM4
+#if !FELUCCA_FM4 && !FELUCCA_CORE
     for (k = 0; k < NTRK; k++)                          /* a DIGITAL sound any other way (the paths convert it */
         if (trk[k].eng_req == ENGI_DIGITAL)             /* already): FM6 (fm4_convert.c) */
             fm4_track(&trk[k]);
@@ -1561,6 +1563,7 @@ static void ui_input(void)
     }
     lytap = layer_gesture(now, combo);
     layer_show();
+    if (FELUCCA_CORE && !tracker_on()) tracker_enter();  /* overlay controls cannot become tracker taps later */
     layer_keys(lkeys);
     for (k = 0; k < 4u; k++)
         if (ks[k]) {
@@ -1605,8 +1608,10 @@ static void ui_input(void)
     }
     if (save == BT_HOLD && chain_busy())
         ui_message("STOP TO UNDO");
-    else if (save == BT_HOLD)                                /* SAVE held: undo the last sound load */
-        undo_swap();
+    else if (save == BT_HOLD) {                              /* tracker reference edits share the undo gesture */
+        if (ts_history.kind && !undo.trk) tracker_history_swap();
+        else undo_swap();
+    }
     else if (save == BT_TAP && !ui.confirm)             /* SAVE acts on release (a hold is the undo) */
         open_family(FAM_SAVE);
     if (ui.confirm) {                                   /* OCT- cancels, OCT+ does it; nothing else reacts */
@@ -1667,15 +1672,22 @@ static void ui_input(void)
     }
     if (lytap)                                          /* a layer's button acts on release (held: the layer; SEQ's */
         layer_tap(lytap);                               /* on every page since 1.2, its tap the SEQ pages) */
-    if (home == BT_TAP)                                 /* HOME acts on release: a hold opens the menu */
-        home_tap();
-    cursor_fix();                                       /* LEN may have changed (knob, editor, load) */
+    if (home == BT_TAP) {
+        if (tracker_on()) tracker.follow ^= 1u;
+        else home_tap();
+    }
+    if (!tracker_on() || !tracker_section_on()) cursor_fix(); /* LEN may have changed */
     for (id = 0; id < 14u; id++) {
         if (!((pressed >> id) & 1u))
             continue;
         b = panel_btn_of(id);
         switch (b) {
         case B_PLAY:
+            if (tracker_on()) {
+                if (song.playing || chain_busy() || seq_counting()) transport_req = 2;
+                else tracker_play(0);
+                break;
+            }
             if (layer_play())                           /* (GLO held: RESTART) */
                 break;
             if (song.playing || chain_busy() || seq_counting())   /* (a count-in: PLAY stops it) */
@@ -1732,7 +1744,10 @@ static void ui_input(void)
         slice_keys_pick(notes);
 #endif
     lock_keys();                                        /* (a grid key on a hit let go: the hit goes) */
-    if (song.grid == 3u) {
+    if (tracker_on()) {
+        if (!lay) tracker_input(notes);
+        song.grid = (uint8_t)keys_mode();
+    } else if (song.grid == 3u) {
         song_keys(notes);
     } else if (song.grid) {
         grid_keys(notes);
@@ -1751,12 +1766,38 @@ static void ui_input(void)
      * pass runs, so one landing after the layer's read went to the page as well: KNOB 1..4 edited the layer's control
      * and the page under it (HOME's sound, motion recorded), PRESETS could load a sound. They stay for the next pass */
     kq |= lay;
-    if (!lay && (s = panel_enc(EN_PRESET)) != 0)
-        presets_turn(s);
-    if (!lay && (s = panel_enc(EN_ALGO)) != 0)     /* ALGORITHM: the selected track, on every page */
+    if (!lay && (s = panel_enc(EN_PRESET)) != 0) {
+        if (tracker_on()) {
+            if ((tracker_section_on() || tracker.view == 2) && (fm1_in.notes & (1u << TK_OPTION))) tracker_section_loop(s);
+            else tracker_cell(s, 0, 0);
+        }
+        else presets_turn(s);
+    }
+    if (!lay && (s = panel_enc(EN_ALGO)) != 0) {   /* ALGORITHM: the selected track, on every page */
+        uint32_t row = ui.cursor, all = tracker_on() && tracker.view == 3;
         track_select((uint32_t)clamp((int32_t)song.sel + (s > 0 ? 1 : -1), 0, NTRK - 1));
+        if (all) { ui.cursor = (uint8_t)row; ui.entry_open = 0; tracker.follow = 0; }
+    }
     if ((s = glo ? sel : panel_enc(EN_SELECT)) != 0) {   /* SELECT knob = global tempo; */
-        if (!glo && sel_mode() >= SEL_MODW) {         /* MENU > SELECT MODW / VEL (1.5.6, #84): it plays */
+        if (!lay && tracker_on()) {
+            uint32_t held = fm1_in.notes, shift = held & (1u << TK_SHIFT), option = held & (1u << TK_OPTION);
+            if (shift && option && (tracker_section_on() || tracker.view == 2)) tracker_section_length(s);
+            else if (tracker.view == 1 || tracker.view == 2) tracker_library_move(s);
+            else if (shift && tracker_section_on()) tracker_move((int32_t)ui.cursor + s * TS_ROWS);
+#if FELUCCA_CORE
+            else if (option && ts_run.enabled) tracker_gate(s);
+#endif
+            else if ((fm1_in.notes & (1u << TK_EDIT)) &&
+                     (!tracker_section_on() || tracker_section_phrase(song.sel) < TS_PHRASES) &&
+                     step_on(&TSEL->step[ui.cursor]) && tracker_edit_ok()) {
+                step_undo_take(TSEL, 0x7500u + ui.cursor);
+                fm1_irq_off();
+                note_set_len(TSEL, ui.cursor, (uint32_t)clamp((int32_t)note_len(TSEL, ui.cursor) + s, 1, NSTEP));
+                fm1_irq_on();
+                motion_undo_done(TSEL);
+                tracker.used = 1;
+            } else tracker_move((int32_t)ui.cursor + s);
+        } else if (!glo && sel_mode() >= SEL_MODW) {         /* MENU > SELECT MODW / VEL (1.5.6, #84): it plays */
             sel_play(sel_mode(), s);
         } else if (!glo && sel_mode() == SEL_PAGE) {   /* MENU > SELECT PAGE (1.5.5, #188): the pages, a detent
                                                          * each (ui.c page_turn); the tempo is GLO + SELECT, CLOCK's
@@ -1780,6 +1821,18 @@ static void ui_input(void)
         uint64_t held;
         if ((s = panel_enc(EN_K1 + k)) == 0)
             continue;
+        if (tracker_on()) {
+            uint32_t ti = home_knob_id(TSEL, k);
+            const param_desc_t *td = track_desc(TSEL, ti);
+            char tv[12]; const char *tu;
+            TSEL->p[ti] = (int16_t)param_turn(td, TSEL->p[ti], accel(EN_K1 + k, s, td->max - td->min));
+            motion_capture(TSEL, ti, TSEL->p[ti]);
+            ml_knob(TSEL, ti);
+            param_format(td, TSEL->p[ti], tv, &tu);
+            ui_say(td->label, " ");
+            str_cpy(ui.msg + str_len(ui.msg), tv, sizeof ui.msg - str_len(ui.msg));
+            continue;
+        }
         if (mom_down())                                 /* (LFO + a knob, MOMENTARY or not: LFO's release opens no page) */
             ui.pg_down &= (uint16_t)~(1u << panel.btn[B_LFO]);
         if ((held = lock_held()) != 0u) {               /* a step held on STEP: KNOB k locks (parameter locks) */

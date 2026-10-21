@@ -12,6 +12,7 @@
  *   build/host/drumfuzz SEED0 NSEEDS STEPS [song]
  * run_tests.sh runs a short one; #211 (1.5.5 and v1.5-src): 200 seeds x 4000 steps each way, nothing found. */
 #define UI_TEST_NO_MAIN 1
+#include <stdint.h>
 #include <signal.h>
 #include <unistd.h>
 #include <sys/time.h>
@@ -279,6 +280,7 @@ int main(int argc, char **argv)
 #endif
     for (s = s0; s < s0 + ns; s++) {
         uint32_t synth = s % NENGINES;
+        if (FELUCCA_CORE && !eng_ok(synth)) synth = ENGI_FM6;
         if (synth == ENGI_DIGITAL) synth = ENGI_FM6;
         if (synth == ENGI_DRUM) synth = ENGI_PHYS;
         fz_seed = s;

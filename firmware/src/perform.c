@@ -346,8 +346,9 @@ static __attribute__((noinline)) int perf_begin(uint32_t n)
             ht = m * (PF_TOP - PF_LOW) / 100;
         pf.lc += clamp(lt - pf.lc, -192, 192);      /* ~45 ms over the range */
         pf.hc += clamp(ht - pf.hc, -192, 192);
+        /* These indices are block constants, including with signed wrapping enabled. */
+        int32_t i = pf.lc >> 8, f = pf.lc & 255, j = pf.hc >> 8, g = pf.hc & 255;
         for (k = 0; k < 3u; k++) {                  /* the coefficients, between two table rows */
-            int32_t i = pf.lc >> 8, f = pf.lc & 255, j = pf.hc >> 8, g = pf.hc & 255;
             pf.lk[k] = (int16_t)(PF_SVF[i][k] + (((PF_SVF[i < 63 ? i + 1 : 63][k] - PF_SVF[i][k]) * f) >> 8));
             pf.hk[k] = (int16_t)(PF_SVF[j][k] + (((PF_SVF[j < 63 ? j + 1 : 63][k] - PF_SVF[j][k]) * g) >> 8));
         }

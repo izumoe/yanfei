@@ -19,21 +19,24 @@
  * key's default, an unknown code too: kept as saved, a later firmware's effect survives a round trip here).
  * MENU's flags (ui.c PREF_*) are append-only bits whose 0 is the default: BPM LOCK (16) is clear in every older setting
  * = unlocked, LARGE (32) = OFF, RESTORE LAST OFF (128, 1.2) = ON, read as saved (nothing to migrate, so importing twice changes nothing). */
+#ifndef FELUCCA_CORE
+#define FELUCCA_CORE 0  /* also compiled alone by settings tools/tests */
+#endif
 typedef struct {
     uint32_t magic, palette, lowcut, zoom;
     panel_t panel;
     uint32_t bold;
     struct { uint8_t factory[16][32]; uint32_t user, filter; } favorites;
 } persist_t;
-#define PERSIST_MAGIC 0x50455234u
+#define PERSIST_MAGIC (FELUCCA_CORE ? 0x59435032u : 0x50455234u)
 
 /* Normalize in place; 1 = current, 2 = migrated, 0 = invalid. */
 static int settings_import(persist_t *p, int n)
 {
     int current = n == (int)sizeof *p && p->magic == PERSIST_MAGIC;
-    int old3 = n == (int)(sizeof *p - sizeof p->favorites) && p->magic == 0x50455233u;
-    int old2 = n == (int)(sizeof *p - sizeof p->favorites - sizeof p->bold) && p->magic == 0x50455232u;
-    int old1 = n == (int)(8u + sizeof(panel_t)) && p->magic == 0x50455231u;
+    int old3 = !FELUCCA_CORE && n == (int)(sizeof *p - sizeof p->favorites) && p->magic == 0x50455233u;
+    int old2 = !FELUCCA_CORE && n == (int)(sizeof *p - sizeof p->favorites - sizeof p->bold) && p->magic == 0x50455232u;
+    int old1 = !FELUCCA_CORE && n == (int)(8u + sizeof(panel_t)) && p->magic == 0x50455231u;
     if (!(current || old3 || old2 || old1)) return 0;
     if (old1) {
         panel_t old;
@@ -77,7 +80,7 @@ static int settings_import(persist_t *p, int n)
 #ifdef FELUCCA_FAVORITES
     memcpy(&favorites, &p->favorites, sizeof favorites);
     favorites.filter = favorites.filter == 1u;
-#if defined(FM4_NPRESETS) && !FELUCCA_FM4
+#if defined(FM4_NPRESETS) && !FELUCCA_FM4 && !FELUCCA_CORE
     {   /* DIGITAL's starred presets (engine 1, retired) -> the FM6 presets that cover them (fm4_convert.c) */
         uint32_t k;
         for (k = 0; k < FM4_NPRESETS; k++)
@@ -86,7 +89,7 @@ static int settings_import(persist_t *p, int n)
         memset(favorites.factory[ENGI_DIGITAL], 0, sizeof favorites.factory[ENGI_DIGITAL]);
     }
 #endif
-#ifdef SMP_SET_PERC
+#if defined(SMP_SET_PERC) && !FELUCCA_CORE
     if ((favorites.factory[ENGI_SAMPLE][0] >> SMP_SET_PERC) & 1u) {   /* SAMPLE's PERC (preset 4, retired): DRUM's */
         favorites.factory[ENGI_DRUM][0] |= 1u;                         /* kit (core.h drum_from_perc) */
         favorites.factory[ENGI_SAMPLE][0] &= (uint8_t)~(1u << SMP_SET_PERC);

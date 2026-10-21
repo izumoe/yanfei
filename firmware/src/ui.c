@@ -130,6 +130,11 @@ static void rp_put(uint32_t f, uint32_t v)
  * (ui_draw.c style_apply) */
 #define ui_style (favorites.factory[15][29])
 static void draw_gaps(uint32_t y, uint32_t h);        /* (ui_draw.c) */
+static int tracker_on(void);
+static uint32_t tracker_keys_mode(void);
+static void tracker_enter(void);
+static void tracker_publish(void);
+static void tracker_song_view(void);
 
 static uint8_t sync_reload;                  /* engine / preset / project / user preset loaded: editor RELOAD push */
 
@@ -425,6 +430,14 @@ static uint32_t layer_btn(void);
  * track's (its patch's operators, ui_fm6op.c) */
 static int page_visible(uint32_t i)
 {
+#if FELUCCA_CORE
+    if(PAGES[i].id[0]==P_ED_FX)return TSEL->eng_req==
+        (PAGES[i].id[1]==P_E4?ENGI_YM:ENGI_PSG);
+    if(PAGES[i].id[0]>=P_LN0 && PAGES[i].id[0]<=P_LN3 && PAGES[i].id[1]>=P_LN4 && PAGES[i].id[1]<=P_LN7)
+        return TSEL->eng_req==ENGI_YM;
+    if(PAGES[i].fam==FAM_EDIT && PAGES[i].id[0]>=P_FM1_ATK && PAGES[i].id[0]<=P_FM4_LEVEL)
+        return TSEL->eng_req==ENGI_YM;
+#endif
     if (PAGES[i].scope == SC_TRACK && PAGES[i].id[0] >= P_LN0 && PAGES[i].id[0] <= P_LN7)
         return TSEL->eng_req % NENGINES == ENGI_DRUM;
     if (PAGES[i].id[0] == P_FTYPE)                    /* FILTER (1.5, #104): ANALOG's */
@@ -469,7 +482,7 @@ static void ui_message(const char *s) { ui_say(s, ""); }
  * for the header's 130 px after the icon) */
 #define MSG_NO_SAMPLE MSG_NOFILE "NO SAMPLE"
 
-static int chain_busy(void) { return chain.running || chain.armed; }
+static int chain_busy(void) { return chain.running || chain.armed || ts_arranging(); }
 /* Main loop only, with interrupts enabled. PLAY may be consumed between reads;
  * take one coherent snapshot before a flash operation or song preparation. */
 static int transport_busy(void)
@@ -482,6 +495,13 @@ static int transport_busy(void)
 }
 static void chain_play_ui(void)
 {
+#if FELUCCA_CORE
+    if (ts_run.enabled) {
+        uint32_t result = ts_prepare(TS_SONG, song.sel, 0, 0);
+        if (result) ui_message("EMPTY SONG / AUTOMATION FULL"); else transport_req = 1;
+        return;
+    }
+#endif
     uint32_t rc = chain_prepare();
     if (!rc) {
         ui.force = 1;
@@ -507,10 +527,16 @@ static int lock_page_ok(uint32_t i)
             return 1;
     return 0;
 }
+/* One HOME map for the cards, turns, learn, momentary edits and step locks. */
+static uint32_t home_knob_id(const track_t *t,uint32_t k)
+{
+    const engine_t *e=ENGINES[t->eng_req % NENGINES];
+    return e->home_knob?e->home_knob(t,k&3u):e->knob[k&3u];
+}
 static uint32_t lock_id(uint32_t k)
 {
     uint32_t id = ui.plk_src && lock_page_ok(ui.plk_src - 1u) ? PAGES[ui.plk_src - 1u].id[k & 3u]
-                                                               : ENGINES[TSEL->eng_req % NENGINES]->knob[k & 3u];
+                                                               : home_knob_id(TSEL,k);
     return id < P_COUNT && motion_param(id) ? id : 0xFFu;
 }
 
@@ -533,6 +559,11 @@ static void page_entered(void)
     if (!ui.home && lock_page_ok(ui.page))
         ui.plk_src = (uint8_t)(ui.page + 1u);
     song.seq_mode = !ui.home && pg->fam == FAM_SEQ;
+    /* Publish the keypad mode with the page, before the next audio interrupt. */
+    if (pg->graph == GR_TRACKER) {
+        tracker_enter();
+        tracker_publish();
+    } else kb_tracker_mute = 0;
     ui.entry_open = 0;
     ui.hot_t = 0;                                /* clear the previous page's emphasis */
     ui.act = pg->graph == GR_USER ? 4u : 0u;     /* the save screen is ready for OCT+ */
@@ -762,6 +793,12 @@ static void note_name(char *b, uint32_t n)
  * and SYSTEM in 1.2), or not shown for this track, gives the family's first */
 static void open_family(uint32_t fam)
 {
+#if FELUCCA_CORE
+    if (fam == FAM_GLO && ts_run.enabled) {
+        ui.page = (uint8_t)page_first(FAM_SEQ); ui.home = 0;
+        tracker_song_view(); page_entered(); return;
+    }
+#endif
     if (!ui.home && cur_page()->fam == fam) {          /* same button again: next page */
         uint32_t n, i = ui.page;
         for (n = 0; n < NPAGES; n++) {
@@ -870,6 +907,10 @@ static struct {
     uint8_t fm6[FP_SIZE + 1u];   /* patch is the track's own, not a factory one */
     int16_t p[P_COUNT];
     step_t step[NSTEP];
+#if FELUCCA_CORE
+    uint8_t tracker_phrase, tracker_meta, tracker_instrument[TS_ROWS], tracker_gate[TS_ROWS];
+    uint16_t tracker_off;
+#endif
     motion_store_t motion_backup; /* one track only, swaps with the shared event pool on undo */
     uint32_t after;              /* track_sig right after the last load */
     uint32_t pat;                /* pat_sig[] of the copy */
@@ -877,6 +918,20 @@ static struct {
     uint8_t from;
     uint32_t t_ms;               /* time of the last load (the editor's SETs after it belong to it) */
 } undo __attribute__((section(".pool")));   /* (main loop only: off the audio code's .bss) */
+static void undo_tracker_capture(const track_t *t)
+{
+#if FELUCCA_CORE
+    undo.tracker_meta = ts_run.enabled;
+    if (ts_run.enabled) {
+        undo.tracker_phrase = ts_bank.edit[(uint32_t)(t - trk)];
+        const ts_phrase_t *p = &ts_bank.phrase[undo.tracker_phrase];
+        memcpy(undo.tracker_instrument, p->instrument, TS_ROWS);
+        memcpy(undo.tracker_gate, p->gate, TS_ROWS); undo.tracker_off = p->off;
+    }
+#else
+    (void)t;
+#endif
+}
 static uint8_t undo_depth;       /* loads nest (an engine jump loads its first preset): the outer one counts;
                                   * felucca_init / project_load raise it to take no copy at all */
 static uint32_t pat_sig[NTRK];   /* steps_sig of the pattern the last pattern load put into each track: such
@@ -993,6 +1048,7 @@ static void load_begin(track_t *t, uint32_t what)
     undo.user = t->user;
     memcpy(undo.p, t->p, sizeof undo.p);
     memcpy(undo.step, t->step, sizeof undo.step);
+    undo_tracker_capture(t);
     memcpy(undo.fm6, fm6_patch[i], FP_SIZE);
     undo.fm6_slot = fm6_slot[i];
     undo.pat = pat_sig[i];
@@ -1051,6 +1107,7 @@ static void edit_undo_take(track_t *t, uint32_t tag, uint32_t what)
     undo.user = t->user;
     memcpy(undo.p, t->p, sizeof undo.p);
     memcpy(undo.step, t->step, sizeof undo.step);
+    undo_tracker_capture(t);
     memcpy(undo.fm6, fm6_patch[i], FP_SIZE);
     undo.fm6_slot = fm6_slot[i];
     undo.pat = pat_sig[i];
@@ -1086,6 +1143,12 @@ static void undo_swap(void)
         return;
     }
     t = &trk[(undo.trk - 1u) % NTRK];
+#if FELUCCA_CORE
+    if ((undo.what & UNDO_PAT) && undo.tracker_meta &&
+        (!ts_run.enabled || ts_bank.edit[(uint32_t)(t - trk)] != undo.tracker_phrase || ts_arranging())) {
+        ui_message("RETURN TO EDITED PHRASE"); return;
+    }
+#endif
     motion_restore(t);
     motion_store_t current_motion;
     motion_snapshot_track(t, &current_motion);
@@ -1112,6 +1175,16 @@ static void undo_swap(void)
             }
     }
     if (undo.what & UNDO_PAT) {
+#if FELUCCA_CORE
+        if (undo.tracker_meta) {
+            ts_phrase_t *p = &ts_bank.phrase[undo.tracker_phrase];
+            for (uint32_t r = 0; r < TS_ROWS; r++) {
+                uint8_t v = p->instrument[r]; p->instrument[r] = undo.tracker_instrument[r]; undo.tracker_instrument[r] = v;
+                v = p->gate[r]; p->gate[r] = undo.tracker_gate[r]; undo.tracker_gate[r] = v;
+            }
+            uint16_t off = p->off; p->off = undo.tracker_off; undo.tracker_off = off;
+        }
+#endif
         uint32_t ps = pat_sig[trk_index(t)];
         uint8_t pn = pat_last[trk_index(t)];
         pat_sig[trk_index(t)] = undo.pat;
@@ -1228,6 +1301,16 @@ static void pat_load(track_t *t, uint32_t n)
         load_pat16(t, PATTERNS[n].note, PATTERNS[n].flags);
     else
         up_pat_load(t, up_pat_nth(n - NPATTERNS));
+#if FELUCCA_CORE
+    if (ts_run.enabled) {
+        ts_phrase_t *p = &ts_bank.phrase[ts_bank.edit[trk_index(t)]]; p->off = 0;
+        memset(p->instrument, TS_NONE, TS_ROWS);
+        for (uint32_t r = 0; r < TS_ROWS; r++) {
+            p->gate[r] = (uint8_t)clamp(t->p[P_SGATE], 1, 127);
+            if (t->step[r].time == ST_REST) p->off |= (uint16_t)(1u << r);
+        }
+    }
+#endif
     pat_sig[trk_index(t)] = steps_sig(t);
     pat_last[trk_index(t)] = (uint8_t)(n + 1u);
     pat_from[trk_index(t)] = 0;                     /* (a phrase: no PROJECT slot) */
@@ -1290,7 +1373,7 @@ static uint32_t preset_rank(const engine_t *e, uint32_t k)
 
 #define preset_shown(e) (ENGINES[e]->npresets - (ENGINES[e]->presets == SMP_PRESET_TABLE ? SMP_NALIAS : 0u))
 
-#if !FELUCCA_FM4
+#if !FELUCCA_FM4 && !FELUCCA_CORE
 /* DIGITAL (engine 1, retired): t's sound = p, values as DIGITAL has them, converted to FM6 with a patch of its own
  * (fm4_convert.c). Every path that brings a DIGITAL sound into a track ends here: a track never keeps engine 1 */
 static void fm4_apply(track_t *t, int16_t *p)
@@ -1338,13 +1421,13 @@ static void apply_preset_to(track_t *t, uint32_t pi)
 {
     const engine_t *e = ENGINES[t->eng_req % NENGINES];
     uint32_t i;
-#if !FELUCCA_FM4
+#if !FELUCCA_FM4 && !FELUCCA_CORE
     if (t->eng_req % NENGINES == ENGI_DIGITAL) {
         fm4_load_preset(t, pi);
         return;
     }
 #endif
-    if (t->eng_req % NENGINES == ENGI_SAMPLE && pi == SMP_SET_PERC) {   /* SAMPLE preset 4 was PERC (retired, a stored */
+    if (!FELUCCA_CORE && t->eng_req % NENGINES == ENGI_SAMPLE && pi == SMP_SET_PERC) {   /* SAMPLE preset 4 was PERC (retired, a stored */
         set_engine_of(t, ENGI_DRUM);                  /* number: the editor's PRESET, a favourite): DRUM's kit */
         return;                                       /* (core.h drum_from_perc) */
     }
@@ -1377,6 +1460,9 @@ static void apply_preset_to(track_t *t, uint32_t pi)
             t->p[P_DIST + i] = (int16_t)(pr->fx[i] ? pr->fx[i] - 1 : FX_DEF[i]);
     }
     fm6_track_loaded(t);                              /* FM6: the preset's patch (its SLOT) */
+#if FELUCCA_CORE
+    core_preset_details(t,t->eng_req,pi);
+#endif
     load_end(t);
 }
 
@@ -1384,9 +1470,10 @@ static void apply_preset_to(track_t *t, uint32_t pi)
  * its values or the new one with its own (voice.c engine_block), never one with the other's */
 static void set_engine_of(track_t *t, uint32_t ei)
 {
+    if (FELUCCA_CORE && !eng_ok(ei % NENGINES)) ei = 0;
     const engine_t *e = ENGINES[ei % NENGINES];
     uint32_t i;
-#if !FELUCCA_FM4
+#if !FELUCCA_FM4 && !FELUCCA_CORE
     if (ei % NENGINES == ENGI_DIGITAL) {             /* DIGITAL (retired): its first preset, as FM6 */
         fm4_load_preset(t, 0);
         return;
@@ -1416,7 +1503,7 @@ static void clean_engine_of(track_t *t)
 {
     uint32_t ei = t->eng_req % NENGINES, i;
     const engine_t *e = ENGINES[ei];
-#if !FELUCCA_FM4
+#if !FELUCCA_FM4 && !FELUCCA_CORE
     if (ei == ENGI_DIGITAL) {                         /* (retired: it becomes FM6, fm4_track) */
         set_engine_of(t, ei);
         return;
@@ -1427,7 +1514,7 @@ static void clean_engine_of(track_t *t)
     fm1_irq_off();
     for (i = 0; i < P_E0; i++)
         if (!param_kept(i))
-            t->p[i] = TP[i].def;
+            t->p[i] = param_desc_of(ei,i)->def;
     for (i = 0; i < 8u; i++)
         t->p[P_E0 + i] = e->edit[i].def;
     if (ei == ENGI_DRUM && e->npresets) {
@@ -1733,7 +1820,7 @@ static uint32_t preset_visible(uint32_t cur, uint32_t total, uint32_t row)
 static track_t *home_trk(uint32_t k) { return home_levels() ? &trk[k & 3u] : TSEL; }
 static const param_desc_t *home_param(uint32_t k, int16_t **vp)
 {
-    uint32_t id = home_levels() ? (uint32_t)P_LEVEL : ENGINES[TSEL->eng_req % NENGINES]->knob[k & 3u];
+    uint32_t id = home_levels() ? (uint32_t)P_LEVEL : home_knob_id(TSEL,k);
     *vp = &home_trk(k)->p[id];
     return track_desc(home_trk(k), id);
 }
@@ -1757,6 +1844,7 @@ static void track_select(uint32_t i)
 #include "ui_slice.c"                             /* EDIT > SLICES: SLICE's slices by hand (an action page too) */
 #include "ui_events.c"                            /* SEQ > AUTOMATION: locks, events, CHANCE, RATCH as a list (an action page) */
 #include "midi_learn.c"                           /* MIDI LEARN (1.5): GLO + D4, a knob, a CC */
+#include "ui_tracker.c"                           /* core tracker phrase editor; existing steps and persistence */
 
 /* ---------------------------------------------------- action pages --- */
 /* Pages whose purpose is an action (SAVE > USER, PHRASES, PROJECT, TOOLS, EDIT > SLICES, SEQ > AUTOMATION): the knobs pick,

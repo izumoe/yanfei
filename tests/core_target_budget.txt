@@ -1,0 +1,41 @@
+# First core-profile pi32v2 loop-cost baseline; regression guard, not device CPU utilization.
+# Existing unchanged DSP retains tests/target_budget.txt. Allow the same +10% tolerance.
+nes_render 0
+dmg_render 0
+chip_render 102
+# Core4: wrapper inlines unchanged AY (113), plus Sega gain/filter loops.
+psg_render 134
+segapsg_render 46
+segapsg_tick 11
+# New YM: separate baseline for native-rate chip loops (multiple loops/algorithms;
+# this weighted static count is not the cost of one audio sample or a deadline).
+ym_render 148
+ym_done 74
+opn2_render 14287
+# Four lookups instead of two: crossfade between harmonic levels (was 84).
+wave_render 118
+phys_render_model 61
+string_render 0
+modal_render 0
+# Core7: key-change handling is out of line. core_budget.py also charges it
+# at the ISR's outer-loop weight against the unchanged combined ISR limit.
+keyboard_block 787
+# Core8: step dispatch is out of line; core_budget.py charges it back into
+# the original combined ISR limit. These new bounded helpers run per step.
+seq_tick 92
+ts_start 56
+ts_steps 0
+ts_play_phrase 0
+# Y13: internal blank pages take one 16-row silent pass.
+ts_find_link 17
+ts_find_song_row 64
+ts_advance 567
+ts_motion 17
+ts_load_sound 19
+ts_row_sound 8
+ts_stop 10
+
+# Y13: bounded section clock and common boundary; clock cost is also charged
+# to the unchanged original combined ISR limit in core_budget.py.
+ts_section_tick 17
+ts_next_section 30

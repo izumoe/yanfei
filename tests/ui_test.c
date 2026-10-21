@@ -168,6 +168,11 @@ static int check(const char *what, int ok)
 static void ui_power_on(void)
 {
     uint32_t i;
+#if FELUCCA_CORE
+    memset(&ts_run, 0, sizeof ts_run); memset(&ts_bank, 0, sizeof ts_bank); memset(ts_section, 0, sizeof ts_section);
+    memset(&tracker, 0, sizeof tracker); tracker_init();
+    memset(&ts_history, 0, sizeof ts_history);
+#endif
     memset(trk, 0, sizeof trk);
     memset(&song, 0, sizeof song);
     memset(midi_lit_ms, 0, sizeof midi_lit_ms); midi_seen = 0;   /* (1.5.5: no MIDI IN light) */
@@ -4910,7 +4915,7 @@ static int test_bughunt_ui2(void)
 /* L is a sparse face (tools/gen_aa_font.py L_CHARS): every string drawn in it has all its glyphs */
 static int test_large_face(void)
 {
-    static const char *const FIXED[] = {"FELUCCA", "0123456789"};   /* main.c, ui_menu.c; ui_draw.c draw_uboot */
+    static const char *const FIXED[] = {FIRMWARE_NAME_UPPER, "0123456789"};   /* main.c, ui_menu.c; ui_draw.c draw_uboot */
     uint32_t i, missing = 0;
     const char *s;
     for (i = 0; i < NB + NE + 2u; i++)                              /* ui_input.c setup_show: the control names */

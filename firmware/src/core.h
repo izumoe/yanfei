@@ -12,9 +12,26 @@
 #define NPART 4                  /* synth parts: tracks 1..4 */
 #define NTRK NPART               /* tracks (the formats and the protocol count these): every track is a part */
 #define NSTEP 64
+/* Ketch-style tracker keypad, indexed from F3. Only A#3..C#5 play in NOTE mode. */
+#define TRACKER_NOTE_KEYS (0xFFFFu << 5)
 #define HALF_FRAMES 128          /* I2S half buffer: 2.9 ms at 44.1 kHz (a key waits 0..1 half, then plays 1 half later) */
+#ifndef FELUCCA_CORE
+#define FELUCCA_CORE 0          /* twelve-engine custom profile; build-core.sh enables it */
+#endif
+#if FELUCCA_CORE
+#define FIRMWARE_NAME "Yanfei"
+#define FIRMWARE_NAME_UPPER "YANFEI"
+#define FIRMWARE_SOURCE "github.com/izumoe/yanfei"
+#else
+#define FIRMWARE_NAME "Felucca"
+#define FIRMWARE_NAME_UPPER "FELUCCA"
+#define FIRMWARE_SOURCE "github.com/hugelton/Felucca"
+#endif
+#if FELUCCA_CORE && ((defined(FELUCCA_SLICE) && FELUCCA_SLICE) || (defined(FELUCCA_FM4) && FELUCCA_FM4))
+#error "core profile excludes SLICE and DIGITAL"
+#endif
 #ifndef FELUCCA_SLICE
-#define FELUCCA_SLICE 1          /* the SLICE engine (eng_slice.c), engine 13; FELUCCA_SLICE=0 builds without it */
+#define FELUCCA_SLICE (!FELUCCA_CORE)          /* the SLICE engine (eng_slice.c), engine 13; FELUCCA_SLICE=0 builds without it */
 #endif
 #ifndef FELUCCA_FM4
 #define FELUCCA_FM4 0            /* the DIGITAL engine (eng_digital.c, four-operator FM): kept in the tree, not built
@@ -28,9 +45,9 @@
                                             * second core (mod.c, voice.c SPREAD, eng_formant.c): one each with two cores,
                                             * one for all with one, as up to 1.6 */
 #define C1_PI(t) ((uint32_t)((t) - trk) % C1_NP)   /* a part's copy */
-#define NENGINES (13 + FELUCCA_SLICE)   /* SLICE (13) comes last: the other engines keep their numbers */
+#define NENGINES (FELUCCA_CORE ? 14 : 13 + FELUCCA_SLICE)   /* SLICE (13) comes last: the other engines keep their numbers */
 #define ENGI_DIGITAL 1u          /* reserved without FELUCCA_FM4: never selectable (eng_ok), its sounds load as FM6 */
-#define NENG_SHOWN (NENGINES - !FELUCCA_FM4)   /* the engines one can pick: PRESETS, the EDIT layer, the editor,
+#define NENG_SHOWN (FELUCCA_CORE ? 12 : NENGINES - !FELUCCA_FM4)   /* the engines one can pick: PRESETS, the EDIT layer, the editor,
                                                 * in the display order of engines.c ENGINE_ORDER */
 #define UP_SLOTS 32u             /* user presets (upreset.c) */
 
@@ -106,6 +123,13 @@ static void params_by_count(int16_t *out, const int16_t *in, uint32_t np, const 
 }
 
 /* engine indices the stores name (engines.c ENGINES[]: append-only) */
+#define ENGI_YM 13u
+#define ENGI_NES 3u
+#define ENGI_DMG 4u
+#define ENGI_PSG 5u
+#define ENGI_WAVE 7u
+#define ENGI_STRING 8u
+#define ENGI_MODAL 9u
 #define ENGI_PHYS 9u
 #define ENGI_DRUM 10u
 /* PHYS MODEL DRUM (MODEL 4, before 1.0) -> the DRUM engine, its E values in place: {MODEL, TUNE, TONE, DECY,
@@ -113,6 +137,7 @@ static void params_by_count(int16_t *out, const int16_t *in, uint32_t np, const 
  * (its engine is ENGI_DRUM now); projects (project.c) and user presets (upreset.c) */
 static int drum_from_phys(uint32_t engine, int16_t *e)
 {
+    if (FELUCCA_CORE) return 0; /* new profile never interprets old engine IDs */
     if (engine != ENGI_PHYS || e[0] != 4)
         return 0;
     e[0] = (int16_t)((e[7] < 0 ? 0 : e[7] > 127 ? 127 : e[7]) >> 5);   /* PERC -> KIT: STD HAND CYM H+CYM */
@@ -132,6 +157,7 @@ static int drum_from_phys(uint32_t engine, int16_t *e)
 #define DRUM_KIT_E {0, 64, 70, 64, 64, 100, 0, 0}   /* {KIT STD, TUNE, TONE, DECY, SNAP, ACC, KICK PUNCH, DRV} */
 static int drum_from_perc(uint32_t engine, int16_t *e)
 {
+    if (FELUCCA_CORE) return 0; /* new profile never interprets old engine IDs */
     static const int16_t KIT[8] = DRUM_KIT_E;
     uint32_t i;
     if (engine != ENGI_SAMPLE || e[0] != (int16_t)SMP_SET_PERC)
@@ -318,7 +344,7 @@ typedef struct track {
     /* engine switch (voice.c engine_block): the old engine's voices fade out, then it switches */
     uint8_t xf_on, xf;           /* fading; blocks of the fade still to render */
     int16_t pe_old[8];           /* P_E0..P_E7 of the sounding engine: the fade renders with these */
-    uint8_t xp_n, xp_note[4], xp_vel[4];   /* note-ons during the fade, played on the new engine */
+    uint8_t xp_n, xp_note[FELUCCA_CORE ? 4 + NLANE : 4], xp_vel[FELUCCA_CORE ? 4 + NLANE : 4];   /* whole chords/kits across engine fades */
     /* modulation matrix (mod.c): MIDI performance controllers of the track's channel, 0..127 */
     uint8_t mw, at;              /* CC1 mod wheel, channel aftertouch */
     uint8_t ex_off;              /* 127 - CC11 expression (0: full, the MIDI default) */

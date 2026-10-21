@@ -276,7 +276,13 @@ static void ed_sync(void)                                /* main loop */
 
 /* descriptor of parameter id of track t: the engine parameters of the engine it asked for
  * (t->engine follows in the audio ISR, after a short fade) */
-static const param_desc_t *ed_tdesc(const track_t *t, uint32_t id) { return param_desc_of(t->eng_req % NENGINES, id); }
+static const param_desc_t *ed_tdesc(const track_t *t, uint32_t id)
+{
+#if FELUCCA_CORE
+    if(t->eng_req==ENGI_PSG && id>=P_E0)return track_desc(t,id);
+#endif
+    return param_desc_of(t->eng_req % NENGINES,id);
+}
 /* descriptor and value slot of (scope, id): scope 0 = the selected track, 1 = global */
 static const param_desc_t *ed_desc(uint32_t scope, uint32_t id, int16_t **vp)
 {
@@ -465,7 +471,7 @@ static void ed_handle(const uint8_t *f, uint32_t n)   /* f: the bytes between F0
         break;
     }
     case ED_INFO:
-        ed_str("FELUCCA " FELUCCA_VERSION, 24);
+        ed_str(FIRMWARE_NAME_UPPER " " FELUCCA_VERSION, 24);
         ed_b(NENGINES);
         ed_b(P_COUNT);
         ed_b(G_COUNT);
@@ -549,8 +555,15 @@ static void ed_handle(const uint8_t *f, uint32_t n)   /* f: the bytes between F0
         if (na < 1u || a[0] >= NSTEP)
             return;
         st = &TSEL->step[a[0]];
-        if (cmd == ED_STEP_SET && na >= 9u && !chain_busy()) {
+        if (cmd == ED_STEP_SET && na >= 9u && !chain_busy() && !ts_arranging()) {
             ed_step_put(st, a + 1, na - 1u);
+#if FELUCCA_CORE
+            if (ts_run.enabled && a[0] < TS_ROWS) {
+                ts_phrase_t *p = &ts_bank.phrase[ts_bank.edit[song.sel]];
+                if (st->time == ST_REST) p->off |= (uint16_t)(1u << a[0]);
+                else p->off &= (uint16_t)~(1u << a[0]);
+            }
+#endif
         }
         ed_w.st[a[0]] = ed_step_sig(&seq_steps(TSEL)[a[0]]);
         ed_b(a[0]);
@@ -559,10 +572,10 @@ static void ed_handle(const uint8_t *f, uint32_t n)   /* f: the bytes between F0
     }
     case ED_PRESET: {                                      /* engine, preset */
         ed_load_t b;
-        if (na < 2u || a[0] >= NENGINES)
+        if (na < 2u || a[0] >= NENGINES || (FELUCCA_CORE && !eng_ok(a[0])))
             return;
         ed_load_before(&b);
-#if !FELUCCA_FM4
+#if !FELUCCA_FM4 && !FELUCCA_CORE
         if (a[0] == ENGI_DIGITAL)                          /* a DIGITAL preset (retired): its sound, as FM6 */
             fm4_load_preset(TSEL, a[1]);
         else
@@ -606,7 +619,7 @@ static void ed_handle(const uint8_t *f, uint32_t n)   /* f: the bytes between F0
         if (na < 1u || a[0] >= SMP_USER_SLOTS || !flash_ok)
             return;
         ed_b(a[0]);
-        ed_b(ed_flash_stop() || ed_smp_erase(a[0], cmd == ED_SMP_ERASE) ? 1u : 0u);
+        ed_b((FELUCCA_CORE && a[0] < 2u) || ed_flash_stop() || ed_smp_erase(a[0], cmd == ED_SMP_ERASE) ? 1u : 0u);
         break;
     case ED_SMP_WRITE: {                                   /* slot, off (3 x 7 bit), pack7 data -> slot, off, rc */
         uint32_t off, len, rc = 0, took;
@@ -614,7 +627,7 @@ static void ed_handle(const uint8_t *f, uint32_t n)   /* f: the bytes between F0
             return;
         off = (uint32_t)a[1] | (uint32_t)a[2] << 7 | (uint32_t)a[3] << 14;
         len = ed_unpack7(a + 4, na - 4u, ed_smp_buf, 256u);
-        if (off < SMP_USER_DATA || (off & 0xFFu) || !len || off + len > SMP_USER_SIZE)
+        if ((FELUCCA_CORE && a[0] < 2u) || off < SMP_USER_DATA || (off & 0xFFu) || !len || off + len > SMP_USER_SIZE)
             rc = 1;
         else if (usr_nz[a[0]])
             rc = 4;                                        /* slot in use: SMP_BEGIN first (voices read it) */
@@ -639,7 +652,7 @@ static void ed_handle(const uint8_t *f, uint32_t n)   /* f: the bytes between F0
         if (na < 2u || a[0] >= SMP_USER_SLOTS || !flash_ok)
             return;
         ed_b(a[0]);
-        ed_b((uint32_t)ed_smp_end(a[0], a + 1, na - 1u));
+        ed_b(FELUCCA_CORE && a[0] < 2u ? 1u : (uint32_t)ed_smp_end(a[0], a + 1, na - 1u));
         break;
     case ED_SMP_INFO:                                      /* -> per slot: zones (0 = empty), name, data KiB */
         ed_b(SMP_USER_SLOTS);
@@ -647,12 +660,12 @@ static void ed_handle(const uint8_t *f, uint32_t n)   /* f: the bytes between F0
         for (i = 0; i < SMP_USER_SLOTS; i++) {
             const smp_user_hdr_t *h = (const smp_user_hdr_t *)smp_user_xip(i);
             char nm[9] = {0};
-            uint32_t j;
-            ed_b(usr_nz[i]);
-            for (j = 0; usr_nz[i] && j < 8u; j++)
+            uint32_t j, zones = FELUCCA_CORE && i < 2u ? 0u : usr_nz[i];
+            ed_b(zones);
+            for (j = 0; zones && j < 8u; j++)
                 nm[j] = h->name[j] >= 32 && h->name[j] < 127 ? h->name[j] : 0;
             ed_str(nm, 8);
-            ed_b(usr_nz[i] ? (h->data_len + 1023u) / 1024u : 0u);
+            ed_b(zones ? (h->data_len + 1023u) / 1024u : 0u);
         }
         break;
     case ED_UP_LIST: {                                     /* start, count -> start, count, total, per slot: used, engine, name;
@@ -832,8 +845,16 @@ static void ed_handle(const uint8_t *f, uint32_t n)   /* f: the bytes between F0
         if (na < 2u || a[0] >= NTRK || a[1] >= NSTEP)
             return;
         st = &trk[a[0]].step[a[1]];
-        if (na >= 10u && !chain_busy())
+        if (na >= 10u && !chain_busy()) {
             ed_step_put(st, a + 2, na - 2u);
+#if FELUCCA_CORE
+            if (ts_run.enabled && a[1] < TS_ROWS) {
+                ts_phrase_t *p = &ts_bank.phrase[ts_bank.edit[a[0]]];
+                if (st->time == ST_REST) p->off |= (uint16_t)(1u << a[1]);
+                else p->off &= (uint16_t)~(1u << a[1]);
+            }
+#endif
+        }
         if (a[0] == song.sel)
             ed_w.st[a[1]] = ed_step_sig(&seq_steps(&trk[a[0]])[a[1]]);
         ed_b(a[0]);

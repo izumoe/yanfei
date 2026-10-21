@@ -14,6 +14,7 @@
  * A silent track ("-", CHAIN_SILENT) plays nothing in that section: at its start the track's sequenced notes are
  * released (seq_release, as at every section) and its automation goes back to the sound's own values (motion_restore);
  * no step, automation or lock of any slot plays there. Live keys and the arp still play it (the sound stays). */
+#include "tracker_song.c"
 typedef struct {
     step_t step[NTRK][NSTEP];
     int16_t timing[NTRK][4];
@@ -32,6 +33,9 @@ static struct {
     uint8_t rec;
     uint32_t carry;
 } chain;
+#if FELUCCA_CORE
+static step_t *ts_play_cache(uint32_t part) { return chain.source[0].step[part]; }
+#endif
 /* a silent lane: its steps (empty: nothing plays) and its timing (a 4/4 bar of 1/16: the section's length when every
  * track is silent) */
 static const step_t chain_silent[NSTEP] = {{{0}}};
@@ -100,6 +104,9 @@ static uint32_t chain_clock(const chain_row_t *r)
 static int chain_owns(uint32_t id) { return (id >= P_SLEN && id <= P_SGATE) || id == P_SQNT; }
 static const step_t *seq_steps(const track_t *t)
 {
+#if FELUCCA_CORE
+    if (ts_run.mode) { const step_t *p = ts_steps(t); return p ? p : chain_silent; }
+#endif
     uint32_t k = (uint32_t)(t - trk), s;
     if (!chain.running)
         return t->step;

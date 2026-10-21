@@ -173,6 +173,20 @@ int main(void)
     printf("-- USB descriptors: CDC %d (%s), UAC %d%s%s, layout %d\n", T_CDC,
            !T_CDC ? "not built" : T_ON ? "presented" : "left out", T_UAC, AUDIO_48K ? " (44.1 / 48 kHz)" : "",
            T_UAC ? (AS_FIRST ? ", AS first" : ", MIDI first") : "", T_LAYOUT);
+#if FELUCCA_CORE
+    {
+        const uint8_t *text; uint16_t size;
+#ifdef FELUCCA_LOADER
+        const char *want = "Yanfei Update";
+#else
+        const char *want = "Yanfei";
+#endif
+        int valid = get_desc(0x0302, &text, &size) && size == 2u + strlen(want) * 2u && text[0] == size && text[1] == 3;
+        for (uint32_t k = 0; valid && k < strlen(want); k++) valid &= text[2u + k * 2u] == want[k] && text[3u + k * 2u] == 0;
+        check("Yanfei product name is a complete UTF-16 USB descriptor", valid);
+        check("Yanfei manufacturer descriptor length", get_desc(0x0301, &text, &size) && size == 14 && text[0] == size);
+    }
+#endif
     check("GET_DESCRIPTOR device", get_desc(0x0100, &dev, &dev_len) && dev_len == 18 && dev[0] == 18 && dev[1] == 1);
     check("GET_DESCRIPTOR configuration", get_desc(0x0200, &c, &n) && c[1] == 2);
 

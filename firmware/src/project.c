@@ -94,7 +94,7 @@
  *
  * Built on the Mac too (tests/project_test.c, -DPROJ_HOST): the part above the #ifndef
  * PROJ_HOST needs core.h, params.c (TP) and engines.c. */
-#define PROJ_MAGIC 0x46554E41u                 /* "FUNA" (FUN10): 104 (1.5: 111) parameters, 128 motion records, nudges */
+#define PROJ_MAGIC (FELUCCA_CORE ? 0x59434632u : 0x46554E41u)                 /* "FUNA" (FUN10): 104 (1.5: 111) parameters, 128 motion records, nudges */
 #define PROJ_MAGIC_V9 0x46554E39u              /* "FUN9": FUN8, 64 bytes longer (the DRUM lane levels, 99 parameters) */
 #define PROJ_MAGIC_V8 0x46554E38u              /* "FUN8": FUN7 + the tracks' FM6 patches */
 #define PROJ_MAGIC_V7 0x46554E37u              /* "FUN7": serialized (byte params, packed steps), chain, motion */
@@ -322,7 +322,7 @@ static void proj_phys(project_t *q)
  * over to FM6's macros. Idempotent */
 static void proj_fm4(project_t *q)
 {
-#if !FELUCCA_FM4
+#if !FELUCCA_FM4 && !FELUCCA_CORE
     uint32_t k, i, n, hit = 0;
     for (k = 0; k < NTRK; k++) {
         proj_trk_t *d = &q->t[k];
@@ -491,7 +491,7 @@ static int proj_engines_ok(const project_t *q)
 {
     uint32_t t;
     for (t = 0; t < NTRK; t++)
-        if (q->t[t].engine >= NENGINES)
+        if (q->t[t].engine >= NENGINES || (FELUCCA_CORE && !eng_ok(q->t[t].engine)))
             return 0;
     return 1;
 }
@@ -507,6 +507,7 @@ static int proj_import(project_t *q, const void *b, int n)
 }
 static int proj_import_any(project_t *q, const void *b, int n)
 {
+    if (FELUCCA_CORE && (n < 8 || ((const uint32_t *)b)[0] != PROJ_MAGIC)) return 0;
     if (n == PROJ_STORE_SIZE && ((const uint32_t *)b)[0] == PROJ_MAGIC)
         return proj_unpack(q, b, PROJ_STORE_SIZE);
     if (n == PROJ_STORE_SIZE && ((const uint32_t *)b)[1] >= 8u && ((const uint32_t *)b)[1] < PROJ_STORE_SIZE)
@@ -716,7 +717,7 @@ static int proj_unpack(project_t *q, const uint8_t *b, uint32_t st)
         int16_t values[P_COUNT], def[P_COUNT];
         for (i = 0; i < np; i++) { if (b[pos] > 191u) return 0; values[i] = (int16_t)b[pos++] - 64; }
         q->t[t].engine = b[pos++]; q->t[t].preset = b[pos++];
-        if (q->t[t].engine >= NENGINES) return 0;
+        if (q->t[t].engine >= NENGINES || (FELUCCA_CORE && !eng_ok(q->t[t].engine))) return 0;
         for (i = 0; i < P_COUNT; i++) def[i] = param_desc_of(q->t[t].engine, i)->def;
         params_by_count(q->t[t].p, values, np, def);
         for (i = 0; i < NSTEP; i++) {
@@ -768,6 +769,14 @@ static int proj_unpack(project_t *q, const uint8_t *b, uint32_t st)
 }
 
 #ifndef PROJ_HOST
+#if FELUCCA_CORE
+static int ts_project_fetch(uint32_t slot);
+static int ts_project_save_as(uint32_t slot, const char *name);
+static int ts_project_load(uint32_t slot);
+static int ts_project_erase(uint32_t slot);
+static int ts_project_rename(uint32_t slot, const char *name);
+static int ts_store_exists(uint32_t object);
+#endif
 /* the GM drum part of a project of before 1.0 (proj_drums_to_part): DRUM's first kit, as a preset load sets it
  * (until 1.0.2 the SAMPLE engine's PERC set, retired since) */
 static void proj_legacy_drums(track_t *t)
@@ -841,6 +850,9 @@ static void proj_bound(project_t *q)
 /* slot from flash into RAM (format 7, or format 6 / 5 / 4 / 3 / 2 / 1 converted) */
 static void proj_fetch(uint32_t slot)
 {
+#if FELUCCA_CORE
+    if (ts_project_fetch(slot)) return;
+#endif
     project_store_t *q = &proj_slot[slot & 3u];
     int n;
     proj_wire_gen++;
@@ -891,6 +903,9 @@ static int project_save_as(uint32_t slot, const char *name)
         ui_message("STOP TO SAVE");                     /* sequencer (storage_hw.c): only while stopped */
         return 1;
     }
+#if FELUCCA_CORE
+    if (ts_run.enabled || ts_project_fetch(slot)) return ts_project_save_as(slot & 3u, name);
+#endif
     project_capture(p);
     if (name) {
         memset(p->name, 0, sizeof p->name);
@@ -985,6 +1000,9 @@ static int project_rename(uint32_t slot, const char *name)
         ui_message("STOP TO SAVE");
         return 1;
     }
+#if FELUCCA_CORE
+    if (ts_project_fetch(slot)) return ts_project_rename(slot & 3u, name);
+#endif
     if (!proj_import(p, &proj_slot[slot & 3u], sizeof(project_store_t))) {
         ui_message("EMPTY SLOT");
         return 1;
@@ -1022,6 +1040,9 @@ static int project_erase(uint32_t slot)
         ui_message("STOP TO ERASE");
         return 1;
     }
+#if FELUCCA_CORE
+    { int result = ts_project_erase(slot); if (result) return result == 1 ? 0 : result; }
+#endif
     if (!project_used(slot)) {
         ui_message("EMPTY SLOT");
         return 1;
@@ -1067,6 +1088,12 @@ static int project_restore_runtime(const project_t *input)
     fm1_irq_off();                                      /* the audio ISR must not see half a project */
     seq_stop();
     transport_req = 0;
+#if FELUCCA_CORE
+    memset(&ts_run, 0, sizeof ts_run);
+    memset(ts_section, 0, sizeof ts_section);
+    tracker.clip_valid = tracker.table_clip_kind = 0;
+    ts_history.kind = 0;
+#endif
     chain_config = p->chain;
     motion = p->motion;
     memset(motion_active, 0, sizeof motion_active);
@@ -1131,6 +1158,9 @@ static int project_restore_runtime(const project_t *input)
 }
 static void project_load(uint32_t slot)
 {
+#if FELUCCA_CORE
+    if (ts_project_load(slot & 3u)) return;
+#endif
 #if FELUCCA_FLASH
     if (flash_ok && !proj_import(&proj_scratch, &proj_slot[slot & 3u], sizeof(project_store_t))) proj_fetch(slot);
 #endif
@@ -1181,7 +1211,7 @@ static void persist_boot(void)                    /* before settings_init / pane
     {   /* projects: fill empty RAM slots from flash, so the slot list is right after power-on */
         uint32_t i;
         for (i = 0; i < 4u; i++)
-            if (!proj_import(&proj_scratch, &proj_slot[i], sizeof(project_store_t)))
+            if (FELUCCA_CORE || !proj_import(&proj_scratch, &proj_slot[i], sizeof(project_store_t)))
                 proj_fetch(i);
     }
     up_boot();                                     /* user presets */
@@ -1193,6 +1223,9 @@ static int project_used(uint32_t slot) { return proj_import(&proj_scratch, &proj
 /* Main loop only: no flash access or copies when the ISR changes rows. */
 static uint32_t chain_prepare(void)
 {
+#if FELUCCA_CORE
+    if (ts_run.enabled) return 2; /* tracker owns the shared playback scratch */
+#endif
     uint32_t i, k, j, used = 0;
     if (transport_busy())
         return 2;
@@ -1330,6 +1363,9 @@ static uint32_t autosave_sig(void)
     h = as_mix(h, song.mch, sizeof song.mch);           /* (1.5.5: MIDI IN TRACK's channels, the project's) */
     h = as_mix(h, &motion, sizeof motion);
     h = as_mix(h, &chain_config, sizeof chain_config);
+#if FELUCCA_CORE
+    if (ts_run.enabled) { h = as_mix(h, &ts_bank, sizeof ts_bank); h = as_mix(h, ts_section, sizeof ts_section); }
+#endif
     return as_mix(h, proj_name, sizeof proj_name);
 }
 
@@ -1367,6 +1403,13 @@ static void autosave_poll(void)
         return;
     as.last = fm1_ms;
     as.wrote = 1;
+#if FELUCCA_CORE
+    if (ts_run.enabled || ts_store_exists(4)) {
+        as.err = ts_project_save_as(4, 0) != 0;
+        if (!as.err) { as.saved = sig; as.writes++; }
+        return;
+    }
+#endif
     project_capture(&proj_scratch);
     proj_wire_gen++;
     as.err = !proj_pack(&proj_wire, &proj_scratch) || st_save(OBJ_AUTOSAVE, &proj_wire, sizeof proj_wire) != 0;
@@ -1387,6 +1430,9 @@ static int autosave_boot(int allowed)
     if (flash_ok && allowed && !(ui_prefs & PREF_RESTORE_OFF)) {
         int n;
         proj_wire_gen++;
+#if FELUCCA_CORE
+        if (ts_project_load(4)) { rc = 1; goto restored; }
+#endif
         n = st_load(OBJ_AUTOSAVE, &proj_wire, sizeof proj_wire);
         if (n > 0 && proj_import(&proj_scratch, &proj_wire, n)) {
             proj_bound(&proj_scratch);
@@ -1399,6 +1445,9 @@ static int autosave_boot(int allowed)
 #else
     (void)allowed;
 #endif
+#if FELUCCA_CORE
+restored:
+#endif
     as.saved = as.seen = autosave_sig();
     as.t = fm1_ms;
     return rc;
@@ -1408,4 +1457,5 @@ static int autosave_boot(int allowed)
 _Static_assert(sizeof(project_store_t) <= ST_PAYLOAD_MAX, "project does not fit one flash sector");
 _Static_assert(sizeof(persist_t) <= ST_PAYLOAD_MAX, "settings do not fit one flash sector");
 #endif
+#include "tracker_store.c"
 #endif /* PROJ_HOST */

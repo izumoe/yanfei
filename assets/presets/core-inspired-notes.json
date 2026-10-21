@@ -1,0 +1,86 @@
+{
+  "ANALOG": {
+    "JUNO CHORUS": "Juno-style PWM and chorus pad",
+    "JUPITER SYNC": "Jupiter-style oscillator-sync lead",
+    "303 SQUELCH": "Acid-era resonant saw bass",
+    "MINI ROUND": "Minimoog-style round sub bass",
+    "MS REED": "MS-family band-pass reed lead"
+  },
+  "NES": {
+    "FAMI HERO": "Famicom narrow-pulse hero lead",
+    "FAMI LOW": "Console triangle bass",
+    "FAMI ARP": "Three-note chiptune chord arpeggio",
+    "8BIT SNARE": "Console long-register noise snare",
+    "DUNGEON PAD": "Softened console pulse pad"
+  },
+  "DMG": {
+    "POCKET BASS": "Handheld square bass",
+    "POCKET BELL": "Handheld wave-RAM bell",
+    "POCKET WIND": "Filtered handheld noise atmosphere",
+    "7BIT TOM": "Short-register handheld percussion",
+    "LINK LEAD": "Handheld pulse lead with stepped vibrato"
+  },
+  "PSG": {
+    "AY BUZZ LEAD": "AY buzzer-envelope lead",
+    "AY ZAP": "AY tone/noise envelope zap",
+    "SEGA SQUARE": "Mega Drive PSG square lead",
+    "SEGA CHORD": "Mega Drive PSG two-tone fifth",
+    "SEGA HAT": "Sega white-noise hat"
+  },
+  "TRIO": {
+    "SID PWM": "SID-style pulse-width lead",
+    "SID RUBBER": "SID-style springy filtered bass",
+    "SID SYNC": "SID-style hard-sync sweep",
+    "SID METAL": "SID-style ring-modulated metal",
+    "SID CHOIR": "SID combined-wave choir pad"
+  },
+  "WAVE": {
+    "PPG CHOIR": "PPG-style nasal/vocal wavetable motion",
+    "ESQ BRASS": "ESQ-style digital brass",
+    "VS AIR": "Prophet VS-style airy digital pad",
+    "PPG METAL": "PPG-style metallic table strike",
+    "ESQ REED": "ESQ-style reed lead"
+  },
+  "PHASE": {
+    "CZ BASS": "CZ-style phase-distortion bass",
+    "CZ STRINGS": "CZ-style layered phase-distortion strings",
+    "CZ GLASS": "CZ-style resonant glass pluck",
+    "CZ ORGAN": "CZ-style doubled-sine organ",
+    "CZ WIRE": "CZ-style resonant, lightly folded wire lead"
+  },
+  "STRING": {
+    "KOTO PICK": "Koto-like bright off-centre pluck",
+    "SITAR BUZZ": "Sitar-like sympathetic buzz",
+    "ZITHER": "Zither-like sympathetic strings",
+    "CLAVI PLUCK": "Clavinet-like damped string attack",
+    "BOWED WIRE": "Early physical-model bowed string texture"
+  },
+  "MODAL": {
+    "VIBE KEYS": "Electric-vibes-style resonant bars",
+    "TOY BELL": "Toy keyboard bell timbre",
+    "GAMELAN": "Gamelan-like inharmonic struck metal",
+    "STEEL TINE": "Thumb-piano/steel-tine-like strike",
+    "SYNTH TOM": "Early digital drum voice / tuned membrane"
+  },
+  "DRUM": {
+    "ELECTRO KIT": "Bright analog-electro drum-machine feel",
+    "HOUSE KIT": "Round low house drums",
+    "ARCADE KIT": "Short driven arcade percussion",
+    "DUB KIT": "Low tuned dub drum-machine feel",
+    "MINIMAL KIT": "Small dry electronic percussion kit"
+  },
+  "FM6": {
+    "TX RUBBER": "TX-style elastic FM bass",
+    "DX GLASS": "DX-style inharmonic glass bell",
+    "DX MALLET": "DX-style wood/metal FM mallet",
+    "DX BRASS": "DX-style FM brass ensemble",
+    "DX ORGAN": "DX-style additive sine organ"
+  },
+  "YM": {
+    "MD SLAP": "Mega Drive-style metallic slap bass",
+    "MD REED": "Mega Drive-style harmonically rich reed",
+    "ARCADE LEAD": "OPN arcade-era feedback lead",
+    "MD EPIANO": "Mega Drive FM electric piano",
+    "MD CHIME": "Mega Drive FM chimes"
+  }
+}

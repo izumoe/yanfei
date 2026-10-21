@@ -400,7 +400,7 @@ static void trk_note_on(track_t *t, uint32_t note, uint32_t vel)
     if (t->xf_on || t->eng_req != t->engine) {          /* engine switch under way: after the fade */
         for (i = 0; i < t->xp_n && t->xp_note[i] != note; i++)
             ;
-        if (i == t->xp_n && t->xp_n < 4u)
+        if (i == t->xp_n && t->xp_n < NELEM(t->xp_note))
             t->xp_n++;
         i = i < t->xp_n ? i : t->xp_n - 1u;             /* (full: the last one is replaced) */
         t->xp_note[i] = (uint8_t)note;
@@ -477,7 +477,9 @@ static void trk_all_off(track_t *t)
     uint32_t i;
     for (i = 0; i < NVOICE; i++) {
         t->v[i].gate = 0;
-        t->v[i].stage = t->v[i].active ? 3 : 0;
+        /* A stolen voice has already given up its budget. Do not resurrect
+         * its one-block kill fade as a normal release during a patch change. */
+        if (t->v[i].stage != 4u) t->v[i].stage = t->v[i].active ? 3 : 0;
     }
     t->nmono = 0;
     t->mono_note = 0;

@@ -1,43 +1,60 @@
-# Felucca
+# Yanfei
 
-[![License: GPL-3.0-only](https://img.shields.io/badge/license-GPL--3.0--only-blue.svg)](LICENSE)
+Yanfei is custom firmware for the M-VAVE FM-1. It is based on
+[Felucca](https://github.com/hugelton/Felucca) by Leo Kuroshita and Hügelton Instruments.
+The fork source is [izumoe/yanfei](https://github.com/izumoe/yanfei).
 
-## Maintenance Notice
+Yanfei has twelve engines, 96 factory presets, and a four-track tracker.
+The tracker starts in ALL. Press SHIFT + UP to open detailed PHRASE.
+Scroll through sections of up to four bars. Use shared phrases and chains to arrange music.
 
-What began as a personal experiment grew far beyond my expectations. I’m grateful to everyone who contributed, supported the project, and made music with Felucca.
+## Use Yanfei
 
-I’ve decided to step back from active development to focus on creating new instruments and music.
+[Open the website](https://izumoe.github.io/yanfei/) for the editor, emulator, installer, and guide.
 
-Felucca will remain available with occasional maintenance, but new features, issue responses, and pull request reviews are not guaranteed.
+- [Visual guide: start here](docs/VISUAL_GUIDE.md)
+- [User guide](docs/USER_GUIDE.md)
+- [Tracker quick reference](docs/TRACKER_QUICK_REFERENCE.md)
+- [Modes and shared controls](docs/MODE_GUIDE.md)
+- [Engine guide](docs/ENGINE_GUIDE.md)
+- [Engines and firmware budgets](docs/CORE_ENGINES.md)
+- [Inspired presets](docs/INSPIRED_PRESETS.md)
+- [Tracker implementation](docs/TRACKER.md)
 
-Thank you for everything. I hope you’ll look forward to my next creations.
+## Build
 
-## Overview
+Follow [BUILDING.md](BUILDING.md) to install the toolchain and SDK.
+Then run:
 
-Multi-engine synthesizer firmware for the M-VAVE FM-1, version 1.6.1. Connect the FM-1 to a computer by USB, open the
-[web installer](https://hugelton.github.io/Felucca/) in Chrome or Edge and press Install; no extra hardware is needed.
-Installing is at your own risk: M-VAVE's updater or the installer's **Return to official V15** takes you back.
-[Try it in your browser](https://hugelton.github.io/Felucca/webapp/try/), no FM-1 needed.
+```sh
+./build-yanfei.sh
+```
 
-- Install: [web installer](https://hugelton.github.io/Felucca/)
-- Edit: [web editor](https://hugelton.github.io/Felucca/webapp/editor/) ([Felucca-WebApp](https://github.com/hugelton/Felucca-WebApp))
-- Read: the manual and the release notes are in the [wiki](https://github.com/hugelton/Felucca/wiki/Home)
-- Build: [BUILDING.md](BUILDING.md)
-- Related: [Felucca-Engines](https://github.com/hugelton/Felucca-Engines) (the ANALOG, LOFI, TRIO, WHEEL and NOISE engines, MIT; still maintained) ·
-  [felucca-bsp](https://github.com/hugelton/felucca-bsp) (the FM-1 hardware layer)
+The installable package is `build/yanfei.fwsc`. The app image is `build/yanfei.bin`.
+The existing `./build-core.sh` command also builds Yanfei.
+The package retains the FM-1 update identity required by the installer.
 
-## AI disclaimer
+For the browser emulator, activate Emscripten, then run:
 
-Felucca is developed with the assistance of AI coding agents (code, tests, documentation, translation, maintenance). The
-design, features, sound design and direction are the maintainer's or the community's, and no generative AI is used for music,
-icons or artwork. See [On AI-Assisted Development and Responsibility](https://github.com/hugelton/Felucca/discussions/166).
+```sh
+FELUCCA_CORE=1 sh web/emu/build.sh
+python3 -m http.server 8000 --directory build/emu
+```
 
-## Credits and licence
+Open `http://localhost:8000` in Chrome or Edge.
+The internal build flag keeps its existing name for compatibility.
 
-Free software: [GPL-3.0-only](LICENSE); the Hügelton Sample Pack is CC0 1.0; the engines in `firmware/engines` are MIT
-([Felucca-Engines](https://github.com/hugelton/Felucca-Engines)); the bundled fonts and ported DSP keep their own licences
-([LICENSES/](LICENSES/), [LICENSING.md](LICENSING.md)). Thanks to everyone whose work and contributions are in it: [CREDITS.md](CREDITS.md).
+## Upstream and licences
 
-M-VAVE and FM-1 are trademarks of their respective owners. Felucca is not affiliated with or endorsed by them.
+Yanfei is GPL-3.0-only. Read [LICENSE](LICENSE), [LICENSING.md](LICENSING.md),
+and the component notices in [LICENSES](LICENSES/).
+The engines in `firmware/engines` come from
+[Felucca-Engines](https://github.com/hugelton/Felucca-Engines), under MIT.
+Upstream copyright notices and credits are retained.
+See [CREDITS.md](CREDITS.md) and the [upstream README](docs/UPSTREAM_README.md).
 
-Copyright (C) 2026 Leo Kuroshita (@kurogedelic), Hügelton Instruments
+This fork was developed with AI coding assistance.
+M-VAVE and FM-1 are trademarks of their respective owners.
+Yanfei is not affiliated with or endorsed by M-VAVE.
+
+Upstream copyright (C) 2026 Leo Kuroshita (@kurogedelic), Hügelton Instruments.

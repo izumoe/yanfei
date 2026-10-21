@@ -48,9 +48,9 @@
 #define UP_PER_BANK 16u
 #define UP_PMAX 72u                              /* room for P_COUNT to grow */
 #define UP_USED 0xA5u
-#define UP_VER 4u                                /* 2 since 1.0; 1 is read too (PHYS MODEL 2 was DUST) */
-#define UP_VER_GRID 5u                           /* 2 with a drum grid as the pattern (see the top) */
-#define UP_BANK_MAGIC 0x31425055u                /* "UPB1" */
+#define UP_VER (FELUCCA_CORE ? 8u : 4u)                                /* 2 since 1.0; 1 is read too (PHYS MODEL 2 was DUST) */
+#define UP_VER_GRID (FELUCCA_CORE ? 9u : 5u)                           /* 2 with a drum grid as the pattern (see the top) */
+#define UP_BANK_MAGIC (FELUCCA_CORE ? 0x32435055u : 0x31425055u)                /* "UPB1" */
 typedef struct {
     uint8_t used, ver, engine, np;               /* UP_USED, UP_VER, engine, P_COUNT when stored */
     char name[12];                               /* ASCII 32..126, 0-padded (no 0 when 12 long) */
@@ -107,6 +107,7 @@ static void up_set_cat(up_rec_t *r, uint32_t c)  /* c CAT_BASS..CAT_OTHER; a rec
 
 static int up_valid(const up_rec_t *r)
 {
+    if (FELUCCA_CORE && (r->ver < UP_VER || r->engine == 1u || r->engine == 11u)) return 0;
     if (!(r->used == UP_USED && r->ver >= 1u && r->ver <= UP_VER_GRID && r->engine < NENGINES &&
           r->np >= 8u && r->np <= (r->ver >= 4u ? UP_PMAX * 2u : UP_PMAX) && r->name[0])) return 0;
     if (r->ver >= 4u) for (uint32_t i = 0; i < r->np; i++) if (r->packed[i] > 191u) return 0;
@@ -228,7 +229,7 @@ static int up_parse(const uint8_t *a, uint32_t na, up_rec_t *r, uint32_t *slot)
         ;
     k = 3u + n;                                  /* after the name's 0 */
     end = k + 2u * P_COUNT + 32u;
-    if (a[0] >= UP_SLOTS || a[1] >= NENGINES || 2u + n >= na || !up_name_ok(a + 2, n) ||
+    if (a[0] >= UP_SLOTS || a[1] >= NENGINES || (FELUCCA_CORE && (a[1] == 1u || a[1] == 11u)) || 2u + n >= na || !up_name_ok(a + 2, n) ||
         (na != end && ((na != end + 17u && na != end + 18u) || a[end] > 1u)) || (na == end + 18u && a[end + 17u] >= CAT_N))
         return 1;
     up_rec_t staged, *target = r;
@@ -312,7 +313,7 @@ static int up_put(uint32_t k, const up_rec_t *r)
     uint32_t magic;
     uint16_t rsize, nslot;
 #endif
-    if (k >= UP_SLOTS)
+    if (k >= UP_SLOTS || (FELUCCA_CORE && r && !up_valid(r)))
         return 1;
     if (transport_busy()) {                            /* no flash erase while playing (project_save) */
         ui_message("STOP TO SAVE");
@@ -464,7 +465,7 @@ static int up_load(uint32_t k)
     up_values(r, v);
     load_begin(t, UNDO_SOUND);                          /* (ui.c: the copy for SAVE held = undo) */
     panic_req |= (uint8_t)(1u << song.sel);
-#if !FELUCCA_FM4
+#if !FELUCCA_FM4 && !FELUCCA_CORE
     if (r->engine == ENGI_DIGITAL) {                    /* a DIGITAL sound (kept as it was stored): FM6 */
         int16_t p[P_COUNT];
         for (i = 0; i < P_COUNT; i++)

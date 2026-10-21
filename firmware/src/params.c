@@ -70,12 +70,16 @@ static const char *const N_IRATE[] = {"689", "919", "1.1k", "1.4k", "1.8k", "2.2
 static const char *const N_MSRC[] = {"OFF", "LFO", "ENV", "VEL", "KEY", "RAND", "MODW", "AT", "EXPR", "S&H", "SLEW"};
 static const char *const N_MDST[] = {"OFF", "PITCH", "CUT", "SHP", "AMP", "PAN", "DIST", "CHO", "DLY", "REV", "RATE",
                                      "VIB", "E1", "E2", "E3", "E4", "E5", "E6", "E7", "E8", "DEPTH", "VEL", "TIME"};
+#if FELUCCA_CORE
+static const char *const N_ENGNAME[] = {"ANALOG","-","PHASE","NES","DMG","PSG","TRIO","WAVE","STRING","MODAL","DRUM","-","FM6","YM"};
+#else
 static const char *const N_ENGNAME[] = {"ANALOG", FELUCCA_FM4 ? "DIGITAL" : "-", "PHASE", "LOFI", "SAMPLE", "VOICE", "TRIO", "WHEEL", "GRAIN", "PHYS",
                                              "DRUM", "NOISE", "FM6",
 #if FELUCCA_SLICE
                                              "SLICE",
 #endif
 };
+#endif
 
 #define PD(l, f, mn, mx, df) {l, f, mn, mx, df, 0, 0}
 #define PE(l, n, df) {l, F_ENUM, 0, (int16_t)(sizeof(n) / sizeof(n[0]) - 1), df, n, 0}
@@ -222,8 +226,35 @@ static const param_desc_t GP[G_COUNT] = {
     [G_DRREV] = PD("-", F_INT, 0, 0, 0),
 };
 
+#if FELUCCA_CORE
+/* Engine-specific uses of existing sound slots preserve the serialized layout. */
+static const param_desc_t PSG_CHIP_DESC={"CHIP",F_ENUM,0,1,0,PSG_CHIPS,0};
+static const param_desc_t YM_COMMON_DESC[5]={
+    {"AR",F_INT,0,31,31,0,0},{"D1R",F_INT,0,31,16,0,0},
+    {"D1L",F_INT,0,15,6,0,0},{"RR",F_INT,0,15,12,0,0},{"TL",F_INT,0,127,0,0,0}
+};
+static const param_desc_t YM_MUL_DESC={"MUL",F_INT,0,15,1,0,0};
+static const param_desc_t YM_DT_DESC={"DT",F_INT,-3,3,0,0,0};
+static const param_desc_t YM_KS_DESC={"KS",F_INT,0,3,1,0,0};
+static const param_desc_t YM_AM_DESC={"AMOPS",F_INT,0,15,15,0,0};
+static const param_desc_t *core_common_desc(uint32_t e,uint32_t id)
+{
+    if(e==ENGI_PSG && id==P_ED_FX)return &PSG_CHIP_DESC;
+    if(e!=ENGI_YM)return 0;
+    if(id>=P_FM1_ATK && id<=P_FM4_LEVEL)return &YM_COMMON_DESC[(id-P_FM1_ATK)%5u];
+    if(id>=P_LN0 && id<=P_LN3)return &YM_MUL_DESC;
+    if(id>=P_LN4 && id<=P_LN7)return &YM_DT_DESC;
+    if(id==P_FTYPE)return &YM_KS_DESC;
+    if(id==P_ED_FX)return &YM_AM_DESC;
+    return 0;
+}
+#endif
+
 static const param_desc_t *track_desc(const track_t *t, uint32_t id)
 {
+#if FELUCCA_CORE
+    const param_desc_t *cd=core_common_desc(t->eng_req,id);if(cd)return cd;
+#endif
     if (id >= P_E0 && id <= P_E7) {                   /* the engine asked for (t->engine follows after a fade) */
         const engine_t *e = ENGINES[eng_idx(t->eng_req)];
         const param_desc_t *d = e->desc ? e->desc(t, id - P_E0) : 0;   /* a mode-dependent label / names */
@@ -240,6 +271,9 @@ static const param_desc_t *track_desc(const track_t *t, uint32_t id)
  * only; range and default are the same): what the editor protocol, user presets and projects use */
 static const param_desc_t *param_desc_of(uint32_t e, uint32_t id)
 {
+#if FELUCCA_CORE
+    const param_desc_t *cd=core_common_desc(e,id);if(cd)return cd;
+#endif
     return id >= P_E0 ? &ENGINES[e]->edit[id - P_E0] : &TP[id];
 }
 
@@ -434,7 +468,7 @@ enum { FAM_HOME, FAM_ENV, FAM_LFO, FAM_FX, FAM_SCL, FAM_EDIT, FAM_GLO, FAM_SAVE,
 enum { SC_TRACK, SC_GLOBAL, SC_ENGINE, SC_STEP, SC_TRK };   /* SC_TRK: the TRACKS page (ui_input.c tracks_edit) */
 enum { GR_NONE, GR_ADSR, GR_LFO, GR_STEPS, GR_ARP, GR_SCALE, GR_FX, GR_ROLL, GR_BROWSE, GR_SLOTS, GR_USER, GR_TRK,
        GR_SLCR, GR_MOD, GR_PATS, GR_SONG, GR_TOOLS, GR_CHORD, GR_SLICES, GR_EVENTS,
-       GR_FMOP, GR_FMOP2, GR_FMENV, GR_INS };   /* (GR_STEPS: SEQ TOOLS' knobs; GR_FMOP..: FM6's operator pages, ui_fm6op.c) */
+       GR_FMOP, GR_FMOP2, GR_FMENV, GR_INS, GR_TRACKER };   /* append graph IDs: host/editor IDs remain stable */
 
 typedef struct {
     const char *title;
@@ -468,11 +502,19 @@ static const page_t PAGES[] = {
     {"OPERATOR", FAM_EDIT, SC_TRACK, GR_FMOP, {0xFF, 0xFF, 0xFF, 0xFF}},    /* FM6 only: KNOB 1 the operator, then its */
     {"OP ENV", FAM_EDIT, SC_TRACK, GR_FMENV, {0xFF, 0xFF, 0xFF, 0xFF}},     /* bytes of the track's patch (ui_fm6op.c): */
     {"OPERATOR 2", FAM_EDIT, SC_TRACK, GR_FMOP2, {0xFF, 0xFF, 0xFF, 0xFF}}, /* CRS FINE LEVEL / STG RATE LEVEL / MODE DTUN VEL */
-    {"OP1 ENV", FAM_EDIT, SC_TRACK, GR_ADSR, {P_FM1_ATK, P_FM1_DEC, P_FM1_SUS, P_FM1_REL}},
-    {"OP2 ENV", FAM_EDIT, SC_TRACK, GR_ADSR, {P_FM2_ATK, P_FM2_DEC, P_FM2_SUS, P_FM2_REL}},
-    {"OP3 ENV", FAM_EDIT, SC_TRACK, GR_ADSR, {P_FM3_ATK, P_FM3_DEC, P_FM3_SUS, P_FM3_REL}},
-    {"OP4 ENV", FAM_EDIT, SC_TRACK, GR_ADSR, {P_FM4_ATK, P_FM4_DEC, P_FM4_SUS, P_FM4_REL}},
+    {"OP1 ENV", FAM_EDIT, SC_TRACK, FELUCCA_CORE ? GR_NONE : GR_ADSR, {P_FM1_ATK, P_FM1_DEC, P_FM1_SUS, P_FM1_REL}},
+    {"OP2 ENV", FAM_EDIT, SC_TRACK, FELUCCA_CORE ? GR_NONE : GR_ADSR, {P_FM2_ATK, P_FM2_DEC, P_FM2_SUS, P_FM2_REL}},
+    {"OP3 ENV", FAM_EDIT, SC_TRACK, FELUCCA_CORE ? GR_NONE : GR_ADSR, {P_FM3_ATK, P_FM3_DEC, P_FM3_SUS, P_FM3_REL}},
+    {"OP4 ENV", FAM_EDIT, SC_TRACK, FELUCCA_CORE ? GR_NONE : GR_ADSR, {P_FM4_ATK, P_FM4_DEC, P_FM4_SUS, P_FM4_REL}},
     {"OP LEVEL", FAM_EDIT, SC_TRACK, GR_NONE, {P_FM1_LEVEL, P_FM2_LEVEL, P_FM3_LEVEL, P_FM4_LEVEL}},
+#if FELUCCA_CORE
+    {"OP1 TONE",FAM_EDIT,SC_TRACK,GR_NONE,{P_LN0,P_LN4,P_FM1_LEVEL,P_FTYPE}},
+    {"OP2 TONE",FAM_EDIT,SC_TRACK,GR_NONE,{P_LN1,P_LN5,P_FM2_LEVEL,P_FTYPE}},
+    {"OP3 TONE",FAM_EDIT,SC_TRACK,GR_NONE,{P_LN2,P_LN6,P_FM3_LEVEL,P_FTYPE}},
+    {"OP4 TONE",FAM_EDIT,SC_TRACK,GR_NONE,{P_LN3,P_LN7,P_FM4_LEVEL,P_FTYPE}},
+    {"YM AM",FAM_EDIT,SC_TRACK,GR_NONE,{P_ED_FX,P_E4,P_E5,P_E6}},
+    {"CHIP",FAM_EDIT,SC_TRACK,GR_NONE,{P_ED_FX,P_E2,P_E4,P_E5}},
+#endif
     {"VOICE", FAM_EDIT, SC_TRACK, GR_NONE, {P_VOICE, P_GLIDE, P_GLMODE, P_PRIO}},
     {"VOICE 2", FAM_EDIT, SC_TRACK, GR_NONE, {P_ALLOC, P_DETUNE, P_PAN, P_MUTE}},
     {"VOICE 3", FAM_EDIT, SC_TRACK, GR_NONE, {P_SPRD, 0xFF, 0xFF, 0xFF}},   /* #148: SPREAD */
@@ -488,6 +530,9 @@ static const page_t PAGES[] = {
     {"TOOLS", FAM_SAVE, SC_GLOBAL, GR_TOOLS, {G_CLRSEQ, G_INITSND, 0xFF, 0xFF}},
     {"ARP", FAM_ARP, SC_TRACK, GR_ARP, {P_AMODE, P_ARATE, P_AOCT, P_AGATE}},
     {"ARP 2", FAM_ARP, SC_TRACK, GR_NONE, {P_ASWING, P_APROB, P_AHOLD, P_AORDER}},
+#if FELUCCA_CORE
+    {"TRACKER", FAM_SEQ, SC_STEP, GR_TRACKER, {0, 1, 2, 3}},
+#endif
     {"STEP", FAM_SEQ, SC_STEP, GR_ROLL, {0, 1, 2, 3}},
     {"DETAIL", FAM_SEQ, SC_STEP, GR_ROLL, {0, 1, 2, 3}},   /* 1.5.1 (#199): the cursor step's CHANCE RATCH NUDGE VEL
                                                              * (ui.c detail_on, ui_input.c sd_turn) */

@@ -17,7 +17,11 @@ typedef struct {
     const char *name;
     uint16_t z0, nz;
 } smp_set_t;
+#if FELUCCA_CORE
+#include "core_samples.h"
+#else
 #include "felucca_samples.h"
+#endif
 #if defined(SMP_PERC_SLOT) && SMP_PERC_SLOT != SMP_SET_PERC
 #error "tools/gen_samples.py PERC_SLOT != core.h SMP_SET_PERC"
 #endif

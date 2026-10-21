@@ -29,7 +29,7 @@ int main(int argc, char **argv)
     web_nor_erase();
     web_boot();
     render(500);
-    web_test_heavy();
+    if(argc>2)web_test_opn();else web_test_heavy();
     web_buttons(1u << B_PLAY);
     render(60);
     web_buttons(0);

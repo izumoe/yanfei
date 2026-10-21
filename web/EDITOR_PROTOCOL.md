@@ -1,5 +1,9 @@
 # Felucca editor protocol (SysEx over USB-MIDI)
 
+Yanfei uses this protocol. Its app port is named "Yanfei", and its loader port
+is "Yanfei Update". INFO starts with "YANFEI". Command IDs, backup format tags
+and the FM-1 update identity retain their existing values.
+
 The firmware side is `firmware/src/editor.c`. Commands 1-15, track selection, dumps, step reads
 and parameter writes (27, 29, 30, 31) were checked on hardware. `tests/editor_test.c` also exercises the real C
 handler, malformed transfers and stop timeouts against simulated flash. User-preset

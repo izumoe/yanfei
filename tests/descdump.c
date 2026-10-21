@@ -64,9 +64,23 @@ static void js_descs(const param_desc_t *d, uint32_t n)
     putchar(']');
 }
 
-int main(void)
+int main(int argc, char **argv)
 {
     uint32_t e, i, k;
+    /* UI checks use these descriptors, including the core PSG/YM overrides. */
+    if (argc == 2 && !strcmp(argv[1], "--engine-descriptors")) {
+        putchar('[');
+        for (e = 0; e < NENGINES; e++) {
+            printf("%s[", e ? "," : "");
+            for (i = 0; i < P_COUNT; i++) {
+                if (i) putchar(',');
+                js_desc(param_desc_of(e, i));
+            }
+            putchar(']');
+        }
+        puts("]");
+        return 0;
+    }
     int32_t v[16];
     printf("{\"P_COUNT\":%d,\"G_COUNT\":%d,\"NSTEP\":%d,\"P_E0\":%d,\"G_ENGSEL\":%d,\"P_SLCR\":%d,\"NTRK\":%d,\n",
            P_COUNT, G_COUNT, NSTEP, P_E0, G_ENGSEL, P_SLCR, NTRK);

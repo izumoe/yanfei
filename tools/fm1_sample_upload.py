@@ -61,10 +61,10 @@ class Link:
         except ImportError:
             sys.exit("needs mido: pip install mido python-rtmidi")
         self.mido = mido
-        outs = [n for n in mido.get_output_names() if "Felucca" in n]
-        ins = [n for n in mido.get_input_names() if "Felucca" in n]
+        outs = [n for n in mido.get_output_names() if "yanfei" in n.lower() or "felucca" in n.lower()]
+        ins = [n for n in mido.get_input_names() if "yanfei" in n.lower() or "felucca" in n.lower()]
         if not outs or not ins:
-            sys.exit("no MIDI port named Felucca: connect the FM-1 (running Felucca) by USB")
+            sys.exit("no Yanfei or Felucca MIDI port: connect the FM-1 by USB")
         self.o = mido.open_output(outs[0])
         self.i = mido.open_input(ins[0])
         for _ in range(3):                          # the first frame after opening the port can be lost
@@ -151,4 +151,4 @@ if __name__ == "__main__":
     try:
         main()
     except TimeoutError as e:
-        sys.exit(f"{e}: is Felucca running, and no other app using its MIDI port?")
+        sys.exit(f"{e}: is Yanfei or Felucca running, and no other app using its MIDI port?")

@@ -143,6 +143,7 @@ static const icon_map_t ICON_MAP[] = {
     {"DCW", ICON_SHAPE}, {"ENV", ICON_ENV}, {"LINE", ICON_MIX}, {"SUB", ICON_SUB},
     {"FOLD", ICON_FOLD}, {"WAV#", ICON_WAVE}, {"DCY", ICON_DECAY}, {"INT2", ICON_TRANSPOSE},
     {"INT3", ICON_TRANSPOSE}, {"PW", ICON_PULSE},
+    {"N-DIV", ICON_RATE}, {"N-MIX", ICON_MIX}, {"BUZZ", ICON_ENV}, {"B-RATE", ICON_RATE},
     {"REG", ICON_DRAWBAR}, {"BODY", ICON_LEVEL}, {"TOP", ICON_TONE}, {"PERC", ICON_DECAY},
     {"CLICK", ICON_ATTACK}, {"ROTR", ICON_VIBRATO},
     {"SRC", ICON_SAMPLE}, {"START", ICON_STEPS}, {"PTCH", ICON_PITCH}, {"DCAY", ICON_DECAY},
@@ -247,6 +248,8 @@ static uint32_t engine_icon(const char *name)
         {"DIGITAL", ICON_ALGORITHM},
 #endif
         {"PHASE", ICON_PHASE}, {"LOFI", ICON_BITS},
+        {"YM", ICON_ALGORITHM}, {"NES", ICON_BITS}, {"DMG", ICON_BITS}, {"PSG", ICON_BITS},
+        {"WAVE", ICON_WAVE}, {"STRING", ICON_PHYS}, {"MODAL", ICON_PHYS},
         {"SAMPLE", ICON_SAMPLE}, {"VOICE", ICON_MOUTH}, {"TRIO", ICON_TRIO}, {"WHEEL", ICON_DRAWBAR},
         {"SLICE", ICON_SLICE},
         {"GRAIN", ICON_GRAIN},
