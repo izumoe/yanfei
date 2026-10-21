@@ -1,5 +1,5 @@
-# Engine library (MIT), published on this repository's yanfei-engines branch.
+# Yanfei engine library (MIT); upstream: hugelton/Felucca-Engines.
 [submodule "firmware/engines"]
 	path = firmware/engines
-	url = https://github.com/izumoe/yanfei.git
-	branch = yanfei-engines
+	url = https://github.com/izumoe/yanfei-engines.git
+	branch = main

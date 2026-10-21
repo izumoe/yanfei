@@ -92,10 +92,9 @@ A parent-repository commit does not include uncommitted submodule files.
 When preparing commits, commit engine changes in that repository, then update the
 parent's submodule reference to an accessible commit.
 
-The engine history is published on the `yanfei-engines` branch of
-`izumoe/yanfei`. The submodule URL uses that repository and pins an engine commit.
-Its tree contains the engine library, not the firmware repository. Publish the
-engine branch before pushing a parent commit that refers to it.
+The canonical engine library is [izumoe/yanfei-engines](https://github.com/izumoe/yanfei-engines).
+The submodule pins a commit from that repository's `main` branch.
+Publish the engine commit before pushing a parent commit that refers to it.
 The original upstream remains [hugelton/Felucca-Engines](https://github.com/hugelton/Felucca-Engines).
 
 The generated website is published separately on `gh-pages`.

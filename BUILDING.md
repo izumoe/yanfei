@@ -10,7 +10,7 @@ The build makes three files in `build/`:
 
 ## Get the source
 
-The engine library is in a git submodule (`firmware/engines/`, [Felucca-Engines](https://github.com/hugelton/Felucca-Engines),
+The engine library is in a git submodule (`firmware/engines/`, [Yanfei Engines](https://github.com/izumoe/yanfei-engines),
 MIT), so clone with `--recurse-submodules`:
 
 ```
