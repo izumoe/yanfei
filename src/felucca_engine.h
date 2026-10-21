@@ -140,6 +140,10 @@ typedef struct {                 /* an engine (engines.c ENGINES[]; the eng_*.c 
      * in, 0 = none: a part plays one engine at a time, so they share one region; on a switch to the engine
      * (after the old one's fade) the region is zeroed when another engine had it (eng_mem_claim) */
     uint16_t mem;
+    /* optional: HOME knob k's parameter for the current mode (k = 0..3).
+     * Hosts use this for display, editing, MIDI learn and automation alike.
+     * 0 = the fixed knob[] map; no audio state or stored parameter is added. */
+    uint8_t (*home_knob)(const struct track *t, uint32_t k);
 } engine_t;
 
 #endif /* FELUCCA_ENGINE_H */

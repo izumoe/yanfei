@@ -20,7 +20,7 @@
 #endif
 #include "../src/felucca_engine.h"
 
-enum { P_ATK, P_REL, P_FTYPE, P_E0, P_E1, P_E2, P_E3, P_E4, P_E5, P_E6, P_E7, P_COUNT };
+enum { P_ATK, P_REL, P_FTYPE, P_E0, P_E1, P_E2, P_E3, P_E4, P_E5, P_E6, P_E7, P_ED_FX, P_COUNT };
 typedef struct track {
     int16_t p[P_COUNT];
     voice_t v[NVOICE];
