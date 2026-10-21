@@ -6,9 +6,10 @@ the corrected decay/envelope details and the high-note WARP limitation.
 This is the first implementation of the twelve-engine profile. `./build-yanfei.sh`
 builds it; `./build.sh` retains the upstream profile for reference. Both write into
 `build/`, so rebuild the desired profile before packaging or emulator comparisons.
-Yanfei identifies itself as `v1.6.1-y12`. Engine additions are
+Yanfei identifies itself as `v1.6.1-y13`. Engine additions are
 paused for the [tracker sequencer work](TRACKER.md); core8 adds reusable phrases, chains, song sections and row instruments.
 The engines and 96 presets are retained; tracker projects use a larger journal.
+Y13 adds scrolling over four section pages, a four-bar limit, and repeat/wait per track.
 Core11 makes ALL the default tracker view after a restart.
 Core10 adds an editable four-track ALL view. SHIFT + UP switches to PHRASE.
 Core9 adds the selected row's four DETAIL values to the PHRASE footer.

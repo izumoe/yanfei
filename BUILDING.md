@@ -147,7 +147,7 @@ Build the firmware and emulator first. Then run:
 
 ```sh
 python3 -m pip install -r web/requirements-pages.txt
-python3 web/make_pages.py build/yanfei.fwsc v1.6.1-y12 build/pages --emulator build/emu
+python3 web/make_pages.py build/yanfei.fwsc v1.6.1-y13 build/pages --emulator build/emu
 python3 -m http.server 8000 --directory build/pages
 ```
 

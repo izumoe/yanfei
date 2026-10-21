@@ -21,7 +21,7 @@ It covers sound selection, the tracker, song arrangement, and project storage.</
 <li><a href="#limits-and-messages">Limits and messages</a></li>
 </ul>
 <p>Use the <a href="TRACKER_QUICK_REFERENCE.html">quick reference</a> for the control tables.
-See the <a href="images/yanfei12-tracker.png">screen examples</a> for the tracker views.</p>
+See the <a href="images/yanfei13-tracker.png">screen examples</a> for the tracker views.</p>
 <h2 id="controls-and-terms">Controls and terms</h2>
 <h3 id="panel-buttons-and-keyboard-keys">Panel buttons and keyboard keys</h3>
 <p>The <strong>EDIT button</strong> is on the control panel.
@@ -36,7 +36,7 @@ They have different functions.</p>
 <li>Release the SHIFT key.</li>
 </ol>
 <p>For <strong>SHIFT + OPTION + EDIT</strong>, hold SHIFT and OPTION before you press EDIT.
-Use this clone command in CHAIN or SONG.
+Use this clone command in a section page, CHAIN, or SONG.
 It does not clone a phrase from the PHRASE view.</p>
 <h3 id="tracker-keyboard-map">Tracker keyboard map</h3>
 <table>
@@ -271,7 +271,8 @@ The tracker has four views:</p>
 </tr>
 </tbody>
 </table>
-<p>The PHRASE heading shows the engine and phrase number.
+<p>The PHRASE heading shows the engine. In section editing, it also shows the page number.
+In separate phrase editing, it shows the phrase number.
 It does not show the word TRACKER.</p>
 <p>In PHRASE and ALL, the bottom strip shows four values for the selected row:</p>
 <table>
@@ -377,7 +378,7 @@ An inversion has the same chord label. The label does not show its bass note.
 An ambiguous set uses the chord whose root is the lowest note, if possible.
 The label does not change the stored notes.</p>
 <p>Use LEFT and RIGHT to select a track. Use UP, DOWN, or SELECT to select a row.
-ALGORITHM also selects a track. The row stays selected if the new phrase is long enough.
+ALGORITHM also selects a track. In section editing, the row stays selected.
 The bottom strip shows CH, RT, ND, and VEL for the selected cell.</p>
 <p>Press REC once to enable note entry. Play one note or hold several note keys together.
 This replaces the selected cell's notes. Release all note keys to advance one row.
@@ -429,7 +430,7 @@ The first two drum keys are tracker controls. Use the detailed lane view for tho
 </tr>
 <tr>
 <td>PLAY</td>
-<td>Repeat all four edit phrases.</td>
+<td>Repeat the selected section; in separate phrase editing, repeat all four edit phrases.</td>
 </tr>
 <tr>
 <td>SHIFT + PLAY</td>
@@ -475,7 +476,8 @@ The cursor moves to the next row after you release all note-entry keys.</p>
 <li>Press REC until NAV appears.</li>
 <li>Press the PLAY button.</li>
 </ol>
-<p>The selected track repeats its phrase.
+<p>In section editing, all tracks repeat the selected section.
+In separate PHRASE editing, the selected track repeats its phrase.
 Press PLAY again to stop.</p>
 <h3 id="play-all-four-tracks">Play all four tracks</h3>
 <ol>
@@ -494,7 +496,15 @@ Inside the tracker, its current view controls what PLAY starts.</p>
 </thead>
 <tbody>
 <tr>
-<td>PHRASE</td>
+<td>ALL or PHRASE in section editing</td>
+<td>The selected section, repeated</td>
+</tr>
+<tr>
+<td>ALL in separate phrase editing</td>
+<td>The four edit phrases, repeated</td>
+</tr>
+<tr>
+<td>PHRASE in separate phrase editing</td>
 <td>The selected track's phrase, repeated</td>
 </tr>
 <tr>
@@ -510,14 +520,96 @@ Inside the tracker, its current view controls what PLAY starts.</p>
 <p>CHAIN playback starts at the selected link.
 After the last link, it repeats from the first link.
 SHIFT + PLAY starts the song from the selected song row.
-Shorter chains wait silently at a section boundary.
-The next section starts after all participating tracks finish.</p>
+A fixed section ends after its set number of bars. Shorter tracks repeat or wait,
+as set for each track. In AUTO, the next section starts after all tracks finish.</p>
 <h3 id="set-tempo">Set tempo</h3>
 <ol>
 <li>Hold the GLO button.</li>
 <li>Turn SELECT to set BPM.</li>
 <li>Release the GLO button.</li>
 </ol>
+<h2 id="edit-a-section-of-up-to-four-bars">Edit a section of up to four bars</h2>
+<p>A new project starts with a four-bar section. At DIV 1/16, with 16 rows in each
+phrase, this is 64 rows. The screen shows 16 rows at a time.
+The page indicator shows <code>1/4</code>, <code>2/4</code>, <code>3/4</code>, or <code>4/4</code>.
+Row numbers are hexadecimal: <code>00</code> through <code>3F</code>.</p>
+<p>Use UP, DOWN, or SELECT to move through the rows. The screen changes page when
+you cross a page boundary. Movement stops at the first or last row.
+Hold SHIFT and turn SELECT to change page. OPTION + UP or DOWN also changes page.
+The row within the page stays selected.</p>
+<p>ALL and detailed PHRASE can both edit section pages. SHIFT + UP switches between
+these views. In SONG, SHIFT + UP opens the selected section in ALL.
+In section editing, PLAY repeats that section. SHIFT + PLAY starts the arrangement.
+Stop playback before you change section notes or references.
+REC switches between NAV and NOTE entry. Use separate phrase editing for live recording.</p>
+<h3 id="set-the-section-length">Set the section length</h3>
+<ol>
+<li>Stop playback.</li>
+<li>Open a section page or select a row in SONG.</li>
+<li>Hold SHIFT and OPTION.</li>
+<li>Turn SELECT to set one, two, three, or four bars.</li>
+<li>Release the keys.</li>
+</ol>
+<p>Turning below one bar selects AUTO. Old projects load with AUTO to keep their
+previous timing: all tracks finish their chains before the next section starts.
+Use a bar length for the new fixed section boundary.
+Shortening a section does not erase notes on later pages.</p>
+<p>A bar has four musical beats. The section clock is independent of track DIV,
+SWING, and phrase LEN. With another division or a shorter phrase, a page can take
+less or more than one bar. The section still ends at the set number of beats.
+Notes after this boundary do not play in that pass.</p>
+<h3 id="repeat-a-shorter-track-or-let-it-wait">Repeat a shorter track, or let it wait</h3>
+<ol>
+<li>Stop playback and select the track in a section page or SONG.</li>
+<li>Hold OPTION.</li>
+<li>Turn PRESETS right for REPEAT, or left for WAIT.</li>
+<li>Release OPTION.</li>
+</ol>
+<p>REPEAT plays the track's chain again until the section ends.
+WAIT plays it once, then releases its notes and waits silently.
+SONG shows R or W beside each track number. New fixed sections use REPEAT.
+An empty track stays silent. An empty page before a later filled page takes
+16 silent rows. All tracks start the next section together.
+AUTO uses the previous wait behavior.</p>
+<h3 id="copy-or-make-a-variation-of-a-page">Copy or make a variation of a page</h3>
+<p>These commands affect the selected track's page:</p>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SHIFT + OPTION + LEFT</td>
+<td>Copy the page reference.</td>
+</tr>
+<tr>
+<td>SHIFT + OPTION + RIGHT</td>
+<td>Paste the reference into this page.</td>
+</tr>
+<tr>
+<td>SHIFT + OPTION + EDIT</td>
+<td>Clone this page for separate note edits.</td>
+</tr>
+</tbody>
+</table>
+<p>A pasted page shares its notes and automation with the source. Clone it before
+you change notes that must differ. A clone still uses the same instrument numbers.
+If two sections share a chain, clone that chain in SONG before you change its pages.</p>
+<p>The project has 32 shared phrases. Each page uses one phrase for each track that
+has notes. Browsing a blank page uses no new phrase. Copying a reference also uses
+no new phrase. A new written page or a clone needs a free phrase.
+The display reports PHRASE BANK FULL when none is available.</p>
+<p>SHIFT + OPTION and SHIFT + EDIT still copy and paste one row.
+Copying a whole section in SONG also copies its length and repeat settings.</p>
+<h3 id="edit-one-phrase-separately">Edit one phrase separately</h3>
+<p>Press SHIFT + DOWN in ALL or PHRASE to switch between section editing and separate
+phrase editing. The message says SECTION EDIT or PHRASE EDIT.
+In separate phrase editing, OPTION + UP or DOWN selects a phrase ID. PLAY repeats
+the edit phrases in ALL, or the selected phrase in PHRASE. REC has its previous
+NAV, NOTE, ARM cycle. Opening a phrase from CHAIN also selects this mode.</p>
 <h2 id="edit-notes-and-drums">Edit notes and drums</h2>
 <h3 id="select-a-row-or-cell">Select a row or cell</h3>
 <ul>
@@ -525,7 +617,8 @@ The next section starts after all participating tracks finish.</p>
 <li>Press LEFT or RIGHT to select a column.</li>
 <li>Press UP or DOWN to move one row.</li>
 <li>Press OPTION + LEFT or OPTION + RIGHT to select a track.</li>
-<li>Press OPTION + UP or OPTION + DOWN to select another phrase number.</li>
+<li>Press OPTION + UP or OPTION + DOWN to change section page.</li>
+<li>In separate phrase editing, these keys select another phrase number.</li>
 </ul>
 <p>Stop playback before you change the selected phrase.</p>
 <h3 id="change-a-note">Change a note</h3>
@@ -759,7 +852,7 @@ Core8 uses row numbers rather than stored A/B section names.</p>
 <li>Press SHIFT + EDIT.</li>
 </ol>
 <p>All four rows now use the same chain references.
-The section copy includes all four tracks.</p>
+The section copy includes all four tracks, its length, and its repeat settings.</p>
 <h3 id="make-section-b">Make section B</h3>
 <ol>
 <li>Select row <code>02</code>.</li>
@@ -906,7 +999,7 @@ Use the I column for instrument changes.</p>
 <h2 id="record-while-the-phrase-plays">Record while the phrase plays</h2>
 <ol>
 <li>Stop playback.</li>
-<li>Open PHRASE.</li>
+<li>Open PHRASE. Press SHIFT + DOWN if needed to select PHRASE EDIT.</li>
 <li>Select the track.</li>
 <li>Press REC until ARM appears.</li>
 <li>Press PLAY.</li>

@@ -176,7 +176,7 @@ starts, recovery needs <a href="https://github.com/kurogedelic/FM-1-transporter"
 <h2 id="build-the-pages-site">Build the Pages site</h2>
 <p>Build the firmware and emulator first. Then run:</p>
 <pre><code class="language-sh">python3 -m pip install -r web/requirements-pages.txt
-python3 web/make_pages.py build/yanfei.fwsc v1.6.1-y12 build/pages --emulator build/emu
+python3 web/make_pages.py build/yanfei.fwsc v1.6.1-y13 build/pages --emulator build/emu
 python3 -m http.server 8000 --directory build/pages
 </code></pre>
 <p>Open <code>http://localhost:8000</code>. The site includes the editor, emulator, installer,

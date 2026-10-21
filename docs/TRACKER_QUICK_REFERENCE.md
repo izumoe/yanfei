@@ -9,7 +9,9 @@ In ALL, LEFT and RIGHT select a track. UP and DOWN select a row.
 Use REC note entry to replace the cell with one note, a chord, or drum hits.
 PRESETS and EDIT with arrows transpose the whole chord.
 SHIFT + OPTION copies the row. SHIFT + EDIT pastes it. OPTION + EDIT clears it.
-PLAY repeats all four edit phrases. SHIFT + PLAY starts the song.
+PLAY repeats the selected section. SHIFT + PLAY starts the song.
+A new section has four pages: 64 rows at DIV 1/16, or four bars.
+SELECT and UP/DOWN scroll across pages. SHIFT + SELECT changes page.
 One or two notes show their pitches. Larger sets show a chord name or MULTI.
 See [Use the four-track view](USER_GUIDE.md#use-the-four-track-view) for details.
 
@@ -40,14 +42,20 @@ For a combination, hold the modifiers before you press the last key.
 | UP / DOWN | Select a row. |
 | SELECT knob | Select a row in the tracker. |
 | OPTION + LEFT / RIGHT | Select a track. |
-| OPTION + UP / DOWN | Select a phrase; in CHAIN, select a chain. |
+| OPTION + UP / DOWN | Change section page; in separate PHRASE, select a phrase; in CHAIN, select a chain. |
+| SHIFT + UP in SONG | Edit the selected section in ALL. |
+| SHIFT + DOWN in ALL / PHRASE | Switch section / separate phrase editing. |
+| SHIFT + SELECT | Change section page. |
+| SHIFT + OPTION + SELECT | Set section length: AUTO or one through four bars. |
+| OPTION + PRESETS in section / SONG | Right: selected track repeats; left: plays once and waits. |
 | SHIFT + LEFT | PHRASE → CHAIN → SONG. |
 | SHIFT + RIGHT | SONG → selected CHAIN → selected PHRASE → sound editing. |
 | GLO button | Open SONG after tracker activation. |
 | ALGORITHM knob | Select a track. |
 
 Press SEQ to cycle the tracker, STEP, DETAIL, and AUTOMATION pages.
-In PHRASE, the heading shows an engine and phrase number.
+In section editing, the heading shows the page number.
+In separate PHRASE editing, it shows the engine and phrase number.
 The table shows N1 through N4, or KD through RM.
 In PHRASE and ALL, the bottom strip shows CH (chance), RT (ratchet), ND (nudge), and VEL (velocity) for the selected row.
 KNOB 1 through KNOB 4 still control the sound in PHRASE.
@@ -66,7 +74,10 @@ KNOB 1 through KNOB 4 still control the sound in PHRASE.
 | OPTION + EDIT | Clear the selected cell or reference. |
 | SHIFT + OPTION in PHRASE | Copy the whole phrase row. |
 | SHIFT + OPTION in CHAIN | Copy the link and its transpose value. |
-| SHIFT + OPTION in SONG | Copy all four cells of the section. |
+| SHIFT + OPTION in SONG | Copy all four cells, length, and repeat settings. |
+| SHIFT + OPTION + LEFT in a section | Copy the selected track's page reference. |
+| SHIFT + OPTION + RIGHT in a section | Paste a shared page reference. |
+| SHIFT + OPTION + EDIT in a section | Clone its page for separate note edits. |
 | EDIT on a filled SONG cell | Copy only its chain reference. |
 | SHIFT + EDIT | Paste at the selected location. |
 | SHIFT + OPTION + EDIT in CHAIN | Clone the selected phrase. |
@@ -84,14 +95,16 @@ Phrase clone also copies automation.
 
 | Control or value | Action or meaning |
 | --- | --- |
-| REC button in PHRASE | NAV → NOTE → ARM → NAV. |
+| REC button in section editing | NAV ↔ NOTE. |
+| REC button in separate phrase editing | NAV → NOTE → ARM → NAV. |
 | Note-entry keys in NOTE | Enter up to four pitches; release all keys to advance. |
 | F#3 in NOTE | Write OFF and advance. |
 | EDIT + F#3 in NOTE | Write a tie and advance. |
 | OPTION held + SELECT knob | Set the row gate; the footer shows its value. |
 | EDIT held + SELECT knob | Extend/shorten a note with ties. |
 | EDIT + PLAY in PHRASE | Hear the selected row while stopped. |
-| PLAY in PHRASE | Repeat the selected track's phrase. |
+| PLAY in section editing | Repeat the selected section. |
+| PLAY in separate PHRASE editing | Repeat the selected track's phrase. |
 | PLAY in CHAIN | Start at the selected link; repeat the chain on the selected track. |
 | PLAY in SONG | Play from the selected section through the song end. |
 | SHIFT + PLAY | Play SONG from the selected song row. |
@@ -132,3 +145,11 @@ To save a whole project:
 To load, select LOAD with KNOB 3 on PROJECT, then press OCT+.
 Loading replaces current work.
 SAVE > USER saves a sound, not the complete project.
+
+Fixed section lengths use musical time, independent of track LEN, DIV, and SWING.
+At other divisions, a page is not necessarily one bar. A shorter section keeps
+notes on later pages. SONG shows R for REPEAT and W for WAIT beside each track.
+AUTO preserves the previous finish-all-chains timing for old projects.
+Browsing blank pages uses no phrase slots. Written pages and clones share the
+project's limit of 32 phrases. Pasting a page shares the source phrase.
+Clone a shared chain in SONG before you change pages for only one section.

@@ -6,7 +6,7 @@ The fork source is [izumoe/yanfei](https://github.com/izumoe/yanfei).
 
 Yanfei has twelve engines, 96 factory presets, and a four-track tracker.
 The tracker starts in ALL. Press SHIFT + UP to open detailed PHRASE.
-Use shared phrases, chains, and song sections to arrange music.
+Scroll through sections of up to four bars. Use shared phrases and chains to arrange music.
 
 ## Use Yanfei
 

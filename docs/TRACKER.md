@@ -4,6 +4,37 @@ For operating instructions, read the [user guide](USER_GUIDE.md).
 Use the [quick reference](TRACKER_QUICK_REFERENCE.md) for the controls.
 This document contains implementation and validation details.
 
+## Four-page section editing (y13)
+
+New sections use a fixed length of one through four bars. Four bars are 16
+musical beats. At 1/16 division and 16-row phrase lengths, a section spans 64 rows.
+ALL and detailed PHRASE scroll over four 16-row pages. The existing phrases,
+chains and working caches remain the storage model. Reading a missing page does
+not allocate a phrase. Editing one allocates it from the shared 32-phrase bank.
+Reference copy/paste shares a phrase; clone makes independent notes and automation.
+
+A section stores two bytes: beats (0 AUTO, 1..16 timed) and a four-track repeat
+mask. The UI offers whole bars. A master sixteenth clock uses the transport's
+sample advance, including external MIDI clock. It resets all track schedulers at
+a common boundary. Shorter tracks repeat their chains or wait silently. An
+internal missing page consumes 16 silent rows at the track's division. Longer
+chains are cut at the fixed boundary. AUTO retains the previous chain barrier.
+PLAY in section editing loops the selected section; SONG advances the arrangement.
+Recording and note edits during arrangement playback remain disabled.
+
+The project payload is 15,792 bytes, up by 64 bytes. Version 2 appends section
+settings after the unchanged version 1 body. The journal and backup paths read
+both lengths and verify CRCs over the stored length. Old projects use AUTO;
+rename or save upgrades the envelope while preserving notes and metadata.
+The flash allocation and eight-voice budget remain unchanged.
+The y13 app is 436,192 bytes, up by 4,836 bytes from y12. Ordinary RAM is
+66,312 of 73,728 bytes. The pool uses 345,112 of 368,640 bytes. Both RAM totals
+increase by 64 bytes. The combined static interrupt/keyboard/step/section cost
+is 6,634 against the original 8,285 baseline and its unchanged tolerance.
+Screen lint passes 13,200 scenes. Browser checks cover all four pages, row 3F,
+reference cloning, repeat/wait and section playback. Device audio deadlines
+remain unmeasured. See the user guide for controls and the build report for logs.
+
 ## Yanfei name (y12)
 
 The custom firmware is named Yanfei. The boot screen, ABOUT page, serial
@@ -102,9 +133,9 @@ the normal preset/engine pages to edit it. Reusing an I number shares that sound
 
 PLAY on PHRASE loops the selected track. PLAY on CHAIN loops that chain on
 the selected track. PLAY on SONG, or SHIFT+PLAY, plays the arrangement from
-the selected song row. All participating tracks finish a section before the
-next section starts; shorter chains wait silently. Empty sections and empty
-links are skipped, and the song stops at its end. HOME/panel PLAY outside the
+the selected song row. Fixed sections end at their set length; each track repeats
+or waits. AUTO waits for all tracks and skips empty sections and links.
+The song stops at its end. HOME/panel PLAY outside the
 tracker loops the four currently selected phrases. The normal clock and MIDI
 transport remain available. Chain/song editing and recording require stopping.
 
@@ -121,7 +152,7 @@ transport remain available. Chain/song editing and recording require stopping.
 | SHIFT + left | Phrase → chain → song |
 | SHIFT + right | Song → selected chain → selected phrase; from phrase, instrument editing |
 | OPTION + left/right | Select track |
-| OPTION + up/down | Select phrase ID; in CHAIN, select chain ID |
+| OPTION + up/down | Change section page; in separate phrase mode select phrase ID; in CHAIN select chain ID |
 | EDIT tap | Insert last note into an empty cell; copy a filled note/value; toggle drum hit; create/copy a library reference |
 | EDIT + arrows | Edit selected value; notes move by semitone/octave |
 | OPTION + EDIT | Clear selected cell/reference |
@@ -215,20 +246,21 @@ sample slots. The third sample slot (0xC8000..0xDBFFF), user presets, FM6 banks,
 settings and OTA are outside this allocation. Core sample upload/erase refuses
 the two reserved slots. SAMPLE remains deferred.
 
-The versioned payload is 15,728 bytes, including the legacy 3,840-byte base
+The version 2 payload is 15,792 bytes, including 64 bytes of section settings,
+the legacy 3,840-byte base
 project and compact instrument parameters. Writes erase only the alternate copy,
 verify the body and commit its CRC-protected header last. Loading fully validates
 both copies and can fall back from a torn or semantically invalid newer copy.
 Erase commits a tombstone. Rename, restore-last and full browser backups preserve
 the entire library. Legacy core projects remain loadable; new tracker libraries
-require core8. The desktop sequencer still exposes the compatible working steps;
+require core8; version 2 section settings require y13. The desktop sequencer still exposes the compatible working steps;
 tracker-only fields and arrangement are edited on the device/emulator.
 
 The active library is 13,648 bytes of ordinary RAM. Project staging and undo use
 the fixed pool; there are no heap allocations or unbounded audio-path walks.
 Target builds retain at least 4 KiB ordinary RAM and 8 KiB pool headroom. Exact
-build totals and checks are recorded alongside the firmware in `build/core8`.
-This build uses 428,864 bytes of app space, 66,248/73,728 bytes ordinary RAM,
+build totals and checks are recorded alongside the firmware in `build/yanfei13`.
+The original core8 build uses 428,864 bytes of app space, 66,248/73,728 bytes ordinary RAM,
 and 345,048/368,640 bytes of the pool. The combined static ISR/keyboard/step
 dispatch cost is 6,531 against the original 8,285 baseline and its unchanged
 tolerance; the out-of-line step and keyboard work is charged back into that guard.
@@ -238,7 +270,9 @@ tolerance; the out-of-line step and keyboard work is charged back into that guar
 `tests/run_core_tests.sh` covers the compatibility editor, full migration,
 shared edits and automation, clone/reference undo, note articulation, arrangement
 barriers, transposition, all factory sounds, journal failure/fallback, and the
-full backup protocol. NOR tests inject power cuts through body/header writes and
+full backup protocol. Section tests exercise all 64 rows, common timed boundaries,
+repeat/wait, silent gaps, shared pages and clone undo. An unchanged y12 fixture
+checks old project import, journal load and rename upgrade. NOR tests inject power cuts through body/header writes and
 erases, checking canaries outside the reserved region. Screen lint exercises
 5,360 scenes across palettes, styles, LARGE settings, engines and library views.
 `tools/capture_tracker.py` drives the actual WASM firmware panel, captures the

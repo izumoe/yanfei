@@ -7,7 +7,9 @@ In ALL, LEFT and RIGHT select a track. UP and DOWN select a row.
 Use REC note entry to replace the cell with one note, a chord, or drum hits.
 PRESETS and EDIT with arrows transpose the whole chord.
 SHIFT + OPTION copies the row. SHIFT + EDIT pastes it. OPTION + EDIT clears it.
-PLAY repeats all four edit phrases. SHIFT + PLAY starts the song.
+PLAY repeats the selected section. SHIFT + PLAY starts the song.
+A new section has four pages: 64 rows at DIV 1/16, or four bars.
+SELECT and UP/DOWN scroll across pages. SHIFT + SELECT changes page.
 One or two notes show their pitches. Larger sets show a chord name or MULTI.
 See <a href="USER_GUIDE.html#use-the-four-track-view">Use the four-track view</a> for details.</p>
 <h2 id="keyboard-keys">Keyboard keys</h2>
@@ -91,7 +93,27 @@ For a combination, hold the modifiers before you press the last key.</p>
 </tr>
 <tr>
 <td>OPTION + UP / DOWN</td>
-<td>Select a phrase; in CHAIN, select a chain.</td>
+<td>Change section page; in separate PHRASE, select a phrase; in CHAIN, select a chain.</td>
+</tr>
+<tr>
+<td>SHIFT + UP in SONG</td>
+<td>Edit the selected section in ALL.</td>
+</tr>
+<tr>
+<td>SHIFT + DOWN in ALL / PHRASE</td>
+<td>Switch section / separate phrase editing.</td>
+</tr>
+<tr>
+<td>SHIFT + SELECT</td>
+<td>Change section page.</td>
+</tr>
+<tr>
+<td>SHIFT + OPTION + SELECT</td>
+<td>Set section length: AUTO or one through four bars.</td>
+</tr>
+<tr>
+<td>OPTION + PRESETS in section / SONG</td>
+<td>Right: selected track repeats; left: plays once and waits.</td>
 </tr>
 <tr>
 <td>SHIFT + LEFT</td>
@@ -112,7 +134,8 @@ For a combination, hold the modifiers before you press the last key.</p>
 </tbody>
 </table>
 <p>Press SEQ to cycle the tracker, STEP, DETAIL, and AUTOMATION pages.
-In PHRASE, the heading shows an engine and phrase number.
+In section editing, the heading shows the page number.
+In separate PHRASE editing, it shows the engine and phrase number.
 The table shows N1 through N4, or KD through RM.
 In PHRASE and ALL, the bottom strip shows CH (chance), RT (ratchet), ND (nudge), and VEL (velocity) for the selected row.
 KNOB 1 through KNOB 4 still control the sound in PHRASE.</p>
@@ -167,7 +190,19 @@ KNOB 1 through KNOB 4 still control the sound in PHRASE.</p>
 </tr>
 <tr>
 <td>SHIFT + OPTION in SONG</td>
-<td>Copy all four cells of the section.</td>
+<td>Copy all four cells, length, and repeat settings.</td>
+</tr>
+<tr>
+<td>SHIFT + OPTION + LEFT in a section</td>
+<td>Copy the selected track's page reference.</td>
+</tr>
+<tr>
+<td>SHIFT + OPTION + RIGHT in a section</td>
+<td>Paste a shared page reference.</td>
+</tr>
+<tr>
+<td>SHIFT + OPTION + EDIT in a section</td>
+<td>Clone its page for separate note edits.</td>
 </tr>
 <tr>
 <td>EDIT on a filled SONG cell</td>
@@ -207,7 +242,11 @@ Phrase clone also copies automation.</p>
 </thead>
 <tbody>
 <tr>
-<td>REC button in PHRASE</td>
+<td>REC button in section editing</td>
+<td>NAV ↔ NOTE.</td>
+</tr>
+<tr>
+<td>REC button in separate phrase editing</td>
 <td>NAV → NOTE → ARM → NAV.</td>
 </tr>
 <tr>
@@ -235,7 +274,11 @@ Phrase clone also copies automation.</p>
 <td>Hear the selected row while stopped.</td>
 </tr>
 <tr>
-<td>PLAY in PHRASE</td>
+<td>PLAY in section editing</td>
+<td>Repeat the selected section.</td>
+</tr>
+<tr>
+<td>PLAY in separate PHRASE editing</td>
 <td>Repeat the selected track's phrase.</td>
 </tr>
 <tr>
@@ -311,4 +354,11 @@ Set QUANTIZE on the AUTOMATION page.</p>
 </ol>
 <p>To load, select LOAD with KNOB 3 on PROJECT, then press OCT+.
 Loading replaces current work.
-SAVE &gt; USER saves a sound, not the complete project.</p></main></html>
+SAVE &gt; USER saves a sound, not the complete project.</p>
+<p>Fixed section lengths use musical time, independent of track LEN, DIV, and SWING.
+At other divisions, a page is not necessarily one bar. A shorter section keeps
+notes on later pages. SONG shows R for REPEAT and W for WAIT beside each track.
+AUTO preserves the previous finish-all-chains timing for old projects.
+Browsing blank pages uses no phrase slots. Written pages and clones share the
+project's limit of 32 phrases. Pasting a page shares the source phrase.
+Clone a shared chain in SONG before you change pages for only one section.</p></main></html>

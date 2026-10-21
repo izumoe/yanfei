@@ -23,7 +23,7 @@ It covers sound selection, the tracker, song arrangement, and project storage.
 - [Limits and messages](#limits-and-messages)
 
 Use the [quick reference](TRACKER_QUICK_REFERENCE.md) for the control tables.
-See the [screen examples](images/yanfei12-tracker.png) for the tracker views.
+See the [screen examples](images/yanfei13-tracker.png) for the tracker views.
 
 ## Controls and terms
 
@@ -43,7 +43,7 @@ For a combination such as **SHIFT + RIGHT**:
 3. Release the SHIFT key.
 
 For **SHIFT + OPTION + EDIT**, hold SHIFT and OPTION before you press EDIT.
-Use this clone command in CHAIN or SONG.
+Use this clone command in a section page, CHAIN, or SONG.
 It does not clone a phrase from the PHRASE view.
 
 ### Tracker keyboard map
@@ -150,7 +150,8 @@ The tracker has four views:
 | CHAIN | A CHAIN heading, with PHRASE and TRANSPOSE columns. |
 | SONG | A SONG heading, with four track columns. |
 
-The PHRASE heading shows the engine and phrase number.
+The PHRASE heading shows the engine. In section editing, it also shows the page number.
+In separate phrase editing, it shows the phrase number.
 It does not show the word TRACKER.
 
 In PHRASE and ALL, the bottom strip shows four values for the selected row:
@@ -210,7 +211,7 @@ An ambiguous set uses the chord whose root is the lowest note, if possible.
 The label does not change the stored notes.
 
 Use LEFT and RIGHT to select a track. Use UP, DOWN, or SELECT to select a row.
-ALGORITHM also selects a track. The row stays selected if the new phrase is long enough.
+ALGORITHM also selects a track. In section editing, the row stays selected.
 The bottom strip shows CH, RT, ND, and VEL for the selected cell.
 
 Press REC once to enable note entry. Play one note or hold several note keys together.
@@ -229,7 +230,7 @@ The first two drum keys are tracker controls. Use the detailed lane view for tho
 | SHIFT + EDIT | Paste the row into the selected track and row. |
 | OPTION + EDIT | Clear the row's notes, instrument reference, gate, and OFF flag. |
 | OPTION + SELECT | Set the row gate. |
-| PLAY | Repeat all four edit phrases. |
+| PLAY | Repeat the selected section; in separate phrase editing, repeat all four edit phrases. |
 | SHIFT + PLAY | Play the song from the selected song row. |
 | SHIFT + UP | Switch back to the detailed PHRASE view. |
 
@@ -272,7 +273,8 @@ To hear the phrase:
 1. Press REC until NAV appears.
 2. Press the PLAY button.
 
-The selected track repeats its phrase.
+In section editing, all tracks repeat the selected section.
+In separate PHRASE editing, the selected track repeats its phrase.
 Press PLAY again to stop.
 
 ### Play all four tracks
@@ -286,21 +288,103 @@ Inside the tracker, its current view controls what PLAY starts.
 
 | View | PLAY starts |
 | --- | --- |
-| PHRASE | The selected track's phrase, repeated |
+| ALL or PHRASE in section editing | The selected section, repeated |
+| ALL in separate phrase editing | The four edit phrases, repeated |
+| PHRASE in separate phrase editing | The selected track's phrase, repeated |
 | CHAIN | The selected chain on the selected track, repeated |
 | SONG | The song from the selected section, through its end |
 
 CHAIN playback starts at the selected link.
 After the last link, it repeats from the first link.
 SHIFT + PLAY starts the song from the selected song row.
-Shorter chains wait silently at a section boundary.
-The next section starts after all participating tracks finish.
+A fixed section ends after its set number of bars. Shorter tracks repeat or wait,
+as set for each track. In AUTO, the next section starts after all tracks finish.
 
 ### Set tempo
 
 1. Hold the GLO button.
 2. Turn SELECT to set BPM.
 3. Release the GLO button.
+
+## Edit a section of up to four bars
+
+A new project starts with a four-bar section. At DIV 1/16, with 16 rows in each
+phrase, this is 64 rows. The screen shows 16 rows at a time.
+The page indicator shows `1/4`, `2/4`, `3/4`, or `4/4`.
+Row numbers are hexadecimal: `00` through `3F`.
+
+Use UP, DOWN, or SELECT to move through the rows. The screen changes page when
+you cross a page boundary. Movement stops at the first or last row.
+Hold SHIFT and turn SELECT to change page. OPTION + UP or DOWN also changes page.
+The row within the page stays selected.
+
+ALL and detailed PHRASE can both edit section pages. SHIFT + UP switches between
+these views. In SONG, SHIFT + UP opens the selected section in ALL.
+In section editing, PLAY repeats that section. SHIFT + PLAY starts the arrangement.
+Stop playback before you change section notes or references.
+REC switches between NAV and NOTE entry. Use separate phrase editing for live recording.
+
+### Set the section length
+
+1. Stop playback.
+2. Open a section page or select a row in SONG.
+3. Hold SHIFT and OPTION.
+4. Turn SELECT to set one, two, three, or four bars.
+5. Release the keys.
+
+Turning below one bar selects AUTO. Old projects load with AUTO to keep their
+previous timing: all tracks finish their chains before the next section starts.
+Use a bar length for the new fixed section boundary.
+Shortening a section does not erase notes on later pages.
+
+A bar has four musical beats. The section clock is independent of track DIV,
+SWING, and phrase LEN. With another division or a shorter phrase, a page can take
+less or more than one bar. The section still ends at the set number of beats.
+Notes after this boundary do not play in that pass.
+
+### Repeat a shorter track, or let it wait
+
+1. Stop playback and select the track in a section page or SONG.
+2. Hold OPTION.
+3. Turn PRESETS right for REPEAT, or left for WAIT.
+4. Release OPTION.
+
+REPEAT plays the track's chain again until the section ends.
+WAIT plays it once, then releases its notes and waits silently.
+SONG shows R or W beside each track number. New fixed sections use REPEAT.
+An empty track stays silent. An empty page before a later filled page takes
+16 silent rows. All tracks start the next section together.
+AUTO uses the previous wait behavior.
+
+### Copy or make a variation of a page
+
+These commands affect the selected track's page:
+
+| Control | Action |
+| --- | --- |
+| SHIFT + OPTION + LEFT | Copy the page reference. |
+| SHIFT + OPTION + RIGHT | Paste the reference into this page. |
+| SHIFT + OPTION + EDIT | Clone this page for separate note edits. |
+
+A pasted page shares its notes and automation with the source. Clone it before
+you change notes that must differ. A clone still uses the same instrument numbers.
+If two sections share a chain, clone that chain in SONG before you change its pages.
+
+The project has 32 shared phrases. Each page uses one phrase for each track that
+has notes. Browsing a blank page uses no new phrase. Copying a reference also uses
+no new phrase. A new written page or a clone needs a free phrase.
+The display reports PHRASE BANK FULL when none is available.
+
+SHIFT + OPTION and SHIFT + EDIT still copy and paste one row.
+Copying a whole section in SONG also copies its length and repeat settings.
+
+### Edit one phrase separately
+
+Press SHIFT + DOWN in ALL or PHRASE to switch between section editing and separate
+phrase editing. The message says SECTION EDIT or PHRASE EDIT.
+In separate phrase editing, OPTION + UP or DOWN selects a phrase ID. PLAY repeats
+the edit phrases in ALL, or the selected phrase in PHRASE. REC has its previous
+NAV, NOTE, ARM cycle. Opening a phrase from CHAIN also selects this mode.
 
 ## Edit notes and drums
 
@@ -310,7 +394,8 @@ The next section starts after all participating tracks finish.
 - Press LEFT or RIGHT to select a column.
 - Press UP or DOWN to move one row.
 - Press OPTION + LEFT or OPTION + RIGHT to select a track.
-- Press OPTION + UP or OPTION + DOWN to select another phrase number.
+- Press OPTION + UP or OPTION + DOWN to change section page.
+- In separate phrase editing, these keys select another phrase number.
 
 Stop playback before you change the selected phrase.
 
@@ -520,7 +605,7 @@ Core8 uses row numbers rather than stored A/B section names.
 10. Press SHIFT + EDIT.
 
 All four rows now use the same chain references.
-The section copy includes all four tracks.
+The section copy includes all four tracks, its length, and its repeat settings.
 
 ### Make section B
 
@@ -647,7 +732,7 @@ Use the I column for instrument changes.
 ## Record while the phrase plays
 
 1. Stop playback.
-2. Open PHRASE.
+2. Open PHRASE. Press SHIFT + DOWN if needed to select PHRASE EDIT.
 3. Select the track.
 4. Press REC until ARM appears.
 5. Press PLAY.
