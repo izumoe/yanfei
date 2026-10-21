@@ -1,0 +1,91 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Core firmware review — Yanfei</title><style>body{max-width:900px;margin:32px auto;padding:0 20px;font:16px/1.65 system-ui,sans-serif;color:#222}a{color:inherit}img{max-width:100%;height:auto}pre{overflow:auto;background:#f4f4f4;padding:16px}table{border-collapse:collapse;display:block;overflow:auto}td,th{border:1px solid #ccc;padding:8px;text-align:left}</style><nav><a href="../index.html">Yanfei home</a></nav><main><h1 id="core-firmware-review">Core firmware review</h1>
+<p>Review scope: the code present in this workspace, including the engine submodule,
+firmware integration, preset tables, persistence and editor/emulator paths. Local
+changes on the owner's computer are not included. The firmware is a candidate for
+FM-1 testing; hardware audio deadlines and analogue output have not been measured.</p>
+<h2 id="core3-wave-extension">Core3 WAVE extension</h2>
+<p>Core3 appends PPG-, ESQ- and Prophet VS-inspired banks: 12 original additive
+waveforms, no additional factory presets. WAVE now has 20 waves / 80 harmonic
+mips / 40 KiB of tables. The original eight waves retain their exact sample bytes
+and bank IDs; all core2 save signatures and parameter meanings remain.</p>
+<p>Focused validation covers regenerated table consistency, unchanged old-table
+checksums, 20 distinct spectra, out-of-band energy below -80 dB for every mip,
+all bank corners with scans and pitch/warp extremes, high-note folded harmonics,
+editor bank selection, simulated-flash round trips and full mix health for every
+bank corner. The emulator's heavy scene automates through the three new banks for
+native/WASM comparison. Existing core tests and target budgets pass. The app is 394,276 bytes, with
+187,288 bytes free in its slot. Ordinary RAM remains 52,280 bytes and the pool
+328,896 bytes, unchanged from core2. All 106 mix runs have zero PCM rail hits.</p>
+<p>The original core2 review record follows; its broader fuzz/UI measurements are
+historical checks of that base, not claims that the entire review was repeated for
+this table extension. Current build details are in the package's build report.</p>
+<h2 id="corrections">Corrections</h2>
+<ul>
+<li>Reduced the core factory library to exactly three presets per engine (33 total).
+  FM6's packed factory voices are also reduced to three; OWN/bank slots, startup
+  patches and categories use the new indices. Reference-profile presets remain.</li>
+<li>Preserved fine tuning, pitch-bend residuals and unison detune when chip engines
+  recalculate pitch. Preserved filter state on sounding retriggers while resetting
+  chip envelopes. Retained the earlier decay-divider and PSG envelope corrections.</li>
+<li>Replaced abrupt WAVE harmonic-table selection with crossfades within the safe
+  bandwidth, and tapered high-pitch phase warp. No extra voice storage or buffers.
+  The 7,040 Hz diagnostic improved from about -39 dB off-harmonic energy at maximum
+  warp to about -87 dB; this is a test case, not a universal aliasing bound.</li>
+<li>Rejected reserved engine IDs in editor preset loads and user-preset input, and
+  excluded legacy DIGITAL conversion paths from the fresh core profile. Bumped
+  the profile's storage namespace to core2 because factory indices changed.</li>
+<li>Added compact STRG/MODL tags to fix icon/name overlap in EDIT and PRESETS.</li>
+<li>Made signed phase wrapping explicit with <code>-fwrapv</code> in core target/emulator builds.
+  Hoisted block-constant performance-filter indices to preserve the original loop
+  budget with wrapping enabled. Fixed a missing <code>&lt;stdint.h&gt;</code> in the existing preemption stress harness and kept
+  standalone settings/parser builds compatible with the new profile switch.</li>
+</ul>
+<h2 id="evidence">Evidence</h2>
+<ul>
+<li><code>sh tests/run_core_tests.sh</code>: all 33 presets render and release, distinct chip
+  signals, descriptor ranges, engine/workspace switches, retriggers, storage
+  signatures and reserved-ID rejection. Actual editor factory loads and user
+  preset values round-trip. Chip tests cover clock dividers, noise periods, all
+  parameter extremes, fine tuning, cyclic interpolation and folded-harmonic checks.</li>
+<li>Simulated NOR: all 33 presets survive user-bank reboot and project load, including
+  FM6 patch data. FM6 bank transfer checks include power cuts after every programmed
+  byte, interrupted erases and bank replacement while saved patches retain voices.</li>
+<li>Full mix health: 66 fresh processes, one-note and eight-note input for each preset,
+  real FX/master path, finite output and zero PCM rail hits; largest peak about
+  0.391 FS. Existing voice caps and mono modes apply.</li>
+<li>Two-core host comparison: 14 scenes, every split, four simultaneous parts with
+  inserts, spread, slicer and modulation. All outputs match one-core rendering.
+  This verifies state isolation, not FM-1 execution time.</li>
+<li>AddressSanitizer/UBSan: core integration, chip/WAVE DSP, editor and bank tests;
+  additional malformed editor/USB packets (30,000 iterations), mutated projects
+  (6,000), and preempted drum-grid editing during normal and song playback.
+  Core sanitizer builds use <code>-fwrapv</code> and disable shift checks for existing DSP;
+  standalone chip tests retain signed-overflow checks without <code>-fwrapv</code>.</li>
+<li>Native versus WebAssembly audio: 88,200 frames match bit for bit. Emulator boot,
+  keys, MIDI, LEDs, playback and a saved preset across instances pass. Chromium
+  HOME scopes were inspected for all eleven engines, with no page errors.</li>
+<li>Core screen sweep: 233 screen scenarios in ten palettes, all page/parameter
+  sweeps, both styles and LARGE. Zero layout findings; 3,066,740 alignment
+  measurements with none off by one pixel or more. Free-text ellipses are allowed.</li>
+<li>Reference engine regression: all 108 standalone golden renders unchanged.
+  Broader firmware regression includes 98 golden renders and 720 engine-memory
+  switching sequences unchanged, plus existing storage, MIDI, sequencer, UI and
+  synthesis tests. Optional DaisySP comparison and ThreadSanitizer were not run.</li>
+<li>Target build checks retain flash/RAM reserves, RAM-only flash routines, core-1
+  code restrictions, register-access audit and static DSP loop budgets. WAVE's new
+  budget accounts for four table lookups instead of two; shared limits stay intact.</li>
+</ul>
+<p>GCC 14.2 at <code>-O1</code> incorrectly reuses the existing custom-palette menu count across
+a palette store. The test passes with <code>-fno-ipa-pure-const</code> and at <code>-O2</code>. The broader
+host suite uses <code>CC='cc -fno-ipa-pure-const'</code>; firmware and WASM use Clang. Review
+logs and measurements are under the ignored <code>build/</code> directory.</p>
+<h2 id="hardware-boundary">Hardware boundary</h2>
+<p>The build report beside the candidate package records exact image/RAM sizes and
+hashes. Static budgets and host performance cannot establish FM-1 interrupt/audio
+headroom. Initial hardware tests should cover dense four-part playback, long FX
+tails, rapid preset/engine switching, tuning/bend, repeated save/load and USB audio
+with the second core both off and on. No device has been flashed here.</p>
+<p>DRUM still uses the existing synthesis styles; the proposed 808/909 redesign and
+707/DMX PCM kits are not implemented. SAMPLE and other optional engines remain
+outside this core profile. No additional sample assets or audio-path allocation
+were introduced.</p></main></html>

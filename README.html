@@ -1,0 +1,41 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Yanfei — Yanfei</title><style>body{max-width:900px;margin:32px auto;padding:0 20px;font:16px/1.65 system-ui,sans-serif;color:#222}a{color:inherit}img{max-width:100%;height:auto}pre{overflow:auto;background:#f4f4f4;padding:16px}table{border-collapse:collapse;display:block;overflow:auto}td,th{border:1px solid #ccc;padding:8px;text-align:left}</style><nav><a href="index.html">Yanfei home</a></nav><main><h1 id="yanfei">Yanfei</h1>
+<p>Yanfei is custom firmware for the M-VAVE FM-1. It is based on
+<a href="https://github.com/hugelton/Felucca">Felucca</a> by Leo Kuroshita and Hügelton Instruments.
+The fork source is <a href="https://github.com/izumoe/yanfei">izumoe/yanfei</a>.</p>
+<p>Yanfei has twelve engines, 96 factory presets, and a four-track tracker.
+The tracker starts in ALL. Press SHIFT + UP to open detailed PHRASE.
+Use shared phrases, chains, and song sections to arrange music.</p>
+<h2 id="use-yanfei">Use Yanfei</h2>
+<p><a href="https://izumoe.github.io/yanfei/">Open the website</a> for the editor, emulator, installer, and guide.</p>
+<ul>
+<li><a href="docs/USER_GUIDE.html">User guide</a></li>
+<li><a href="docs/TRACKER_QUICK_REFERENCE.html">Tracker quick reference</a></li>
+<li><a href="docs/CORE_ENGINES.html">Engines and firmware budgets</a></li>
+<li><a href="docs/INSPIRED_PRESETS.html">Inspired presets</a></li>
+<li><a href="docs/TRACKER.html">Tracker implementation</a></li>
+</ul>
+<h2 id="build">Build</h2>
+<p>Follow <a href="BUILDING.html">BUILDING.md</a> to install the toolchain and SDK.
+Then run:</p>
+<pre><code class="language-sh">./build-yanfei.sh
+</code></pre>
+<p>The installable package is <code>build/yanfei.fwsc</code>. The app image is <code>build/yanfei.bin</code>.
+The existing <code>./build-core.sh</code> command also builds Yanfei.
+The package retains the FM-1 update identity required by the installer.</p>
+<p>For the browser emulator, activate Emscripten, then run:</p>
+<pre><code class="language-sh">FELUCCA_CORE=1 sh web/emu/build.sh
+python3 -m http.server 8000 --directory build/emu
+</code></pre>
+<p>Open <code>http://localhost:8000</code> in Chrome or Edge.
+The internal build flag keeps its existing name for compatibility.</p>
+<h2 id="upstream-and-licences">Upstream and licences</h2>
+<p>Yanfei is GPL-3.0-only. Read <a href="LICENSE">LICENSE</a>, <a href="LICENSING.html">LICENSING.md</a>,
+and the component notices in <a href="LICENSES/">LICENSES</a>.
+The engines in <code>firmware/engines</code> come from
+<a href="https://github.com/hugelton/Felucca-Engines">Felucca-Engines</a>, under MIT.
+Upstream copyright notices and credits are retained.
+See <a href="CREDITS.html">CREDITS.md</a> and the <a href="docs/UPSTREAM_README.html">upstream README</a>.</p>
+<p>This fork was developed with AI coding assistance.
+M-VAVE and FM-1 are trademarks of their respective owners.
+Yanfei is not affiliated with or endorsed by M-VAVE.</p>
+<p>Upstream copyright (C) 2026 Leo Kuroshita (@kurogedelic), Hügelton Instruments.</p></main></html>

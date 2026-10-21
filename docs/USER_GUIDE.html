@@ -1,0 +1,1099 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Yanfei user guide — Yanfei</title><style>body{max-width:900px;margin:32px auto;padding:0 20px;font:16px/1.65 system-ui,sans-serif;color:#222}a{color:inherit}img{max-width:100%;height:auto}pre{overflow:auto;background:#f4f4f4;padding:16px}table{border-collapse:collapse;display:block;overflow:auto}td,th{border:1px solid #ccc;padding:8px;text-align:left}</style><nav><a href="../index.html">Yanfei home</a></nav><main><h1 id="yanfei-user-guide">Yanfei user guide</h1>
+<p>This guide is for Yanfei firmware on the M-VAVE FM-1.
+Yanfei is based on Felucca by Leo Kuroshita and Hügelton Instruments.
+It covers sound selection, the tracker, song arrangement, and project storage.</p>
+<h2 id="contents">Contents</h2>
+<ul>
+<li><a href="#controls-and-terms">Controls and terms</a></li>
+<li><a href="#select-a-sound">Select a sound</a></li>
+<li><a href="#open-the-tracker">Open the tracker</a></li>
+<li><a href="#use-the-four-track-view">Use the four-track view</a></li>
+<li><a href="#make-your-first-phrase">Make your first phrase</a></li>
+<li><a href="#edit-notes-and-drums">Edit notes and drums</a></li>
+<li><a href="#set-note-duration">Set note duration</a></li>
+<li><a href="#use-instruments">Use instruments</a></li>
+<li><a href="#use-chains">Use chains</a></li>
+<li><a href="#make-an-aaba-song">Make an A–A–B–A song</a></li>
+<li><a href="#set-chance-repeats-and-timing">Set chance, repeats, and timing</a></li>
+<li><a href="#use-parameter-locks">Use parameter locks</a></li>
+<li><a href="#record-while-the-phrase-plays">Record while the phrase plays</a></li>
+<li><a href="#save-load-and-back-up">Save, load, and back up</a></li>
+<li><a href="#limits-and-messages">Limits and messages</a></li>
+</ul>
+<p>Use the <a href="TRACKER_QUICK_REFERENCE.html">quick reference</a> for the control tables.
+See the <a href="images/yanfei12-tracker.png">screen examples</a> for the tracker views.</p>
+<h2 id="controls-and-terms">Controls and terms</h2>
+<h3 id="panel-buttons-and-keyboard-keys">Panel buttons and keyboard keys</h3>
+<p>The <strong>EDIT button</strong> is on the control panel.
+The <strong>EDIT key</strong> is a key on the musical keyboard.
+They have different functions.</p>
+<p><strong>Press</strong> means press and release.
+<strong>Hold</strong> means keep the control pressed.</p>
+<p>For a combination such as <strong>SHIFT + RIGHT</strong>:</p>
+<ol>
+<li>Hold the SHIFT key.</li>
+<li>Press the RIGHT key.</li>
+<li>Release the SHIFT key.</li>
+</ol>
+<p>For <strong>SHIFT + OPTION + EDIT</strong>, hold SHIFT and OPTION before you press EDIT.
+Use this clone command in CHAIN or SONG.
+It does not clone a phrase from the PHRASE view.</p>
+<h3 id="tracker-keyboard-map">Tracker keyboard map</h3>
+<table>
+<thead>
+<tr>
+<th>Physical key position</th>
+<th>Tracker function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>F3, the leftmost key</td>
+<td>LEFT</td>
+</tr>
+<tr>
+<td>F#3</td>
+<td>OFF in NOTE mode</td>
+</tr>
+<tr>
+<td>G3</td>
+<td>DOWN</td>
+</tr>
+<tr>
+<td>G#3</td>
+<td>UP</td>
+</tr>
+<tr>
+<td>A3</td>
+<td>RIGHT</td>
+</tr>
+<tr>
+<td>A#3 through C#5</td>
+<td>Sixteen note-entry keys</td>
+</tr>
+<tr>
+<td>D5</td>
+<td>SHIFT</td>
+</tr>
+<tr>
+<td>E5</td>
+<td>PLAY</td>
+</tr>
+<tr>
+<td>F5</td>
+<td>OPTION</td>
+</tr>
+<tr>
+<td>G5, the rightmost key</td>
+<td>EDIT</td>
+</tr>
+</tbody>
+</table>
+<p>These names identify physical key positions.
+Octave changes do not move the tracker controls.</p>
+<h3 id="song-terms">Song terms</h3>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Track</td>
+<td>One of four parts that can play at the same time.</td>
+</tr>
+<tr>
+<td>Row</td>
+<td>One time position in a phrase.</td>
+</tr>
+<tr>
+<td>Cell</td>
+<td>One value at a row and column.</td>
+</tr>
+<tr>
+<td>Phrase</td>
+<td>A pattern with up to sixteen rows.</td>
+</tr>
+<tr>
+<td>Instrument</td>
+<td>A stored sound, with its engine and sound settings.</td>
+</tr>
+<tr>
+<td>Chain</td>
+<td>A list of phrases to play in order.</td>
+</tr>
+<tr>
+<td>Link</td>
+<td>One phrase reference and transpose value in a chain.</td>
+</tr>
+<tr>
+<td>Section</td>
+<td>One song row, with a chain reference for each track.</td>
+</tr>
+<tr>
+<td>Reference</td>
+<td>The number of an existing phrase, chain, or instrument.</td>
+</tr>
+<tr>
+<td>Clone</td>
+<td>A new copy that you can change separately.</td>
+</tr>
+<tr>
+<td>Project</td>
+<td>The song, phrases, chains, instruments, and their settings.</td>
+</tr>
+</tbody>
+</table>
+<p>The display uses hexadecimal numbers.
+After <code>09</code>, the numbers continue as <code>0A</code>, <code>0B</code>, <code>0C</code>, <code>0D</code>, <code>0E</code>, and <code>0F</code>.
+A full phrase has rows <code>00</code> through <code>0F</code>.</p>
+<h2 id="select-a-sound">Select a sound</h2>
+<p>Do this before you enter the tracker.</p>
+<ol>
+<li>Stop playback.</li>
+<li>Press the ENV button.</li>
+<li>Press the HOME button.</li>
+<li>Turn ALGORITHM to select a track.</li>
+<li>Turn PRESETS to select a sound.</li>
+<li>Play the keyboard to hear the sound.</li>
+</ol>
+<p>The preset list includes sounds from all twelve engines.
+The display shows the selected engine and preset.
+KNOB 1 through KNOB 4 change the sound parameters shown on HOME.</p>
+<table>
+<thead>
+<tr>
+<th>Engine</th>
+<th>Main use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ANALOG</td>
+<td>Filtered oscillator sounds, basses, and leads</td>
+</tr>
+<tr>
+<td>NES</td>
+<td>Console pulse tones, triangle bass, and noise</td>
+</tr>
+<tr>
+<td>DMG</td>
+<td>Handheld pulse, wave, and noise sounds</td>
+</tr>
+<tr>
+<td>PSG</td>
+<td>AY or Sega square tones and noise</td>
+</tr>
+<tr>
+<td>TRIO</td>
+<td>SID-style oscillators, ring modulation, and filtering</td>
+</tr>
+<tr>
+<td>FM6</td>
+<td>Six-operator FM and DX-style sounds</td>
+</tr>
+<tr>
+<td>YM</td>
+<td>Four-operator YM2612-style FM, as used in the Sega Genesis</td>
+</tr>
+<tr>
+<td>WAVE</td>
+<td>Wave scanning and changing digital tones</td>
+</tr>
+<tr>
+<td>PHASE</td>
+<td>Phase-distortion sounds</td>
+</tr>
+<tr>
+<td>STRING</td>
+<td>Plucked and resonating strings</td>
+</tr>
+<tr>
+<td>MODAL</td>
+<td>Bells, bars, plates, and membranes</td>
+</tr>
+<tr>
+<td>DRUM</td>
+<td>Eight synthesized drum lanes</td>
+</tr>
+</tbody>
+</table>
+<h3 id="psg-chip-selection">PSG chip selection</h3>
+<ol>
+<li>Select a PSG sound.</li>
+<li>Press the EDIT button until the CHIP page appears.</li>
+<li>Turn KNOB 1 to select AY or SEGA.</li>
+</ol>
+<p>Pause between EDIT button presses to prevent its double-press shortcut.
+On HOME, AY shows TONE2, N-MIX, BUZZ, and B-RATE.
+SEGA shows TONE2, N-MIX, NOISE, and TONE.</p>
+<h3 id="wave-banks">WAVE banks</h3>
+<ol>
+<li>Select a WAVE sound.</li>
+<li>Press the EDIT button until BANK appears.</li>
+<li>Turn the knob below BANK to select BASIC, COLOR, PPG, ESQ, or VS.</li>
+</ol>
+<p>Each bank contains four waves.
+POS moves between them.
+RATE and SCAN control automatic movement.
+The VS bank uses the same linear scan as the other banks.</p>
+<h2 id="open-the-tracker">Open the tracker</h2>
+<p>SEQ cycles through the tracker, STEP, DETAIL, and AUTOMATION pages.
+Pause between SEQ presses to prevent its double-press shortcut.
+On a fresh boot, the tracker opens in ALL.
+It keeps your selected view when you leave and return during the same session.
+The tracker has four views:</p>
+<table>
+<thead>
+<tr>
+<th>View</th>
+<th>How to identify it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ALL</td>
+<td>An ALL heading, with four track columns.</td>
+</tr>
+<tr>
+<td>PHRASE</td>
+<td>Note columns N1 through N4, or drum columns KD through RM.</td>
+</tr>
+<tr>
+<td>CHAIN</td>
+<td>A CHAIN heading, with PHRASE and TRANSPOSE columns.</td>
+</tr>
+<tr>
+<td>SONG</td>
+<td>A SONG heading, with four track columns.</td>
+</tr>
+</tbody>
+</table>
+<p>The PHRASE heading shows the engine and phrase number.
+It does not show the word TRACKER.</p>
+<p>In PHRASE and ALL, the bottom strip shows four values for the selected row:</p>
+<table>
+<thead>
+<tr>
+<th>Label</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CH</td>
+<td>Chance or condition</td>
+</tr>
+<tr>
+<td>RT</td>
+<td>Ratchet repeat count</td>
+</tr>
+<tr>
+<td>ND</td>
+<td>Nudge timing offset</td>
+</tr>
+<tr>
+<td>VEL</td>
+<td>Velocity</td>
+</tr>
+</tbody>
+</table>
+<p>Dim values do not apply to the current row or settings.
+Short messages temporarily replace this strip.
+KNOB 1 through KNOB 4 still change the sound on this page.
+Use DETAIL to edit the four note values with those knobs.</p>
+<p>To reach PHRASE:</p>
+<ol>
+<li>Stop playback.</li>
+<li>Press SEQ until one of these four views appears.</li>
+<li>In SONG, select a filled chain cell.</li>
+<li>In SONG, press SHIFT + RIGHT to open that chain.</li>
+<li>In CHAIN, select a filled phrase cell.</li>
+<li>In CHAIN, press SHIFT + RIGHT to open that phrase.</li>
+</ol>
+<p>In ALL, press SHIFT + UP to open PHRASE.
+If PHRASE is already open, no further navigation is required.
+Opening an empty chain or song cell can create a new item.</p>
+<h2 id="use-the-four-track-view">Use the four-track view</h2>
+<ol>
+<li>Open SEQ.</li>
+<li>If PHRASE is open, hold SHIFT and press UP.</li>
+</ol>
+<p>ALL is the default after a restart.</p>
+<p>The heading shows ALL, the selected track number, and its phrase number.
+The four columns show tracks 1 through 4, from left to right.
+Each column heading shows the track's current engine.</p>
+<table>
+<thead>
+<tr>
+<th>Cell</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>One pitch, such as C4</td>
+<td>The row has one note.</td>
+</tr>
+<tr>
+<td>Two pitches</td>
+<td>The row has two notes. Each pitch includes its octave.</td>
+</tr>
+<tr>
+<td>A chord name, such as Cm7</td>
+<td>The row has three or four notes that match a known chord.</td>
+</tr>
+<tr>
+<td>MULTI</td>
+<td>The row has several notes or drum hits. There is no chord label for this set.</td>
+</tr>
+<tr>
+<td>One or two drum names</td>
+<td>The row has one or two drum lanes.</td>
+</tr>
+<tr>
+<td>---</td>
+<td>Blank row. A held note can continue.</td>
+</tr>
+<tr>
+<td>OFF</td>
+<td>Release held notes.</td>
+</tr>
+<tr>
+<td>===</td>
+<td>Tie.</td>
+</tr>
+<tr>
+<td>Empty cell</td>
+<td>The row is past this track's phrase length.</td>
+</tr>
+</tbody>
+</table>
+<p>Chord labels use sharp names. M7 means major seventh. m7 means minor seventh.
+A plus sign means augmented. dim means diminished.
+An inversion has the same chord label. The label does not show its bass note.
+An ambiguous set uses the chord whose root is the lowest note, if possible.
+The label does not change the stored notes.</p>
+<p>Use LEFT and RIGHT to select a track. Use UP, DOWN, or SELECT to select a row.
+ALGORITHM also selects a track. The row stays selected if the new phrase is long enough.
+The bottom strip shows CH, RT, ND, and VEL for the selected cell.</p>
+<p>Press REC once to enable note entry. Play one note or hold several note keys together.
+This replaces the selected cell's notes. Release all note keys to advance one row.
+Use this method for available drum hits, too.
+The first two drum keys are tracker controls. Use the detailed lane view for those lanes.</p>
+<table>
+<thead>
+<tr>
+<th>Control in ALL</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PRESETS</td>
+<td>Transpose all notes in the cell by semitones.</td>
+</tr>
+<tr>
+<td>EDIT + LEFT or RIGHT</td>
+<td>Transpose all notes by one semitone.</td>
+</tr>
+<tr>
+<td>EDIT + UP or DOWN</td>
+<td>Transpose all notes by one octave.</td>
+</tr>
+<tr>
+<td>EDIT tap on a blank cell</td>
+<td>Insert C4, or a kick on a drum track.</td>
+</tr>
+<tr>
+<td>EDIT tap on a filled cell</td>
+<td>Copy the row.</td>
+</tr>
+<tr>
+<td>SHIFT + OPTION</td>
+<td>Copy the row.</td>
+</tr>
+<tr>
+<td>SHIFT + EDIT</td>
+<td>Paste the row into the selected track and row.</td>
+</tr>
+<tr>
+<td>OPTION + EDIT</td>
+<td>Clear the row's notes, instrument reference, gate, and OFF flag.</td>
+</tr>
+<tr>
+<td>OPTION + SELECT</td>
+<td>Set the row gate.</td>
+</tr>
+<tr>
+<td>PLAY</td>
+<td>Repeat all four edit phrases.</td>
+</tr>
+<tr>
+<td>SHIFT + PLAY</td>
+<td>Play the song from the selected song row.</td>
+</tr>
+<tr>
+<td>SHIFT + UP</td>
+<td>Switch back to the detailed PHRASE view.</td>
+</tr>
+</tbody>
+</table>
+<p>Transposition keeps the intervals between notes. It stops at the MIDI pitch limits.
+For drums, use note entry or the detailed lane view to change the hits.
+To change one note within a chord, switch to PHRASE and select its note column.
+The sound knobs keep their engine controls in both views.</p>
+<p>Rows show phrase positions. Tracks with different lengths or divisions can have different playhead positions.
+A line below each playing cell shows that track's playhead.
+Chain and song playback show the current phrase for each track.
+Stop chain or song playback before you edit.</p>
+<h2 id="make-your-first-phrase">Make your first phrase</h2>
+<p>These instructions assume that playback has stopped.</p>
+<ol>
+<li><a href="#open-the-tracker">Open PHRASE</a>.</li>
+<li>Turn ALGORITHM to select track 1.</li>
+<li>Press REC until NOTE appears.</li>
+<li>Turn SELECT to row <code>00</code>.</li>
+<li>Press a note-entry key.</li>
+<li>Release the note-entry key.</li>
+</ol>
+<p>The note appears in the row.
+The cursor moves to the next row after you release all note-entry keys.</p>
+<p>To add more notes:</p>
+<ol>
+<li>Turn SELECT to row <code>04</code>.</li>
+<li>Enter another note.</li>
+<li>Turn SELECT to row <code>08</code>.</li>
+<li>Enter another note.</li>
+<li>Turn SELECT to row <code>0C</code>.</li>
+<li>Enter another note.</li>
+</ol>
+<p>To hear the phrase:</p>
+<ol>
+<li>Press REC until NAV appears.</li>
+<li>Press the PLAY button.</li>
+</ol>
+<p>The selected track repeats its phrase.
+Press PLAY again to stop.</p>
+<h3 id="play-all-four-tracks">Play all four tracks</h3>
+<ol>
+<li>Stop playback.</li>
+<li>Press the ENV button.</li>
+<li>Press the PLAY button.</li>
+</ol>
+<p>Outside the tracker, PLAY repeats the four selected phrases together.
+Inside the tracker, its current view controls what PLAY starts.</p>
+<table>
+<thead>
+<tr>
+<th>View</th>
+<th>PLAY starts</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PHRASE</td>
+<td>The selected track's phrase, repeated</td>
+</tr>
+<tr>
+<td>CHAIN</td>
+<td>The selected chain on the selected track, repeated</td>
+</tr>
+<tr>
+<td>SONG</td>
+<td>The song from the selected section, through its end</td>
+</tr>
+</tbody>
+</table>
+<p>CHAIN playback starts at the selected link.
+After the last link, it repeats from the first link.
+SHIFT + PLAY starts the song from the selected song row.
+Shorter chains wait silently at a section boundary.
+The next section starts after all participating tracks finish.</p>
+<h3 id="set-tempo">Set tempo</h3>
+<ol>
+<li>Hold the GLO button.</li>
+<li>Turn SELECT to set BPM.</li>
+<li>Release the GLO button.</li>
+</ol>
+<h2 id="edit-notes-and-drums">Edit notes and drums</h2>
+<h3 id="select-a-row-or-cell">Select a row or cell</h3>
+<ul>
+<li>Turn SELECT to move between rows.</li>
+<li>Press LEFT or RIGHT to select a column.</li>
+<li>Press UP or DOWN to move one row.</li>
+<li>Press OPTION + LEFT or OPTION + RIGHT to select a track.</li>
+<li>Press OPTION + UP or OPTION + DOWN to select another phrase number.</li>
+</ul>
+<p>Stop playback before you change the selected phrase.</p>
+<h3 id="change-a-note">Change a note</h3>
+<ol>
+<li>Select its note cell.</li>
+<li>Turn PRESETS to change its pitch.</li>
+</ol>
+<p>Alternatively, press EDIT + LEFT or EDIT + RIGHT to change one semitone.
+Press EDIT + UP to raise one octave.
+Press EDIT + DOWN to lower one octave.</p>
+<p>Press the EDIT key on an empty note cell to insert a note.
+Pressing EDIT on a filled note cell copies its pitch for later entry.</p>
+<h3 id="enter-a-chord">Enter a chord</h3>
+<ol>
+<li>Press REC until NOTE appears.</li>
+<li>Select the row.</li>
+<li>Press up to four note-entry keys together.</li>
+<li>Release all note-entry keys.</li>
+</ol>
+<p>All four pitches share the row's instrument, velocity, timing, and duration.
+The sound's voice mode can limit how many pitches you hear.
+For chords, select POLY with the VCE control on the VOICE page.
+Use the EDIT button to reach that page.</p>
+<p>The four tracks share eight voices.
+The firmware can stop an older voice when this limit is reached.</p>
+<h3 id="clear-a-note">Clear a note</h3>
+<ol>
+<li>Select the note cell.</li>
+<li>Press OPTION + EDIT.</li>
+</ol>
+<p>The remaining chord notes move left.
+If no notes remain, the row becomes blank.
+A blank row does not stop an earlier held note.</p>
+<h3 id="enter-drum-hits">Enter drum hits</h3>
+<ol>
+<li>Select a DRUM sound.</li>
+<li><a href="#open-the-tracker">Open PHRASE</a>.</li>
+<li>Select a row and drum-lane column.</li>
+<li>Press the EDIT key to switch the hit on or off.</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Drum lane</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>KD</td>
+<td>Kick drum</td>
+</tr>
+<tr>
+<td>SD</td>
+<td>Snare drum</td>
+</tr>
+<tr>
+<td>CH</td>
+<td>Closed hi-hat</td>
+</tr>
+<tr>
+<td>OH</td>
+<td>Open hi-hat</td>
+</tr>
+<tr>
+<td>LT</td>
+<td>Low tom</td>
+</tr>
+<tr>
+<td>HT</td>
+<td>High tom</td>
+</tr>
+<tr>
+<td>CP</td>
+<td>Clap</td>
+</tr>
+<tr>
+<td>RM</td>
+<td>Rim</td>
+</tr>
+</tbody>
+</table>
+<p>Several lanes can play on one row.
+EDIT + UP sets the selected hit's accent.
+EDIT + DOWN removes its accent.
+An accented hit uses velocity 127.
+Other hits use the row's VEL value.</p>
+<h2 id="set-note-duration">Set note duration</h2>
+<h3 id="blank-rows-hold-off-and-ties">Blank rows, HOLD, OFF, and ties</h3>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Blank row</td>
+<td>No new note or note-off instruction.</td>
+</tr>
+<tr>
+<td>HOLD gate</td>
+<td>Keep the note until another note, OFF, section completion, or stop.</td>
+</tr>
+<tr>
+<td>Finite gate</td>
+<td>Release the note after a specified part of its step.</td>
+</tr>
+<tr>
+<td>OFF</td>
+<td>Release the notes held by this track.</td>
+</tr>
+<tr>
+<td>Tie, shown as <code>===</code></td>
+<td>Continue the previous note without a new trigger.</td>
+</tr>
+</tbody>
+</table>
+<p>A sound can decay to silence while its note remains held.
+HOLD does not add a pitch slide.</p>
+<h3 id="set-a-row-gate">Set a row gate</h3>
+<ol>
+<li>Select the note row in PHRASE.</li>
+<li>Hold the OPTION key.</li>
+<li>Turn SELECT until the footer shows the required gate.</li>
+<li>Release the OPTION key.</li>
+</ol>
+<p>For example, <strong>GATE 50%</strong> releases the note halfway through its step.
+Turn left until <strong>GATE HOLD</strong> appears to remove the timed release.
+A very short finite gate can display <code>0%</code>; this differs from HOLD.</p>
+<p>With ratchet repeats, HOLD uses a full subdivision for each hit.</p>
+<h3 id="insert-off">Insert OFF</h3>
+<ol>
+<li>Press REC until NOTE appears.</li>
+<li>Select the row where the note must stop.</li>
+<li>Press F#3.</li>
+</ol>
+<p>The row shows OFF.
+The cursor advances one row.
+OFF replaces the row's notes.</p>
+<h3 id="insert-or-extend-ties">Insert or extend ties</h3>
+<p>To insert a tie in NOTE mode, press EDIT + F#3.</p>
+<p>To set a note's length with ties:</p>
+<ol>
+<li>Select the note row in PHRASE.</li>
+<li>Hold the EDIT key.</li>
+<li>Turn SELECT to extend or shorten the note.</li>
+<li>Release the EDIT key.</li>
+</ol>
+<p>Extension stops at the next occupied row or the phrase end.
+A tie can extend a note that has a finite gate.</p>
+<h2 id="use-instruments">Use instruments</h2>
+<p>The I column selects an instrument number from <code>00</code> through <code>0F</code>.
+An instrument contains an engine and its sound settings.
+It also contains the complete patch for an FM6 sound.</p>
+<p><code>..</code> means use the last I value above this row.
+If no earlier I value exists, the phrase's default instrument applies.</p>
+<h3 id="assign-a-separate-sound">Assign a separate sound</h3>
+<p>Stop playback first.
+On a new project, instruments <code>00</code> through <code>03</code> are the initial track sounds.</p>
+<ol>
+<li>Select the required phrase row.</li>
+<li>Move to its I column.</li>
+<li>Turn PRESETS to an instrument number that the project does not use.</li>
+</ol>
+<p>The unused instrument starts as a copy of the selected sound.</p>
+<ol>
+<li>Press SHIFT + RIGHT to open sound editing.</li>
+<li>Turn PRESETS to select the required sound.</li>
+<li><a href="#open-the-tracker">Return to PHRASE</a>.</li>
+</ol>
+<p>Rows with the same instrument number use the same sound.
+An edit to that instrument changes all its uses.
+To keep the original sound, assign another unused instrument number first.</p>
+<p>The track's timing stays the same when the instrument changes.
+Knob changes during playback are temporary.
+Stop playback before you make sound edits that the project must keep.</p>
+<h2 id="use-chains">Use chains</h2>
+<h3 id="open-a-chain">Open a chain</h3>
+<ol>
+<li>Stop playback.</li>
+<li>Open PHRASE.</li>
+<li>Press SHIFT + LEFT.</li>
+</ol>
+<p>CHAIN shows phrase references in play order.
+For example, two links to P00 play that phrase twice.</p>
+<h3 id="add-another-phrase">Add another phrase</h3>
+<ol>
+<li>Select an empty PHRASE cell in CHAIN.</li>
+<li>Press the EDIT key.</li>
+</ol>
+<p>A new phrase number appears.</p>
+<ol>
+<li>Press SHIFT + RIGHT to open the new phrase.</li>
+<li>Enter its notes.</li>
+<li>Press SHIFT + LEFT to return to CHAIN.</li>
+</ol>
+<p>To use an existing phrase, select its number with PRESETS instead of creating a new phrase.</p>
+<h3 id="transpose-one-link">Transpose one link</h3>
+<ol>
+<li>Select the link's TRANSPOSE cell.</li>
+<li>Turn PRESETS to set the transpose value.</li>
+</ol>
+<p>The range is minus 24 through plus 24 semitones.
+Transpose changes playback pitches without changing the phrase's stored notes.
+It does not transpose drum hits.</p>
+<h3 id="copy-a-chain-link">Copy a chain link</h3>
+<ol>
+<li>Select the source link.</li>
+<li>Press SHIFT + OPTION.</li>
+<li>Select the destination link.</li>
+<li>Press SHIFT + EDIT.</li>
+</ol>
+<p>Both links now refer to the same phrase.
+An edit to that phrase changes both links.</p>
+<h2 id="make-an-aaba-song">Make an A–A–B–A song</h2>
+<p>This procedure assumes that section <code>00</code> already contains your first arrangement, called A here.
+Core8 uses row numbers rather than stored A/B section names.</p>
+<h3 id="repeat-section-a">Repeat section A</h3>
+<ol>
+<li>Stop playback.</li>
+<li>Press the GLO button to open SONG.</li>
+<li>Select song row <code>00</code>.</li>
+<li>Press SHIFT + OPTION to copy the whole section.</li>
+<li>Select row <code>01</code>.</li>
+<li>Press SHIFT + EDIT.</li>
+<li>Select row <code>02</code>.</li>
+<li>Press SHIFT + EDIT.</li>
+<li>Select row <code>03</code>.</li>
+<li>Press SHIFT + EDIT.</li>
+</ol>
+<p>All four rows now use the same chain references.
+The section copy includes all four tracks.</p>
+<h3 id="make-section-b">Make section B</h3>
+<ol>
+<li>Select row <code>02</code>.</li>
+<li>Select the track column that must change.</li>
+<li>Press SHIFT + OPTION + EDIT.</li>
+</ol>
+<p>The selected cell now refers to a new chain.
+The new chain still uses the original phrases.</p>
+<ol>
+<li>Press SHIFT + RIGHT to open the new chain.</li>
+<li>Select the PHRASE cell that must change.</li>
+<li>Press SHIFT + OPTION + EDIT.</li>
+</ol>
+<p>The link now refers to a new phrase.
+The new phrase has separate notes, gates, and automation.
+Its instrument numbers remain shared.</p>
+<ol>
+<li>Press SHIFT + RIGHT to open the new phrase.</li>
+<li>Change its notes.</li>
+<li>Press the GLO button to return to SONG.</li>
+</ol>
+<p>Repeat the chain and phrase clone steps for each additional part that must differ.
+Only the selected track's chain changes with a chain clone.</p>
+<h3 id="play-the-arrangement">Play the arrangement</h3>
+<ol>
+<li>Select song row <code>00</code>.</li>
+<li>Press PLAY.</li>
+</ol>
+<p>The song plays A, A, B, then A.
+It stops after the last section.
+An empty song cell is silent for that track in that section.</p>
+<h3 id="copy-one-song-cell">Copy one song cell</h3>
+<ol>
+<li>Select a filled song cell.</li>
+<li>Press the EDIT key to copy its chain reference.</li>
+<li>Select the destination cell.</li>
+<li>Press SHIFT + EDIT.</li>
+</ol>
+<p>This copies one reference.
+SHIFT + OPTION copies all four cells in a section instead.</p>
+<h2 id="set-chance-repeats-and-timing">Set chance, repeats, and timing</h2>
+<p>In PHRASE, select VEL, %, or RT and turn PRESETS to change the value.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VEL</td>
+<td>Velocity, from 1 through 127.</td>
+</tr>
+<tr>
+<td>%</td>
+<td>Chance, from 0% through 100%, followed by cycle and FILL conditions.</td>
+</tr>
+<tr>
+<td>RT</td>
+<td>One through four triggers within the step.</td>
+</tr>
+</tbody>
+</table>
+<p>For example, <code>1:2</code> plays on the first of every two cycle passes.
+In PHRASE, conditions count phrase passes.
+In CHAIN and SONG, they count chain passes.
+Chance and conditions are alternative settings in the same field.
+They are not independent probability controls.</p>
+<p>FILL plays while the fill control is held.
+!FILL plays while it is released.
+To use the fill control, hold the GLO button and the keyboard's E4 key.</p>
+<h3 id="use-detail">Use DETAIL</h3>
+<ol>
+<li>Select the phrase row.</li>
+<li>Press SEQ until DETAIL appears.</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Knob</th>
+<th>Field</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>KNOB 1</td>
+<td>CHANCE or condition</td>
+</tr>
+<tr>
+<td>KNOB 2</td>
+<td>RATCH, the repeat count</td>
+</tr>
+<tr>
+<td>KNOB 3</td>
+<td>NUDGE, the timing offset</td>
+</tr>
+<tr>
+<td>KNOB 4</td>
+<td>VEL</td>
+</tr>
+</tbody>
+</table>
+<p>On DETAIL, turn PRESETS to select a row.
+These fields also apply to drum rows.</p>
+<h3 id="apply-a-timing-offset">Apply a timing offset</h3>
+<ol>
+<li>Open AUTOMATION with the SEQ button.</li>
+<li>Turn KNOB 1 to select QUANTIZE.</li>
+<li>Turn KNOB 4 to set it to OFF.</li>
+<li>Return to DETAIL.</li>
+<li>Select the note row with PRESETS.</li>
+<li>Set RATCH to one.</li>
+<li>Turn KNOB 3 to set NUDGE.</li>
+</ol>
+<p>Negative NUDGE values play early.
+Positive values play late.
+Each unit is one sixteenth of a step.
+The range is minus eight through plus seven units.</p>
+<h2 id="use-parameter-locks">Use parameter locks</h2>
+<p>A <strong>lock</strong> changes an eligible sound parameter for one step.
+An <strong>AUTO event</strong> holds its value until another event, the loop restart, or stop.
+For example, a lock can change filter cutoff for one note.</p>
+<h3 id="add-a-lock">Add a lock</h3>
+<ol>
+<li>Stop playback.</li>
+<li>Open AUTOMATION with the SEQ button.</li>
+<li>Turn KNOB 1 to select + ADD.</li>
+<li>Turn KNOB 2 to select the step.</li>
+<li>Turn KNOB 3 to select a sound parameter.</li>
+<li>Press OCT+ to add the lock.</li>
+<li>Turn KNOB 4 to set its value.</li>
+</ol>
+<p>AUTOMATION uses step numbers starting at 1.
+Tracker row <code>00</code> is step 1 in this list.</p>
+<p>On an existing lock, OCT+ changes LOCK to AUTO.
+Press OCT+ again to change AUTO to LOCK.
+The EDIT button deletes the selected event.
+PLAY at the top of this list enables or disables automation.
+It does not start the transport.</p>
+<p>Parameter locks support eligible sound, envelope, mix, and effect settings.
+They do not switch engines.
+Use the I column for instrument changes.</p>
+<h2 id="record-while-the-phrase-plays">Record while the phrase plays</h2>
+<ol>
+<li>Stop playback.</li>
+<li>Open PHRASE.</li>
+<li>Select the track.</li>
+<li>Press REC until ARM appears.</li>
+<li>Press PLAY.</li>
+<li>Play the note-entry keys.</li>
+<li>Press PLAY to stop.</li>
+<li>Press REC until NAV appears.</li>
+</ol>
+<p>Recording uses the playback position.
+It does not also enter notes at the edit cursor.
+Record phrases separately from chain and song playback.</p>
+<h2 id="save-load-and-back-up">Save, load, and back up</h2>
+<h3 id="save-a-project">Save a project</h3>
+<ol>
+<li>Stop playback.</li>
+<li>Press SAVE until PROJECT appears.</li>
+<li>Turn KNOB 1 to select a slot.</li>
+<li>Turn KNOB 4 right to select SAVE.</li>
+<li>Press OCT+.</li>
+</ol>
+<p>If OVERWRITE appears, OCT+ confirms replacement of that slot.
+OCT− cancels.
+The NAME screen appears before the write.</p>
+<ol>
+<li>Set the name, if required.</li>
+<li>Press OCT+ to write the project.</li>
+</ol>
+<p>On NAME, KNOB 1 moves the text cursor.
+KNOB 2 changes a character.
+OCT− cancels without writing.</p>
+<p>PROJECT saves the whole tracker library and arrangement.
+SAVE &gt; USER saves a sound; it is not a complete song save.</p>
+<h3 id="load-a-project">Load a project</h3>
+<p>Loading replaces the current work.
+Save the current project first if you must keep it.</p>
+<ol>
+<li>Stop playback.</li>
+<li>Press SAVE until PROJECT appears.</li>
+<li>Turn KNOB 1 to select the slot.</li>
+<li>Turn KNOB 3 right to select LOAD.</li>
+<li>Press OCT+.</li>
+</ol>
+<h3 id="undo-or-redo">Undo or redo</h3>
+<ol>
+<li>Stop playback.</li>
+<li>Hold the SAVE button until the undo message appears.</li>
+<li>Release SAVE.</li>
+</ol>
+<p>Hold SAVE again to redo the change.
+There is one undo action, not a history list.
+For a phrase edit, return to that phrase before you undo it.
+Undoing a new reference retains its created phrase or chain in the library.</p>
+<h3 id="save-a-complete-backup-to-a-computer">Save a complete backup to a computer</h3>
+<p>Use the web editor from this checkout.
+An older editor can reject the larger core8 projects.</p>
+<p>To open the supplied editor, run this command from the repository folder:</p>
+<pre><code class="language-sh">python3 -m http.server 8000 --directory web
+</code></pre>
+<ol>
+<li>Open <a href="http://localhost:8000/editor.html">http://localhost:8000/editor.html</a> in Chrome or Edge.</li>
+<li>Connect the FM-1 by USB.</li>
+<li>Select Connect in the editor.</li>
+<li>Select the FM-1 MIDI port if the browser asks.</li>
+<li>Stop playback.</li>
+<li>Select the Projects tab.</li>
+<li>Select Save backup under Complete backup.</li>
+<li>Keep the downloaded file.</li>
+</ol>
+<p>The backup includes current work, saved projects, sound banks, and settings.
+It includes the available user sample data.
+Core8 reserves the first two sample slots for projects.
+Those slots are not available for sample upload or backup.</p>
+<p>To restore a backup, select Restore backup and choose the file.
+Restoration replaces current work and stored data.
+Keep USB connected until restoration finishes.</p>
+<p>Use the device or emulator to edit tracker instruments and song sections.
+The desktop sequencer does not expose all core8 tracker fields.</p>
+<h3 id="load-older-core-projects">Load older core projects</h3>
+<p>The first tracker entry converts the four working patterns into phrase pages.
+It keeps notes, drum hits, timing, automation, and FM6 patches.
+Old rests become OFF instructions where required.</p>
+<p>Save the converted project to another slot to retain the original.
+Older song orders do not convert into tracker song sections.
+Rebuild those orders in SONG.
+Core8 tracker projects require core8 firmware.</p>
+<h2 id="limits-and-messages">Limits and messages</h2>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Project limit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tracks</td>
+<td>4</td>
+</tr>
+<tr>
+<td>Phrases</td>
+<td>32, with up to 16 rows each</td>
+</tr>
+<tr>
+<td>Chains</td>
+<td>16, with up to 16 links each</td>
+</tr>
+<tr>
+<td>Song sections</td>
+<td>32</td>
+</tr>
+<tr>
+<td>Instruments</td>
+<td>16</td>
+</tr>
+<tr>
+<td>Automation events and locks</td>
+<td>128 shared records</td>
+</tr>
+<tr>
+<td>Saved projects</td>
+<td>4 slots</td>
+</tr>
+<tr>
+<td>Sounding voices</td>
+<td>8 shared voices, with additional engine limits</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Display or problem</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NAV; keyboard makes no sound</td>
+<td>Press REC until NOTE appears, or open a sound page.</td>
+</tr>
+<tr>
+<td>Only one track plays</td>
+<td>PHRASE playback uses the selected track. Use SONG or play outside the tracker.</td>
+</tr>
+<tr>
+<td>STOP TO EDIT</td>
+<td>Stop playback or recording before you edit.</td>
+</tr>
+<tr>
+<td>STOP TO RECORD</td>
+<td>Stop chain or song playback before you record a phrase.</td>
+</tr>
+<tr>
+<td>PHRASE BANK FULL</td>
+<td>Reuse an existing phrase. Another clone cannot fit.</td>
+</tr>
+<tr>
+<td>CHAIN BANK FULL</td>
+<td>Reuse an existing chain. Another chain cannot fit.</td>
+</tr>
+<tr>
+<td>AUTOMATION FULL</td>
+<td>Remove unneeded events or locks before you add more.</td>
+</tr>
+<tr>
+<td>RETURN TO EDITED PHRASE</td>
+<td>Select the phrase that contains the edit, then hold SAVE.</td>
+</tr>
+<tr>
+<td>NO NOTE</td>
+<td>Select a row with a note or drum hit before you change its details.</td>
+</tr>
+<tr>
+<td>QUANTIZE IS ON</td>
+<td>Set QUANTIZE to OFF in AUTOMATION to hear NUDGE.</td>
+</tr>
+<tr>
+<td>An edit also changes section A</td>
+<td>The sections share a phrase or instrument. Clone or assign a separate instrument before editing.</td>
+</tr>
+<tr>
+<td>A note continues through blank rows</td>
+<td>Use OFF or a finite row gate.</td>
+</tr>
+</tbody>
+</table>
+<p>Clearing a reference removes its use at that location.
+It does not delete the phrase or free its number.</p>
+<p>Core8 does not have dedicated tracker pitch-slide, vibrato, or arpeggio command columns.
+Use the sound controls and existing automation where applicable.</p>
+<p>For implementation and validation details, see <a href="TRACKER.html">Tracker technical notes</a>.</p></main></html>
