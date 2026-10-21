@@ -1,14 +1,16 @@
-<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Yanfei user guide — Yanfei</title><style>body{max-width:900px;margin:32px auto;padding:0 20px;font:16px/1.65 system-ui,sans-serif;color:#222}a{color:inherit}img{max-width:100%;height:auto}pre{overflow:auto;background:#f4f4f4;padding:16px}table{border-collapse:collapse;display:block;overflow:auto}td,th{border:1px solid #ccc;padding:8px;text-align:left}</style><nav><a href="../index.html">Yanfei home</a></nav><main><h1 id="yanfei-user-guide">Yanfei user guide</h1>
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Yanfei user guide — Yanfei</title><style>body{max-width:900px;margin:32px auto;padding:0 20px;font:16px/1.65 system-ui,sans-serif;color:#222}a{color:inherit}img{max-width:100%;height:auto}figure{margin:24px 0}figcaption{color:#444;font-size:15px;max-width:60ch}img.screen{image-rendering:pixelated}h2,h3{scroll-margin-top:100px}nav{display:flex;flex-wrap:wrap;gap:8px 20px;position:sticky;top:0;background:#fff;padding:8px 0;border-bottom:1px solid #ddd;z-index:1}pre{overflow:auto;background:#f4f4f4;padding:16px}table{border-collapse:collapse;display:block;overflow:auto}td,th{border:1px solid #ccc;padding:8px;text-align:left}</style><nav><a href="../index.html">Yanfei home</a><a href="VISUAL_GUIDE.html">Visual guide</a><a href="TRACKER_QUICK_REFERENCE.html">Controls</a></nav><main><h1 id="yanfei-user-guide">Yanfei user guide</h1>
 <p>This guide is for Yanfei firmware on the M-VAVE FM-1.
 Yanfei is based on Felucca by Leo Kuroshita and Hügelton Instruments.
 It covers sound selection, the tracker, song arrangement, and project storage.</p>
 <h2 id="contents">Contents</h2>
 <ul>
+<li><a href="VISUAL_GUIDE.html">Visual guide</a></li>
 <li><a href="#controls-and-terms">Controls and terms</a></li>
 <li><a href="#select-a-sound">Select a sound</a></li>
 <li><a href="#open-the-tracker">Open the tracker</a></li>
 <li><a href="#use-the-four-track-view">Use the four-track view</a></li>
 <li><a href="#make-your-first-phrase">Make your first phrase</a></li>
+<li><a href="#edit-a-section-of-up-to-four-bars">Edit a section of up to four bars</a></li>
 <li><a href="#edit-notes-and-drums">Edit notes and drums</a></li>
 <li><a href="#set-note-duration">Set note duration</a></li>
 <li><a href="#use-instruments">Use instruments</a></li>
@@ -21,7 +23,9 @@ It covers sound selection, the tracker, song arrangement, and project storage.</
 <li><a href="#limits-and-messages">Limits and messages</a></li>
 </ul>
 <p>Use the <a href="TRACKER_QUICK_REFERENCE.html">quick reference</a> for the control tables.
-See the <a href="images/yanfei13-tracker.png">screen examples</a> for the tracker views.</p>
+Start with the <a href="VISUAL_GUIDE.html">visual guide</a> to find the controls and recognize each screen.
+The pictures below show the y13 emulator. Your notes, sounds, and colors can differ.
+Select a picture to open it at full size.</p>
 <h2 id="controls-and-terms">Controls and terms</h2>
 <h3 id="panel-buttons-and-keyboard-keys">Panel buttons and keyboard keys</h3>
 <p>The <strong>EDIT button</strong> is on the control panel.
@@ -37,7 +41,12 @@ They have different functions.</p>
 </ol>
 <p>For <strong>SHIFT + OPTION + EDIT</strong>, hold SHIFT and OPTION before you press EDIT.
 Use this clone command in a section page, CHAIN, or SONG.
-It does not clone a phrase from the PHRASE view.</p>
+In separate phrase editing, open CHAIN first to clone a phrase.</p>
+<figure>
+<a href="images/guide/keyboard.png"><img class="screen" src="images/guide/keyboard.png" width="960" alt="Tracker key positions: directions at the left, note entry in the middle, and modifiers at the right."></a>
+<figcaption>The EDIT key is at the far right. It is separate from the panel EDIT button.</figcaption>
+</figure>
+
 <h3 id="tracker-keyboard-map">Tracker keyboard map</h3>
 <table>
 <thead>
@@ -159,6 +168,11 @@ A full phrase has rows <code>00</code> through <code>0F</code>.</p>
 <li>Turn PRESETS to select a sound.</li>
 <li>Play the keyboard to hear the sound.</li>
 </ol>
+<figure>
+<a href="images/guide/home.png"><img class="screen" src="images/guide/home.png" width="480" alt="HOME with four sound controls and the selected ANALOG JUNO CHORUS preset."></a>
+<figcaption>HOME shows the current sound at the bottom. The four knobs change the four displayed settings.</figcaption>
+</figure>
+
 <p>The preset list includes sounds from all twelve engines.
 The display shows the selected engine and preset.
 KNOB 1 through KNOB 4 change the sound parameters shown on HOME.</p>
@@ -229,6 +243,11 @@ KNOB 1 through KNOB 4 change the sound parameters shown on HOME.</p>
 <p>Pause between EDIT button presses to prevent its double-press shortcut.
 On HOME, AY shows TONE2, N-MIX, BUZZ, and B-RATE.
 SEGA shows TONE2, N-MIX, NOISE, and TONE.</p>
+<figure>
+<a href="images/guide/psg-sega.png"><img class="screen" src="images/guide/psg-sega.png" width="480" alt="PSG CHIP page showing CHIP set to SEGA."></a>
+<figcaption>CHIP is the AY/Sega selector. KNOB 1 changes it.</figcaption>
+</figure>
+
 <h3 id="wave-banks">WAVE banks</h3>
 <ol>
 <li>Select a WAVE sound.</li>
@@ -239,6 +258,11 @@ SEGA shows TONE2, N-MIX, NOISE, and TONE.</p>
 POS moves between them.
 RATE and SCAN control automatic movement.
 The VS bank uses the same linear scan as the other banks.</p>
+<figure>
+<a href="images/guide/wave.png"><img class="screen" src="images/guide/wave.png" width="480" alt="WAVE EDIT page with its BANK control."></a>
+<figcaption>WAVE bank selection on EDIT.</figcaption>
+</figure>
+
 <h2 id="open-the-tracker">Open the tracker</h2>
 <p>SEQ cycles through the tracker, STEP, DETAIL, and AUTOMATION pages.
 Pause between SEQ presses to prevent its double-press shortcut.
@@ -271,6 +295,11 @@ The tracker has four views:</p>
 </tr>
 </tbody>
 </table>
+<figure>
+<a href="images/guide/phrase.png"><img class="screen" src="images/guide/phrase.png" width="480" alt="PHRASE with note columns N1 through N4 and the row instrument and velocity."></a>
+<figcaption>Use the column headings to identify PHRASE. SHIFT + UP switches between it and ALL.</figcaption>
+</figure>
+
 <p>The PHRASE heading shows the engine. In section editing, it also shows the page number.
 In separate phrase editing, it shows the phrase number.
 It does not show the word TRACKER.</p>
@@ -323,8 +352,14 @@ Opening an empty chain or song cell can create a new item.</p>
 <li>If PHRASE is open, hold SHIFT and press UP.</li>
 </ol>
 <p>ALL is the default after a restart.</p>
-<p>The heading shows ALL, the selected track number, and its phrase number.
-The four columns show tracks 1 through 4, from left to right.
+<p>In section editing, the heading shows ALL, the section number, and the page number.
+In separate phrase editing, it shows the selected track and phrase number.</p>
+<figure>
+<a href="images/guide/all.png"><img class="screen" src="images/guide/all.png" width="480" alt="ALL with a white selected cell in track 2 and four row values below."></a>
+<figcaption>The white cell is the edit position. The underlined engine heading marks its track.</figcaption>
+</figure>
+
+<p>The four columns show tracks 1 through 4, from left to right.
 Each column heading shows the track's current engine.</p>
 <table>
 <thead>
@@ -533,6 +568,11 @@ as set for each track. In AUTO, the next section starts after all tracks finish.
 phrase, this is 64 rows. The screen shows 16 rows at a time.
 The page indicator shows <code>1/4</code>, <code>2/4</code>, <code>3/4</code>, or <code>4/4</code>.
 Row numbers are hexadecimal: <code>00</code> through <code>3F</code>.</p>
+<figure>
+<a href="images/guide/page4.png"><img class="screen" src="images/guide/page4.png" width="480" alt="ALL on page 4 of 4, showing rows 30 through 3F."></a>
+<figcaption>The page number and row labels show your position in the section.</figcaption>
+</figure>
+
 <p>Use UP, DOWN, or SELECT to move through the rows. The screen changes page when
 you cross a page boundary. Movement stops at the first or last row.
 Hold SHIFT and turn SELECT to change page. OPTION + UP or DOWN also changes page.
@@ -653,6 +693,11 @@ The firmware can stop an older voice when this limit is reached.</p>
 If no notes remain, the row becomes blank.
 A blank row does not stop an earlier held note.</p>
 <h3 id="enter-drum-hits">Enter drum hits</h3>
+<figure>
+<a href="images/guide/drums.png"><img class="screen" src="images/guide/drums.png" width="480" alt="DRUM view with eight lanes, an instrument column, and velocity."></a>
+<figcaption>On a DRUM track, PHRASE shows one column per drum lane.</figcaption>
+</figure>
+
 <ol>
 <li>Select a DRUM sound.</li>
 <li><a href="#open-the-tracker">Open PHRASE</a>.</li>
@@ -741,6 +786,11 @@ Other hits use the row's VEL value.</p>
 <p>A sound can decay to silence while its note remains held.
 HOLD does not add a pitch slide.</p>
 <h3 id="set-a-row-gate">Set a row gate</h3>
+<figure>
+<a href="images/guide/gate.png"><img class="screen" src="images/guide/gate.png" width="480" alt="Tracker row with a GATE 50 percent message in the footer."></a>
+<figcaption>The gate value appears at the bottom while you change it with OPTION + SELECT.</figcaption>
+</figure>
+
 <ol>
 <li>Select the note row in PHRASE.</li>
 <li>Hold the OPTION key.</li>
@@ -804,6 +854,11 @@ Stop playback before you make sound edits that the project must keep.</p>
 <li>Open PHRASE.</li>
 <li>Press SHIFT + LEFT.</li>
 </ol>
+<figure>
+<a href="images/guide/chain.png"><img class="screen" src="images/guide/chain.png" width="480" alt="CHAIN with two P00 references and a transpose value of 12 on the second link."></a>
+<figcaption>Each link selects a phrase and a transpose value. A value of 12 raises playback by one octave.</figcaption>
+</figure>
+
 <p>CHAIN shows phrase references in play order.
 For example, two links to P00 play that phrase twice.</p>
 <h3 id="add-another-phrase">Add another phrase</h3>
@@ -837,7 +892,12 @@ It does not transpose drum hits.</p>
 An edit to that phrase changes both links.</p>
 <h2 id="make-an-aaba-song">Make an A–A–B–A song</h2>
 <p>This procedure assumes that section <code>00</code> already contains your first arrangement, called A here.
-Core8 uses row numbers rather than stored A/B section names.</p>
+Yanfei uses row numbers rather than stored A/B section names.</p>
+<figure>
+<a href="images/guide/song.png"><img class="screen" src="images/guide/song.png" width="480" alt="SONG example with four section rows arranged A A B A."></a>
+<figcaption>Here, rows 00, 01, and 03 use C00 on track 1. Row 02 uses C04.</figcaption>
+</figure>
+
 <h3 id="repeat-section-a">Repeat section A</h3>
 <ol>
 <li>Stop playback.</li>
@@ -958,6 +1018,11 @@ To use the fill control, hold the GLO button and the keyboard's E4 key.</p>
 </table>
 <p>On DETAIL, turn PRESETS to select a row.
 These fields also apply to drum rows.</p>
+<figure>
+<a href="images/guide/detail.png"><img class="screen" src="images/guide/detail.png" width="480" alt="DETAIL with CHANCE RATCH NUDGE and VEL knob cards."></a>
+<figcaption>PRESETS selects the row. KNOB 1 through KNOB 4 change the four note fields.</figcaption>
+</figure>
+
 <h3 id="apply-a-timing-offset">Apply a timing offset</h3>
 <ol>
 <li>Open AUTOMATION with the SEQ button.</li>
@@ -1019,6 +1084,11 @@ Record phrases separately from chain and song playback.</p>
 <li>Turn KNOB 4 right to select SAVE.</li>
 <li>Press OCT+.</li>
 </ol>
+<figure>
+<a href="images/guide/project.png"><img class="screen" src="images/guide/project.png" width="480" alt="PROJECT with slots A B C D and SLOT ERASE LOAD SAVE controls."></a>
+<figcaption>Use PROJECT for the whole song. USER saves one sound.</figcaption>
+</figure>
+
 <p>If OVERWRITE appears, OCT+ confirms replacement of that slot.
 OCT− cancels.
 The NAME screen appears before the write.</p>
@@ -1026,6 +1096,11 @@ The NAME screen appears before the write.</p>
 <li>Set the name, if required.</li>
 <li>Press OCT+ to write the project.</li>
 </ol>
+<figure>
+<a href="images/guide/name.png"><img class="screen" src="images/guide/name.png" width="480" alt="NAME screen with a project name and SAVE and CANCEL hints."></a>
+<figcaption>OCT+ writes the named project. OCT− cancels.</figcaption>
+</figure>
+
 <p>On NAME, KNOB 1 moves the text cursor.
 KNOB 2 changes a character.
 OCT− cancels without writing.</p>
@@ -1052,8 +1127,10 @@ There is one undo action, not a history list.
 For a phrase edit, return to that phrase before you undo it.
 Undoing a new reference retains its created phrase or chain in the library.</p>
 <h3 id="save-a-complete-backup-to-a-computer">Save a complete backup to a computer</h3>
-<p>Use the web editor from this checkout.
-An older editor can reject the larger core8 projects.</p>
+<p>Use the <a href="https://izumoe.github.io/yanfei/webapp/editor/">current web editor</a> in Chrome or Edge.
+An older editor can reject the larger tracker projects.
+Connect the FM-1, stop playback, open Projects, and select Save backup.
+For a local copy of the editor, use the procedure below.</p>
 <p>To open the supplied editor, run this command from the repository folder:</p>
 <pre><code class="language-sh">python3 -m http.server 8000 --directory web
 </code></pre>
@@ -1069,13 +1146,13 @@ An older editor can reject the larger core8 projects.</p>
 </ol>
 <p>The backup includes current work, saved projects, sound banks, and settings.
 It includes the available user sample data.
-Core8 reserves the first two sample slots for projects.
+Yanfei reserves the first two sample slots for projects.
 Those slots are not available for sample upload or backup.</p>
 <p>To restore a backup, select Restore backup and choose the file.
 Restoration replaces current work and stored data.
 Keep USB connected until restoration finishes.</p>
 <p>Use the device or emulator to edit tracker instruments and song sections.
-The desktop sequencer does not expose all core8 tracker fields.</p>
+The desktop sequencer does not expose all tracker fields.</p>
 <h3 id="load-older-core-projects">Load older core projects</h3>
 <p>The first tracker entry converts the four working patterns into phrase pages.
 It keeps notes, drum hits, timing, automation, and FM6 patches.

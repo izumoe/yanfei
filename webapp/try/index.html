@@ -69,6 +69,20 @@ a { color: inherit; }
 kbd { font: 600 11px ui-monospace, Menlo, monospace; border: 1px solid var(--rule); padding: 0 4px; color: var(--fg); }
 footer { margin-top: 12px; font-size: 12px; }
 footer nav a { margin: 0 6px; }
+.assist { display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:12px 20px; margin:16px 0; }
+.assist button { font:inherit; color:var(--fg); background:transparent; border:1px solid var(--rule); border-radius:4px; padding:6px 12px; cursor:pointer; }
+.assist button:disabled { opacity:.5; cursor:default; }
+.assist a:focus-visible, .assist button:focus-visible { outline:2px solid var(--fg); outline-offset:3px; }
+.tracker-help { max-width:760px; margin:12px auto; text-align:center; }
+.tracker-help[hidden] { display:none; }
+.tracker-help kbd { white-space:nowrap; }
+.device .key-label { pointer-events:none; fill:#d6edff; }
+dialog { color:#eee; background:#171717; border:1px solid #555; padding:16px; max-width:calc(100vw - 40px); }
+dialog::backdrop { background:#000a; }
+dialog form { display:flex; justify-content:space-between; align-items:center; gap:16px; margin-bottom:12px; }
+dialog h2 { font:600 16px system-ui,sans-serif; margin:0; }
+dialog button { font:inherit; padding:6px 12px; }
+#screen-large { display:block; width:min(640px,calc(100vw - 72px),calc(100dvh - 160px)); height:auto; image-rendering:pixelated; }
 footer small { font-size: 11px; opacity: .8; }
 </style>
 </head>
@@ -80,6 +94,21 @@ footer small { font-size: 11px; opacity: .8; }
   <div class="start" id="start"><button id="go" type="button">Switch on</button><p id="status" hidden></p></div>
 </div>
 
+<div class="assist" aria-label="Viewing controls">
+  <label><input id="tracker-labels" type="checkbox"> Show tracker key labels</label>
+  <button id="screen-enlarge" type="button" disabled>Enlarge screen</button>
+  <button id="release-controls" type="button">Release held controls</button>
+  <a href="../../docs/VISUAL_GUIDE.html">Visual guide</a>
+</div>
+<p class="tracker-help" id="tracker-help" hidden>These labels apply in the SEQ tracker.
+  On your computer: <kbd>Z</kbd> LEFT · <kbd>X</kbd> DOWN · <kbd>D</kbd> UP · <kbd>C</kbd> RIGHT ·
+  <kbd>R</kbd> SHIFT · <kbd>Y</kbd> PLAY · <kbd>U</kbd> OPTION · <kbd>O</kbd> EDIT · <kbd>S</kbd> OFF.<br>
+  Shift-click a labelled SHIFT or OPTION key to hold it. Click it again to release it.
+  REC enables note entry. <a href="../../docs/TRACKER_QUICK_REFERENCE.html">All tracker controls</a></p>
+<dialog id="screen-dialog" aria-labelledby="screen-title">
+  <form method="dialog"><h2 id="screen-title">Live screen</h2><button>Close</button></form>
+  <canvas id="screen-large" width="240" height="240" role="img" aria-label="Enlarged live FM-1 screen"></canvas>
+</dialog>
 <p class="keys">
   <span><kbd>Z</kbd>–<kbd>'</kbd> <kbd>Q</kbd>–<kbd>O</kbd> keys</span>
   <span><kbd>1</kbd>–<kbd>=</kbd> FX … REC</span>
@@ -155,6 +184,9 @@ function label(parent, x, y, s, size, font = SANS, ink = "var(--label)") {
 const KEYNAMES = ["F", "F♯", "G", "G♯", "A", "A♯", "B", "C", "C♯", "D", "D♯", "E"];
 const keyName = (k) => KEYNAMES[k % 12] + (3 + Math.floor((k + 5) / 12));
 
+const TRACKER_KEYS = {0:"LEFT",1:"OFF",2:"DOWN",3:"UP",4:"RIGHT",21:"SHIFT",23:"PLAY",24:"OPTION",26:"EDIT"};
+const MODIFIER_KEYS = new Set([21,24]);
+let trackerLabels = false, latchedKeys = 0;
 let node = null, btnMask = 0, keyMask = 0, latched = 0, masterValue = 700, lastLeds = [0, 0, 0, 0, 0], layout = null;
 const angle = Object.fromEntries(KNOBS.map((n) => [n, 0]));
 angle.MASTER = -135 + 270 * masterValue / 1023;
@@ -163,6 +195,10 @@ const btnBy = new Map(), keyBy = new Map();                   // pointer / key c
 const send = (m) => { if (node) node.port.postMessage(m); };
 
 function build(name) {
+  // Replacing pointer targets must release their presses; latched modifiers and
+  // computer keys keep their state when the layout changes.
+  for (const map of [btnBy,keyBy]) for (const id of [...map.keys()]) if (id.startsWith("p")) map.delete(id);
+  syncButtons();syncKeys();
   const L = LAYOUTS[name];
   layout = name;
   svg.innerHTML = "";
@@ -210,7 +246,12 @@ function build(name) {
     el("rect", { x: cx - kw / 2, y, width: kw, height: kh, rx: kw / 2, class: "face key" }, g);
     el("rect", { x: cx - sw / 2, y: y + kw * 0.4, width: sw, height: kh - kw * 0.8, rx: sw / 2, class: "slit" }, g);
     el("rect", { x: cx - pitch / 2, y: cy - h * 0.24, width: pitch, height: h * 0.48, fill: "transparent" }, g);   // its target
-    keys[k] = { g, name: keyName(k) };
+    const name = keyName(k), hint = trackerLabels ? TRACKER_KEYS[k] || name : "";
+    if (hint) {
+      const t=label(g,cx,y+kh-9,hint === "OPTION" ? "OPT" : hint,Math.max(7,kw*.22),SANS,"#d6edff");
+      t.setAttribute("class","key-label");
+    }
+    keys[k] = { g, name: trackerLabels && TRACKER_KEYS[k] ? `${TRACKER_KEYS[k]} (${name})` : name };
   };
   WHITE.forEach((k, i) => key(x0 + 12 + (i + 0.5) * pitch, y0 + h * 0.75, k));
   BLACK_AFTER.forEach((a, j) => key(x0 + 12 + (a + 1) * pitch, y0 + h * 0.25, BLACK[j]));
@@ -251,11 +292,15 @@ function syncButtons(redraw) {
   }
 }
 function syncKeys(redraw) {
-  let m = 0;
+  let m = latchedKeys;
   for (const k of keyBy.values()) m |= 1 << k;
   if (m !== keyMask) { keyMask = m; send({ type: "keys", mask: m }); }
   else if (!redraw) return;
-  keys.forEach((k, i) => k.g.classList.toggle("held", !!(m & (1 << i))));
+  keys.forEach((k, i) => {
+    k.g.classList.toggle("held", !!(m & (1 << i)));
+    k.g.classList.toggle("latched", !!(latchedKeys & (1 << i)));
+    k.hit.setAttribute("aria-pressed", !!(m & (1 << i)));
+  });
 }
 function bindButton(b) {
   b.hit.addEventListener("pointerdown", (e) => {
@@ -274,6 +319,9 @@ function bindButton(b) {
 function bindKey(k, i) {
   k.hit.addEventListener("pointerdown", (e) => {
     e.preventDefault();
+    if (trackerLabels && MODIFIER_KEYS.has(i) && (e.shiftKey || (latchedKeys & (1 << i)))) {
+      latchedKeys ^= 1 << i; syncKeys(true); return;
+    }
     k.hit.setPointerCapture(e.pointerId);
     keyBy.set("p" + e.pointerId, i);
     syncKeys();
@@ -349,7 +397,7 @@ const KEYMAP = {};
 Object.assign(KEYMAP, { BracketLeft: { btn: B["OCT-"] }, BracketRight: { btn: B["OCT+"] } });
 const ARROWS = { ArrowUp: [EN.SELECT, 1], ArrowDown: [EN.SELECT, -1], ArrowRight: [EN.ALGORITHM, 1], ArrowLeft: [EN.ALGORITHM, -1] };
 addEventListener("keydown", (e) => {
-  if (!node || e.metaKey || e.ctrlKey || e.altKey || e.target.closest?.(".hit.knob")) return;
+  if (!node || e.metaKey || e.ctrlKey || e.altKey || e.target.closest?.(".hit.knob, input[type=text], textarea, select, [contenteditable=true]")) return;
   if (ARROWS[e.code]) { const [r, n] = ARROWS[e.code]; turn(knobs.find((k) => k.role === r), n); e.preventDefault(); return; }
   const m = KEYMAP[e.code];
   if (!m) return;
@@ -370,6 +418,22 @@ addEventListener("blur", () => {
   syncKeys();
 });
 
+// Browser viewing aids do not change the firmware or send notes when toggled.
+const screenDialog=document.getElementById("screen-dialog");
+const largeCtx=document.getElementById("screen-large").getContext("2d");
+document.getElementById("screen-enlarge").addEventListener("click",()=>{
+  largeCtx.drawImage(canvas,0,0);screenDialog.showModal();
+});
+document.getElementById("tracker-labels").addEventListener("change",e=>{
+  trackerLabels=e.target.checked;
+  if (!trackerLabels) { latchedKeys=0;syncKeys(true); }
+  document.getElementById("tracker-help").hidden=!trackerLabels;
+  build(layout);
+});
+document.getElementById("release-controls").addEventListener("click",()=>{
+  latched=latchedKeys=0;btnBy.clear();keyBy.clear();syncButtons(true);syncKeys(true);
+});
+
 // ------------------------------------------------------------------ screen and lights
 const ctx = document.getElementById("screen").getContext("2d");
 const img = ctx.createImageData(240, 240);
@@ -383,6 +447,7 @@ function drawScreen(fb) {
     d[i * 4 + 3] = 255;
   }
   ctx.putImageData(img, 0, 0);
+  if (screenDialog.open) largeCtx.putImageData(img, 0, 0);
 }
 // the power-on sweep (hal/fm1_led_anim.h): a level per LED, lit frames /64 (| 128: the glow under them), drawn as the
 // LED's share of lit between its dark (or glowing) colour and the lit one, mixed in linear light
@@ -515,6 +580,7 @@ async function switchOn() {
     });
     await ac.resume();
     document.getElementById("start").hidden = true;
+    document.getElementById("screen-enlarge").disabled = false;
     go.textContent = "On";
     if (ac.sampleRate !== 44100) console.warn(`Yanfei: the browser plays at ${ac.sampleRate} Hz, the pitch is off by ${(1200 * Math.log2(ac.sampleRate / 44100)).toFixed(0)} cents.`);
     syncButtons();

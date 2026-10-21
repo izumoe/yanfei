@@ -6,11 +6,13 @@ It covers sound selection, the tracker, song arrangement, and project storage.
 
 ## Contents
 
+- [Visual guide](VISUAL_GUIDE.md)
 - [Controls and terms](#controls-and-terms)
 - [Select a sound](#select-a-sound)
 - [Open the tracker](#open-the-tracker)
 - [Use the four-track view](#use-the-four-track-view)
 - [Make your first phrase](#make-your-first-phrase)
+- [Edit a section of up to four bars](#edit-a-section-of-up-to-four-bars)
 - [Edit notes and drums](#edit-notes-and-drums)
 - [Set note duration](#set-note-duration)
 - [Use instruments](#use-instruments)
@@ -23,7 +25,9 @@ It covers sound selection, the tracker, song arrangement, and project storage.
 - [Limits and messages](#limits-and-messages)
 
 Use the [quick reference](TRACKER_QUICK_REFERENCE.md) for the control tables.
-See the [screen examples](images/yanfei13-tracker.png) for the tracker views.
+Start with the [visual guide](VISUAL_GUIDE.md) to find the controls and recognize each screen.
+The pictures below show the y13 emulator. Your notes, sounds, and colors can differ.
+Select a picture to open it at full size.
 
 ## Controls and terms
 
@@ -44,7 +48,13 @@ For a combination such as **SHIFT + RIGHT**:
 
 For **SHIFT + OPTION + EDIT**, hold SHIFT and OPTION before you press EDIT.
 Use this clone command in a section page, CHAIN, or SONG.
-It does not clone a phrase from the PHRASE view.
+In separate phrase editing, open CHAIN first to clone a phrase.
+
+
+<figure>
+<a href="images/guide/keyboard.png"><img class="screen" src="images/guide/keyboard.png" width="960" alt="Tracker key positions: directions at the left, note entry in the middle, and modifiers at the right."></a>
+<figcaption>The EDIT key is at the far right. It is separate from the panel EDIT button.</figcaption>
+</figure>
 
 ### Tracker keyboard map
 
@@ -95,6 +105,12 @@ Do this before you enter the tracker.
 5. Turn PRESETS to select a sound.
 6. Play the keyboard to hear the sound.
 
+
+<figure>
+<a href="images/guide/home.png"><img class="screen" src="images/guide/home.png" width="480" alt="HOME with four sound controls and the selected ANALOG JUNO CHORUS preset."></a>
+<figcaption>HOME shows the current sound at the bottom. The four knobs change the four displayed settings.</figcaption>
+</figure>
+
 The preset list includes sounds from all twelve engines.
 The display shows the selected engine and preset.
 KNOB 1 through KNOB 4 change the sound parameters shown on HOME.
@@ -124,6 +140,12 @@ Pause between EDIT button presses to prevent its double-press shortcut.
 On HOME, AY shows TONE2, N-MIX, BUZZ, and B-RATE.
 SEGA shows TONE2, N-MIX, NOISE, and TONE.
 
+
+<figure>
+<a href="images/guide/psg-sega.png"><img class="screen" src="images/guide/psg-sega.png" width="480" alt="PSG CHIP page showing CHIP set to SEGA."></a>
+<figcaption>CHIP is the AY/Sega selector. KNOB 1 changes it.</figcaption>
+</figure>
+
 ### WAVE banks
 
 1. Select a WAVE sound.
@@ -134,6 +156,12 @@ Each bank contains four waves.
 POS moves between them.
 RATE and SCAN control automatic movement.
 The VS bank uses the same linear scan as the other banks.
+
+
+<figure>
+<a href="images/guide/wave.png"><img class="screen" src="images/guide/wave.png" width="480" alt="WAVE EDIT page with its BANK control."></a>
+<figcaption>WAVE bank selection on EDIT.</figcaption>
+</figure>
 
 ## Open the tracker
 
@@ -149,6 +177,12 @@ The tracker has four views:
 | PHRASE | Note columns N1 through N4, or drum columns KD through RM. |
 | CHAIN | A CHAIN heading, with PHRASE and TRANSPOSE columns. |
 | SONG | A SONG heading, with four track columns. |
+
+
+<figure>
+<a href="images/guide/phrase.png"><img class="screen" src="images/guide/phrase.png" width="480" alt="PHRASE with note columns N1 through N4 and the row instrument and velocity."></a>
+<figcaption>Use the column headings to identify PHRASE. SHIFT + UP switches between it and ALL.</figcaption>
+</figure>
 
 The PHRASE heading shows the engine. In section editing, it also shows the page number.
 In separate phrase editing, it shows the phrase number.
@@ -188,7 +222,14 @@ Opening an empty chain or song cell can create a new item.
 
 ALL is the default after a restart.
 
-The heading shows ALL, the selected track number, and its phrase number.
+In section editing, the heading shows ALL, the section number, and the page number.
+In separate phrase editing, it shows the selected track and phrase number.
+
+<figure>
+<a href="images/guide/all.png"><img class="screen" src="images/guide/all.png" width="480" alt="ALL with a white selected cell in track 2 and four row values below."></a>
+<figcaption>The white cell is the edit position. The underlined engine heading marks its track.</figcaption>
+</figure>
+
 The four columns show tracks 1 through 4, from left to right.
 Each column heading shows the track's current engine.
 
@@ -313,6 +354,12 @@ phrase, this is 64 rows. The screen shows 16 rows at a time.
 The page indicator shows `1/4`, `2/4`, `3/4`, or `4/4`.
 Row numbers are hexadecimal: `00` through `3F`.
 
+
+<figure>
+<a href="images/guide/page4.png"><img class="screen" src="images/guide/page4.png" width="480" alt="ALL on page 4 of 4, showing rows 30 through 3F."></a>
+<figcaption>The page number and row labels show your position in the section.</figcaption>
+</figure>
+
 Use UP, DOWN, or SELECT to move through the rows. The screen changes page when
 you cross a page boundary. Movement stops at the first or last row.
 Hold SHIFT and turn SELECT to change page. OPTION + UP or DOWN also changes page.
@@ -411,6 +458,8 @@ Press EDIT + DOWN to lower one octave.
 Press the EDIT key on an empty note cell to insert a note.
 Pressing EDIT on a filled note cell copies its pitch for later entry.
 
+
+
 ### Enter a chord
 
 1. Press REC until NOTE appears.
@@ -436,6 +485,11 @@ If no notes remain, the row becomes blank.
 A blank row does not stop an earlier held note.
 
 ### Enter drum hits
+
+<figure>
+<a href="images/guide/drums.png"><img class="screen" src="images/guide/drums.png" width="480" alt="DRUM view with eight lanes, an instrument column, and velocity."></a>
+<figcaption>On a DRUM track, PHRASE shows one column per drum lane.</figcaption>
+</figure>
 
 1. Select a DRUM sound.
 2. [Open PHRASE](#open-the-tracker).
@@ -475,6 +529,11 @@ A sound can decay to silence while its note remains held.
 HOLD does not add a pitch slide.
 
 ### Set a row gate
+
+<figure>
+<a href="images/guide/gate.png"><img class="screen" src="images/guide/gate.png" width="480" alt="Tracker row with a GATE 50 percent message in the footer."></a>
+<figcaption>The gate value appears at the bottom while you change it with OPTION + SELECT.</figcaption>
+</figure>
 
 1. Select the note row in PHRASE.
 2. Hold the OPTION key.
@@ -551,6 +610,12 @@ Stop playback before you make sound edits that the project must keep.
 2. Open PHRASE.
 3. Press SHIFT + LEFT.
 
+
+<figure>
+<a href="images/guide/chain.png"><img class="screen" src="images/guide/chain.png" width="480" alt="CHAIN with two P00 references and a transpose value of 12 on the second link."></a>
+<figcaption>Each link selects a phrase and a transpose value. A value of 12 raises playback by one octave.</figcaption>
+</figure>
+
 CHAIN shows phrase references in play order.
 For example, two links to P00 play that phrase twice.
 
@@ -589,7 +654,13 @@ An edit to that phrase changes both links.
 ## Make an A–A–B–A song
 
 This procedure assumes that section `00` already contains your first arrangement, called A here.
-Core8 uses row numbers rather than stored A/B section names.
+Yanfei uses row numbers rather than stored A/B section names.
+
+
+<figure>
+<a href="images/guide/song.png"><img class="screen" src="images/guide/song.png" width="480" alt="SONG example with four section rows arranged A A B A."></a>
+<figcaption>Here, rows 00, 01, and 03 use C00 on track 1. Row 02 uses C04.</figcaption>
+</figure>
 
 ### Repeat section A
 
@@ -685,6 +756,12 @@ To use the fill control, hold the GLO button and the keyboard's E4 key.
 On DETAIL, turn PRESETS to select a row.
 These fields also apply to drum rows.
 
+
+<figure>
+<a href="images/guide/detail.png"><img class="screen" src="images/guide/detail.png" width="480" alt="DETAIL with CHANCE RATCH NUDGE and VEL knob cards."></a>
+<figcaption>PRESETS selects the row. KNOB 1 through KNOB 4 change the four note fields.</figcaption>
+</figure>
+
 ### Apply a timing offset
 
 1. Open AUTOMATION with the SEQ button.
@@ -754,12 +831,24 @@ Record phrases separately from chain and song playback.
 4. Turn KNOB 4 right to select SAVE.
 5. Press OCT+.
 
+
+<figure>
+<a href="images/guide/project.png"><img class="screen" src="images/guide/project.png" width="480" alt="PROJECT with slots A B C D and SLOT ERASE LOAD SAVE controls."></a>
+<figcaption>Use PROJECT for the whole song. USER saves one sound.</figcaption>
+</figure>
+
 If OVERWRITE appears, OCT+ confirms replacement of that slot.
 OCT− cancels.
 The NAME screen appears before the write.
 
 6. Set the name, if required.
 7. Press OCT+ to write the project.
+
+
+<figure>
+<a href="images/guide/name.png"><img class="screen" src="images/guide/name.png" width="480" alt="NAME screen with a project name and SAVE and CANCEL hints."></a>
+<figcaption>OCT+ writes the named project. OCT− cancels.</figcaption>
+</figure>
 
 On NAME, KNOB 1 moves the text cursor.
 KNOB 2 changes a character.
@@ -792,8 +881,10 @@ Undoing a new reference retains its created phrase or chain in the library.
 
 ### Save a complete backup to a computer
 
-Use the web editor from this checkout.
-An older editor can reject the larger core8 projects.
+Use the [current web editor](https://izumoe.github.io/yanfei/webapp/editor/) in Chrome or Edge.
+An older editor can reject the larger tracker projects.
+Connect the FM-1, stop playback, open Projects, and select Save backup.
+For a local copy of the editor, use the procedure below.
 
 To open the supplied editor, run this command from the repository folder:
 
@@ -812,7 +903,7 @@ python3 -m http.server 8000 --directory web
 
 The backup includes current work, saved projects, sound banks, and settings.
 It includes the available user sample data.
-Core8 reserves the first two sample slots for projects.
+Yanfei reserves the first two sample slots for projects.
 Those slots are not available for sample upload or backup.
 
 To restore a backup, select Restore backup and choose the file.
@@ -820,7 +911,7 @@ Restoration replaces current work and stored data.
 Keep USB connected until restoration finishes.
 
 Use the device or emulator to edit tracker instruments and song sections.
-The desktop sequencer does not expose all core8 tracker fields.
+The desktop sequencer does not expose all tracker fields.
 
 ### Load older core projects
 

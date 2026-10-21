@@ -1,5 +1,6 @@
 # Yanfei tracker quick reference
 
+Start with the [visual guide](VISUAL_GUIDE.md) for the keyboard map and screen pictures.
 See the [user guide](USER_GUIDE.md) for procedures and examples.
 
 ALL is the default tracker view after a restart.
