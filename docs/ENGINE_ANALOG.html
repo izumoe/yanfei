@@ -1,0 +1,147 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>ANALOG engine — Yanfei</title><style>body{max-width:900px;margin:32px auto;padding:0 20px;font:16px/1.65 system-ui,sans-serif;color:#222}a{color:inherit}img{max-width:100%;height:auto}figure{margin:24px 0}figcaption{color:#444;font-size:15px;max-width:60ch}img.screen{image-rendering:pixelated}h2,h3{scroll-margin-top:100px}nav{display:flex;flex-wrap:wrap;gap:8px 20px;position:sticky;top:0;background:#fff;padding:8px 0;border-bottom:1px solid #ddd;z-index:1}pre{overflow:auto;background:#f4f4f4;padding:16px}table{border-collapse:collapse;display:block;overflow:auto}td,th{border:1px solid #ccc;padding:8px;text-align:left}</style><nav><a href="../index.html">Yanfei home</a><a href="VISUAL_GUIDE.html">Visual guide</a><a href="TRACKER_QUICK_REFERENCE.html">Controls</a><a href="MODE_GUIDE.html">Modes</a><a href="ENGINE_GUIDE.html">Engines</a></nav><main><h1 id="analog-engine">ANALOG engine</h1>
+<p><a href="ENGINE_GUIDE.html">All engines</a> · <a href="MODE_GUIDE.html">Modes and shared controls</a></p>
+<p>Use ANALOG for basses, leads, pads, and sounds shaped by a resonant filter.</p>
+<h2 id="how-the-sound-is-made">How the sound is made</h2>
+<p>Two oscillators and a noise source feed a filter. The envelope sets the note shape. Filter and shape modulation can change the tone while a note plays.</p>
+<figure>
+<a href="images/engines/analog-home.png"><img class="screen" src="images/engines/analog-home.png" width="320" alt="ANALOG HOME page showing its four main sound controls and first factory preset."></a>
+<figcaption>ANALOG on HOME. These knobs apply to the selected track unless HOME LEVELS is enabled.</figcaption>
+</figure>
+<h2 id="home-knobs">HOME knobs</h2>
+<table>
+<thead>
+<tr>
+<th>Knob 1</th>
+<th>Knob 2</th>
+<th>Knob 3</th>
+<th>Knob 4</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CUT</td>
+<td>RES</td>
+<td>ATK</td>
+<td>REL</td>
+</tr>
+</tbody>
+</table>
+<p>For HOME LEVELS, see <a href="MODE_GUIDE.html#home-and-mixer">HOME and mixer</a>.</p>
+<h2 id="engine-controls">Engine controls</h2>
+<p>Press the panel <strong>EDIT</strong> button to cycle the engine pages.
+Pause between presses to avoid opening its shortcut layer.
+The musical <strong>EDIT key</strong> is a different control.</p>
+<h3 id="osc-page">OSC page</h3>
+<figure>
+<a href="images/engines/analog-edit1.png"><img class="screen" src="images/engines/analog-edit1.png" width="320" alt="ANALOG OSC page from the running firmware, including its four control labels."></a>
+<figcaption>OSC is engine page 1.</figcaption>
+</figure>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>What it changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>WAVE</td>
+<td>Select SAW, SQR, TRI, SIN, PWM, SYNC, or SUB. See the mode table below.</td>
+</tr>
+<tr>
+<td>DTN / SYNC</td>
+<td>Detune the second oscillator in cents. In SYNC, change its pitch above the first oscillator instead.</td>
+</tr>
+<tr>
+<td>MIX / SUB</td>
+<td>Mix the two oscillators. In SUB, increase the lower square oscillator.</td>
+</tr>
+<tr>
+<td>NOIS</td>
+<td>Add noise before the filter.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="flt-page">FLT page</h3>
+<figure>
+<a href="images/engines/analog-edit2.png"><img class="screen" src="images/engines/analog-edit2.png" width="320" alt="ANALOG FLT page from the running firmware, including its four control labels."></a>
+<figcaption>FLT is engine page 2.</figcaption>
+</figure>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>What it changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CUT</td>
+<td>Set the filter cutoff. A higher LP cutoff usually gives a brighter sound.</td>
+</tr>
+<tr>
+<td>RES</td>
+<td>Emphasize frequencies near the cutoff.</td>
+</tr>
+<tr>
+<td>DRV</td>
+<td>Add drive before the filter.</td>
+</tr>
+<tr>
+<td>KTR</td>
+<td>Make the cutoff follow the played pitch. Higher notes open the filter more.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="oscillator-and-filter-modes">Oscillator and filter modes</h2>
+<table>
+<thead>
+<tr>
+<th>WAVE</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SAW</td>
+<td>Bright oscillator pair for basses, strings, and brass.</td>
+</tr>
+<tr>
+<td>SQR</td>
+<td>Square oscillator pair with a hollow tone.</td>
+</tr>
+<tr>
+<td>TRI</td>
+<td>Softer triangle oscillator pair.</td>
+</tr>
+<tr>
+<td>SIN</td>
+<td>Sine oscillator pair with few upper harmonics.</td>
+</tr>
+<tr>
+<td>PWM</td>
+<td>Pulse oscillator pair. Route LFO or ENV to SHP to move the pulse width.</td>
+</tr>
+<tr>
+<td>SYNC</td>
+<td>The first saw resets the second saw. Sweep SYNC or route modulation to SHP.</td>
+</tr>
+<tr>
+<td>SUB</td>
+<td>A saw with a square one octave below. SUB controls the lower oscillator level.</td>
+</tr>
+</tbody>
+</table>
+<p>On <strong>EDIT &gt; FILTER</strong>, TYPE selects LP, BP, or HP.
+LP removes high frequencies. BP keeps a band near the cutoff. HP removes low frequencies.</p>
+<h2 id="try-these-changes">Try these changes</h2>
+<h3 id="hear-a-filter-sweep">Hear a filter sweep</h3>
+<p>Load <strong>303 SQUELCH</strong>. Hold one note and turn CUT slowly. Increase RES, then lower it again. On ENV DEST, add a positive FLT amount to make each attack open the filter.</p>
+<h3 id="hear-hard-sync">Hear hard sync</h3>
+<p>Load <strong>JUPITER SYNC</strong>. Open OSC and change SYNC while holding a note. The note stays at its played pitch while its harmonic pattern changes.</p>
+<h2 id="factory-presets">Factory presets</h2>
+<p><strong>SQR BASS</strong>, <strong>SAW LEAD</strong>, <strong>SOFT PAD</strong>, <strong>JUNO CHORUS</strong>, <strong>JUPITER SYNC</strong>, <strong>303 SQUELCH</strong>, <strong>MINI ROUND</strong>, <strong>MS REED</strong>.</p>
+<p>See the <a href="INSPIRED_PRESETS.html">inspired preset catalogue</a> for the references behind the newer sounds.</p>
+<h2 id="limits-and-useful-checks">Limits and useful checks</h2>
+<p>ANALOG has no dedicated Jupiter-8 model. Its inspired presets use these oscillator, filter, envelope, and effect controls.</p>
+<p>Save a user preset or project before loading another sound if you want to keep your edits.</p></main></html>

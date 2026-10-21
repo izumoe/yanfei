@@ -1,0 +1,151 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>STRING engine — Yanfei</title><style>body{max-width:900px;margin:32px auto;padding:0 20px;font:16px/1.65 system-ui,sans-serif;color:#222}a{color:inherit}img{max-width:100%;height:auto}figure{margin:24px 0}figcaption{color:#444;font-size:15px;max-width:60ch}img.screen{image-rendering:pixelated}h2,h3{scroll-margin-top:100px}nav{display:flex;flex-wrap:wrap;gap:8px 20px;position:sticky;top:0;background:#fff;padding:8px 0;border-bottom:1px solid #ddd;z-index:1}pre{overflow:auto;background:#f4f4f4;padding:16px}table{border-collapse:collapse;display:block;overflow:auto}td,th{border:1px solid #ccc;padding:8px;text-align:left}</style><nav><a href="../index.html">Yanfei home</a><a href="VISUAL_GUIDE.html">Visual guide</a><a href="TRACKER_QUICK_REFERENCE.html">Controls</a><a href="MODE_GUIDE.html">Modes</a><a href="ENGINE_GUIDE.html">Engines</a></nav><main><h1 id="string-engine">STRING engine</h1>
+<p><a href="ENGINE_GUIDE.html">All engines</a> · <a href="MODE_GUIDE.html">Modes and shared controls</a></p>
+<p>Use STRING for plucked strings, stiff or buzzing strings, sympathetic resonance, and sustained string textures.</p>
+<h2 id="how-the-sound-is-made">How the sound is made</h2>
+<p>A short excitation starts a simulated string. The string and its loop filters produce the decay. SYMP adds three sympathetic strings. The common amplitude envelope still controls the final note.</p>
+<figure>
+<a href="images/engines/string-home.png"><img class="screen" src="images/engines/string-home.png" width="320" alt="STRING HOME page showing its four main sound controls and first factory preset."></a>
+<figcaption>STRING on HOME. These knobs apply to the selected track unless HOME LEVELS is enabled.</figcaption>
+</figure>
+<h2 id="home-knobs">HOME knobs</h2>
+<table>
+<thead>
+<tr>
+<th>Knob 1</th>
+<th>Knob 2</th>
+<th>Knob 3</th>
+<th>Knob 4</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>STRC / CHRD</td>
+<td>BRIT</td>
+<td>DAMP</td>
+<td>POS / SYMP</td>
+</tr>
+</tbody>
+</table>
+<p>For HOME LEVELS, see <a href="MODE_GUIDE.html#home-and-mixer">HOME and mixer</a>.</p>
+<h2 id="engine-controls">Engine controls</h2>
+<p>Press the panel <strong>EDIT</strong> button to cycle the engine pages.
+Pause between presses to avoid opening its shortcut layer.
+The musical <strong>EDIT key</strong> is a different control.</p>
+<h3 id="body-page">BODY page</h3>
+<figure>
+<a href="images/engines/string-edit1.png"><img class="screen" src="images/engines/string-edit1.png" width="320" alt="STRING BODY page from the running firmware, including its four control labels."></a>
+<figcaption>BODY is engine page 1.</figcaption>
+</figure>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>What it changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MODEL</td>
+<td>Select PLUCK or SYMP.</td>
+</tr>
+<tr>
+<td>STRC / CHRD</td>
+<td>PLUCK: change bridge behavior and string stiffness. SYMP: choose the sympathetic tuning group.</td>
+</tr>
+<tr>
+<td>BRIT</td>
+<td>Set excitation brightness and the string loop tone.</td>
+</tr>
+<tr>
+<td>DAMP</td>
+<td>Set the model decay. Higher values ring longer, despite the DAMP label.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="exct-page">EXCT page</h3>
+<figure>
+<a href="images/engines/string-edit2.png"><img class="screen" src="images/engines/string-edit2.png" width="320" alt="STRING EXCT page from the running firmware, including its four control labels."></a>
+<figcaption>EXCT is engine page 2.</figcaption>
+</figure>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>What it changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>POS / SYMP</td>
+<td>PLUCK: set pluck position. SYMP: set coupling into the sympathetic strings.</td>
+</tr>
+<tr>
+<td>ACC</td>
+<td>Set how much velocity strengthens and brightens the excitation.</td>
+</tr>
+<tr>
+<td>BOW / BUZZ</td>
+<td>PLUCK: add repeated excitation for a sustained texture. SYMP: increase bridge buzz.</td>
+</tr>
+<tr>
+<td>EXC</td>
+<td>Mix the direct pick or excitation signal into the output.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="pluck-and-symp">PLUCK and SYMP</h2>
+<p>In PLUCK, low STRC values give a curved, buzzing bridge response.
+Higher values add stiff-string dispersion. POS changes the pluck's harmonic balance.
+BOW sustains the model with repeated random excitation. It is not a recorded bowed instrument.</p>
+<p>In SYMP, several labels change on the device:</p>
+<table>
+<thead>
+<tr>
+<th>PLUCK label</th>
+<th>SYMP label</th>
+<th>New function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>STRC</td>
+<td>CHRD</td>
+<td>Tune the sympathetic strings: OCT, 5TH, 4TH, MAJ, MIN, SUS, 7TH, or ROOT.</td>
+</tr>
+<tr>
+<td>POS</td>
+<td>SYMP</td>
+<td>Change sympathetic coupling.</td>
+</tr>
+<tr>
+<td>BOW</td>
+<td>BUZZ</td>
+<td>Change the bridge buzz.</td>
+</tr>
+</tbody>
+</table>
+<p>ROOT uses the track's scale root with its fifth and octave.
+These sympathetic pitches belong to one modelled voice; they are separate from chord-key note entry.</p>
+<p>Keep common SUS high if you want to hear the string's natural decay.
+Use REL or a row gate to stop a long ring.</p>
+<figure>
+<a href="images/engines/string-symp-edit1.png"><img class="screen" src="images/engines/string-symp-edit1.png" width="320" alt="STRING SYMP model showing CHRD, brightness and model decay."></a>
+<figcaption>SYMP changes STRC into CHRD.</figcaption>
+</figure>
+
+<figure>
+<a href="images/engines/string-symp-edit2.png"><img class="screen" src="images/engines/string-symp-edit2.png" width="320" alt="STRING SYMP excitation page showing sympathetic amount, accent, buzz and direct excitation."></a>
+<figcaption>SYMP also changes POS into SYMP and BOW into BUZZ.</figcaption>
+</figure>
+
+<h2 id="try-these-changes">Try these changes</h2>
+<h3 id="make-a-dry-pluck">Make a dry pluck</h3>
+<p>Load <strong>CLAVI PLUCK</strong>. Keep BOW at zero. Change POS, then reduce DAMP for a shorter model decay. Compare soft and hard notes.</p>
+<h3 id="hear-sympathetic-resonance">Hear sympathetic resonance</h3>
+<p>Load <strong>HARP</strong>. Compare CHRD choices while holding one note. Raise SYMP gradually. Use ROOT if you want resonance related to the track root.</p>
+<h2 id="factory-presets">Factory presets</h2>
+<p><strong>PLUCK</strong>, <strong>DRONE STRING</strong>, <strong>HARP</strong>, <strong>KOTO PICK</strong>, <strong>SITAR BUZZ</strong>, <strong>ZITHER</strong>, <strong>CLAVI PLUCK</strong>, <strong>BOWED WIRE</strong>.</p>
+<p>See the <a href="INSPIRED_PRESETS.html">inspired preset catalogue</a> for the references behind the newer sounds.</p>
+<h2 id="limits-and-useful-checks">Limits and useful checks</h2>
+<p>STRING has at most three voices per track and shares the total eight-voice budget. Long decays can use those voices quickly. The models synthesize the strings; they do not play instrument samples.</p>
+<p>Save a user preset or project before loading another sound if you want to keep your edits.</p></main></html>

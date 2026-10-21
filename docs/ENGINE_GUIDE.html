@@ -1,0 +1,222 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Yanfei engine guide — Yanfei</title><style>body{max-width:900px;margin:32px auto;padding:0 20px;font:16px/1.65 system-ui,sans-serif;color:#222}a{color:inherit}img{max-width:100%;height:auto}figure{margin:24px 0}figcaption{color:#444;font-size:15px;max-width:60ch}img.screen{image-rendering:pixelated}h2,h3{scroll-margin-top:100px}nav{display:flex;flex-wrap:wrap;gap:8px 20px;position:sticky;top:0;background:#fff;padding:8px 0;border-bottom:1px solid #ddd;z-index:1}pre{overflow:auto;background:#f4f4f4;padding:16px}table{border-collapse:collapse;display:block;overflow:auto}td,th{border:1px solid #ccc;padding:8px;text-align:left}</style><nav><a href="../index.html">Yanfei home</a><a href="VISUAL_GUIDE.html">Visual guide</a><a href="TRACKER_QUICK_REFERENCE.html">Controls</a><a href="MODE_GUIDE.html">Modes</a><a href="ENGINE_GUIDE.html">Engines</a></nav><main><h1 id="yanfei-engine-guide">Yanfei engine guide</h1>
+<p>Use this guide to choose an engine and learn its controls.
+It covers the twelve engines in Yanfei v1.6.1-y13.
+Each engine page includes pictures from the running firmware, HOME controls,
+engine parameters, mode choices, factory preset names, and changes to try.</p>
+<p>For envelopes, effects, scale, voice modes, and tracker operation, use the <a href="MODE_GUIDE.html">mode guide</a>.
+For the physical controls, use the <a href="VISUAL_GUIDE.html">visual guide</a>.</p>
+<h2 id="choose-an-engine">Choose an engine</h2>
+<table>
+<thead>
+<tr>
+<th>Engine</th>
+<th>Start here when you want</th>
+<th>Main sound method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="ENGINE_ANALOG.html">ANALOG</a></td>
+<td>Bass, lead, pad, filter sweep</td>
+<td>Oscillators into a resonant filter.</td>
+</tr>
+<tr>
+<td><a href="ENGINE_NES.html">NES</a></td>
+<td>Console pulse lead or stepped triangle bass</td>
+<td>Pulse, triangle, and clocked noise with chip decay.</td>
+</tr>
+<tr>
+<td><a href="ENGINE_DMG.html">DMG</a></td>
+<td>Handheld wave, pulse bass, or short-register noise</td>
+<td>Four-bit wave shapes, pulse, and noise.</td>
+</tr>
+<tr>
+<td><a href="ENGINE_PSG.html">PSG</a></td>
+<td>AY buzzer or Sega square/noise</td>
+<td>Two square tones, noise, and chip-specific controls.</td>
+</tr>
+<tr>
+<td><a href="ENGINE_TRIO.html">TRIO</a></td>
+<td>SID-style stack, sync, or ring modulation</td>
+<td>Three interacting oscillators and a filter.</td>
+</tr>
+<tr>
+<td><a href="ENGINE_FM6.html">FM6</a></td>
+<td>DX-style electric piano, mallet, or digital pad</td>
+<td>Six-operator FM with complete voice patches.</td>
+</tr>
+<tr>
+<td><a href="ENGINE_YM.html">YM</a></td>
+<td>Genesis-style FM bass, brass, or arcade lead</td>
+<td>Four-operator YM2612-style FM.</td>
+</tr>
+<tr>
+<td><a href="ENGINE_WAVE.html">WAVE</a></td>
+<td>Moving digital pad or changing wave tone</td>
+<td>Linear scanning through four waves per bank.</td>
+</tr>
+<tr>
+<td><a href="ENGINE_PHASE.html">PHASE</a></td>
+<td>CZ-style bass, resonant tone, or glass</td>
+<td>Two lines of phase-distortion synthesis.</td>
+</tr>
+<tr>
+<td><a href="ENGINE_STRING.html">STRING</a></td>
+<td>Plucked, buzzing, or sympathetic string</td>
+<td>Modelled string and optional sympathetic strings.</td>
+</tr>
+<tr>
+<td><a href="ENGINE_MODAL.html">MODAL</a></td>
+<td>Bell, bar, plate, or tuned membrane</td>
+<td>A strike into a bank of resonances.</td>
+</tr>
+<tr>
+<td><a href="ENGINE_DRUM.html">DRUM</a></td>
+<td>A full kit on one track</td>
+<td>Eight synthesized drum lanes.</td>
+</tr>
+</tbody>
+</table>
+<p>These are instrument designs and inspired sound families.
+The names do not imply complete emulation of a vintage keyboard or console.
+Use the notes on each engine page to identify its specific features and limits.</p>
+<h2 id="select-and-edit-a-sound">Select and edit a sound</h2>
+<ol>
+<li>Stop playback.</li>
+<li>Leave the tracker by pressing ENV, then press HOME.</li>
+<li>Turn ALGORITHM to select a track.</li>
+<li>Turn PRESETS to select a sound.</li>
+<li>Play a note and change one HOME knob at a time.</li>
+<li>Press the panel EDIT button to open the engine controls.</li>
+</ol>
+<p>Pause between EDIT presses. A quick double press opens its shortcut layer.
+The bottom-right page name helps identify the current page.
+The first two engine page names differ by engine; for example, WAVE uses SCAN and TONE.
+Later EDIT pages contain voice settings or engine-specific pages.</p>
+<p>For another engine, choose one of its factory sounds with PRESETS.
+You can also hold EDIT to open the engine selection layer.
+Read the displayed key map before selecting an engine.
+Save edits before loading another sound.</p>
+<p>In the <a href="WEB_EDITOR.html">web editor</a>, select an engine in Sound, below the preset name.
+The engine card contains its main pages. FM6 also has a separate 6-OP FM page.
+Controls whose meanings change by model can have different labels on the device.</p>
+<h2 id="understand-the-two-kinds-of-envelope">Understand the two kinds of envelope</h2>
+<p>Most engines use the common ENV to control note amplitude.
+NES and DMG add a separate stepped chip decay.
+STRING and MODAL also have a model decay, so DAMP and ENV both affect the result.</p>
+<p>FM6 and YM use their operator envelopes for amplitude and release.
+Changing common ATK or REL is not the way to change their note duration.
+DRUM uses the drum hit's own envelope; key release and common ADSR do not stop the hit.</p>
+<p>If a sound stops too soon, check both its engine decay and its row gate or OFF instruction.
+If it rings too long, check the same controls before adding effects.</p>
+<h2 id="voice-limits">Voice limits</h2>
+<p>All four tracks share a total budget of eight active voices.
+An engine can impose a lower per-track limit:</p>
+<table>
+<thead>
+<tr>
+<th>Engine group</th>
+<th>Per-track limit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>STRING, MODAL</td>
+<td>Three voices.</td>
+</tr>
+<tr>
+<td>FM6, YM</td>
+<td>Six voices.</td>
+</tr>
+<tr>
+<td>Other melodic engines</td>
+<td>Up to the shared voice budget, subject to voice mode.</td>
+</tr>
+<tr>
+<td>DRUM</td>
+<td>Eight lanes, subject to the same shared voice budget.</td>
+</tr>
+</tbody>
+</table>
+<p>A long release can still occupy a voice after a key is released.
+Unison uses several voices for one played note.
+A dense chord on one track can therefore take voices from another track.
+Use shorter releases, fewer chord notes, or simpler arrangements if notes are cut off.</p>
+<h2 id="sound-terms">Sound terms</h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Oscillator</td>
+<td>A source that repeats a wave to make a tone.</td>
+</tr>
+<tr>
+<td>Harmonic</td>
+<td>A tone component at a whole-number multiple of the played pitch.</td>
+</tr>
+<tr>
+<td>Partial</td>
+<td>One tone component; it does not have to be a harmonic.</td>
+</tr>
+<tr>
+<td>Filter cutoff</td>
+<td>The frequency around which a filter changes the signal.</td>
+</tr>
+<tr>
+<td>Resonance</td>
+<td>Emphasis around a filter cutoff, or ringing in a physical model.</td>
+</tr>
+<tr>
+<td>Pulse width</td>
+<td>The fraction of a pulse cycle spent at its high level.</td>
+</tr>
+<tr>
+<td>Hard sync</td>
+<td>Restart one oscillator whenever another begins a cycle.</td>
+</tr>
+<tr>
+<td>Ring modulation</td>
+<td>Multiply two signals to create extra sum and difference tones.</td>
+</tr>
+<tr>
+<td>Wave table</td>
+<td>Stored samples that describe a repeating wave.</td>
+</tr>
+<tr>
+<td>Excitation</td>
+<td>The strike, pluck, or repeated input that starts a model ringing.</td>
+</tr>
+<tr>
+<td>Operator</td>
+<td>An oscillator and envelope used in FM synthesis.</td>
+</tr>
+<tr>
+<td>Attenuation</td>
+<td>A reduction in level. A higher attenuation value is quieter.</td>
+</tr>
+<tr>
+<td>Velocity</td>
+<td>Note attack strength; it can change loudness, brightness, or both.</td>
+</tr>
+<tr>
+<td>Polyphony</td>
+<td>The number of voices that can sound together.</td>
+</tr>
+<tr>
+<td>Gate</td>
+<td>The time between a note starting and its release instruction.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="read-the-pictures">Read the pictures</h2>
+<p>The engine pages show the actual y13 emulator screen.
+Select a picture to open the full image.
+The scope shows mixed output with level scaling; effects can change its shape.
+It is not a direct drawing of an oscillator or an equal-loudness comparison.</p>
+<p>The <a href="INSPIRED_PRESETS.html">inspired preset catalogue</a> explains the newer patch references.
+The <a href="CORE_ENGINES.html">engine implementation record</a> contains technical budgets and validation details.</p></main></html>

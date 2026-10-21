@@ -1,5 +1,8 @@
 # Yanfei engines and firmware budgets
 
+For sound controls and examples, read the [engine guide](ENGINE_GUIDE.md).
+This document records implementation details and firmware budgets.
+
 See [the waveform review](WAVEFORM_REVIEW.md) for live scopes, signal measurements,
 the corrected decay/envelope details and the high-note WARP limitation.
 

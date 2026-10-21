@@ -1,0 +1,144 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>FM6 engine — Yanfei</title><style>body{max-width:900px;margin:32px auto;padding:0 20px;font:16px/1.65 system-ui,sans-serif;color:#222}a{color:inherit}img{max-width:100%;height:auto}figure{margin:24px 0}figcaption{color:#444;font-size:15px;max-width:60ch}img.screen{image-rendering:pixelated}h2,h3{scroll-margin-top:100px}nav{display:flex;flex-wrap:wrap;gap:8px 20px;position:sticky;top:0;background:#fff;padding:8px 0;border-bottom:1px solid #ddd;z-index:1}pre{overflow:auto;background:#f4f4f4;padding:16px}table{border-collapse:collapse;display:block;overflow:auto}td,th{border:1px solid #ccc;padding:8px;text-align:left}</style><nav><a href="../index.html">Yanfei home</a><a href="VISUAL_GUIDE.html">Visual guide</a><a href="TRACKER_QUICK_REFERENCE.html">Controls</a><a href="MODE_GUIDE.html">Modes</a><a href="ENGINE_GUIDE.html">Engines</a></nav><main><h1 id="fm6-engine">FM6 engine</h1>
+<p><a href="ENGINE_GUIDE.html">All engines</a> · <a href="MODE_GUIDE.html">Modes and shared controls</a></p>
+<p>Use FM6 for DX-style electric pianos, bells, brass, basses, and layered digital tones.</p>
+<h2 id="how-the-sound-is-made">How the sound is made</h2>
+<p>Six operators form the sound. An operator is an oscillator with its own envelope. Carriers reach the output; modulators change other operators. An algorithm connects them. A complete operator patch sits below eight performance controls.</p>
+<figure>
+<a href="images/engines/fm6-home.png"><img class="screen" src="images/engines/fm6-home.png" width="320" alt="FM6 HOME page showing its four main sound controls and first factory preset."></a>
+<figcaption>FM6 on HOME. These knobs apply to the selected track unless HOME LEVELS is enabled.</figcaption>
+</figure>
+<h2 id="home-knobs">HOME knobs</h2>
+<table>
+<thead>
+<tr>
+<th>Knob 1</th>
+<th>Knob 2</th>
+<th>Knob 3</th>
+<th>Knob 4</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MLVL</td>
+<td>MRAT</td>
+<td>MEG</td>
+<td>SLOT</td>
+</tr>
+</tbody>
+</table>
+<p>For HOME LEVELS, see <a href="MODE_GUIDE.html#home-and-mixer">HOME and mixer</a>.</p>
+<h2 id="engine-controls">Engine controls</h2>
+<p>Press the panel <strong>EDIT</strong> button to cycle the engine pages.
+Pause between presses to avoid opening its shortcut layer.
+The musical <strong>EDIT key</strong> is a different control.</p>
+<h3 id="ops-page">OPS page</h3>
+<figure>
+<a href="images/engines/fm6-edit1.png"><img class="screen" src="images/engines/fm6-edit1.png" width="320" alt="FM6 OPS page from the running firmware, including its four control labels."></a>
+<figcaption>OPS is engine page 1.</figcaption>
+</figure>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>What it changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ALG</td>
+<td>PAT uses the patch algorithm. Values 1–32 override it with another algorithm.</td>
+</tr>
+<tr>
+<td>FB</td>
+<td>Add to or subtract from the patch feedback.</td>
+</tr>
+<tr>
+<td>MLVL</td>
+<td>Raise or lower modulator levels. This usually changes brightness more than final loudness.</td>
+</tr>
+<tr>
+<td>MRAT</td>
+<td>Add to the coarse frequency ratios of modulators in ratio mode.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="patch-page">PATCH page</h3>
+<figure>
+<a href="images/engines/fm6-edit2.png"><img class="screen" src="images/engines/fm6-edit2.png" width="320" alt="FM6 PATCH page from the running firmware, including its four control labels."></a>
+<figcaption>PATCH is engine page 2.</figcaption>
+</figure>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>What it changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MEG</td>
+<td>Change modulator envelope speed. Positive amounts slow the envelopes; negative amounts speed them up.</td>
+</tr>
+<tr>
+<td>VMOD</td>
+<td>Change modulator velocity sensitivity.</td>
+</tr>
+<tr>
+<td>DTUN</td>
+<td>Spread the carrier pitches for a wider or beating sound.</td>
+</tr>
+<tr>
+<td>SLOT</td>
+<td>Load a built-in patch, the track’s OWN patch, or an available bank patch.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="patch-and-operator-editing">Patch and operator editing</h2>
+<p>The common track ADSR does not control FM6's note length.
+Use its operator envelopes. A carrier envelope controls audible level.
+A modulator envelope changes the evolving tone.</p>
+<table>
+<thead>
+<tr>
+<th>EDIT page</th>
+<th>Knobs 1–4</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OPERATOR</td>
+<td>OP, CRS, FINE, LEVEL</td>
+</tr>
+<tr>
+<td>OP ENV</td>
+<td>OP, STAGE, RATE, LEVEL</td>
+</tr>
+<tr>
+<td>OPERATOR 2</td>
+<td>OP, MODE, DTUN, VEL</td>
+</tr>
+</tbody>
+</table>
+<p>OP selects operator 1–6. CRS and FINE set its frequency.
+RATIO follows the played note. FIXED sets a frequency independent of the played note.
+Each operator envelope has four rates and four target levels.
+Higher envelope rates move faster. Edit the release stage to change the tail.</p>
+<p>Editing an operator makes the patch <strong>OWN</strong>.
+Performance controls still apply above that patch.
+Direct operator edits are saved with sounds and projects; they are not separate step-lock parameters.</p>
+<p>In this Yanfei profile, the original three built-in SLOT patches are followed by OWN.
+The five newer FM6 factory presets carry their full patch as OWN.
+The full preset list still contains eight sounds.
+OWN is not a fourth factory preset. Save it in a user preset or project to keep it.
+The <a href="WEB_EDITOR.html">web editor</a> can import and export DX-style SysEx voices.</p>
+<h2 id="try-these-changes">Try these changes</h2>
+<h3 id="change-an-electric-piano-attack">Change an electric piano attack</h3>
+<p>Load <strong>TINE EP</strong>. Increase MLVL slightly and compare soft and hard playing. Return MLVL to zero before changing the underlying operator patch.</p>
+<h3 id="make-a-softer-mallet">Make a softer mallet</h3>
+<p>Load <strong>DX MALLET</strong>. Lower MLVL. For a longer tail, use OP ENV on the audible carriers; the common ENV release will not do this.</p>
+<h2 id="factory-presets">Factory presets</h2>
+<p><strong>TINE EP</strong>, <strong>FM BASS</strong>, <strong>PAD</strong>, <strong>TX RUBBER</strong>, <strong>DX GLASS</strong>, <strong>DX MALLET</strong>, <strong>DX BRASS</strong>, <strong>DX ORGAN</strong>.</p>
+<p>See the <a href="INSPIRED_PRESETS.html">inspired preset catalogue</a> for the references behind the newer sounds.</p>
+<h2 id="limits-and-useful-checks">Limits and useful checks</h2>
+<p>FM6 has at most six voices per track. It shares the total eight-voice budget with other tracks. Importing a patch replaces that track’s current operator patch.</p>
+<p>Save a user preset or project before loading another sound if you want to keep your edits.</p></main></html>

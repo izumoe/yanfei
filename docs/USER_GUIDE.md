@@ -7,6 +7,8 @@ It covers sound selection, the tracker, song arrangement, and project storage.
 ## Contents
 
 - [Visual guide](VISUAL_GUIDE.md)
+- [Modes and shared controls](MODE_GUIDE.md)
+- [Engine guide](ENGINE_GUIDE.md)
 - [Controls and terms](#controls-and-terms)
 - [Select a sound](#select-a-sound)
 - [Open the tracker](#open-the-tracker)
@@ -110,6 +112,9 @@ Do this before you enter the tracker.
 <a href="images/guide/home.png"><img class="screen" src="images/guide/home.png" width="480" alt="HOME with four sound controls and the selected ANALOG JUNO CHORUS preset."></a>
 <figcaption>HOME shows the current sound at the bottom. The four knobs change the four displayed settings.</figcaption>
 </figure>
+
+For each engine's controls, modes, and examples, use the [engine guide](ENGINE_GUIDE.md).
+For envelopes, LFO, effects, and voice modes, use [modes and shared controls](MODE_GUIDE.md).
 
 The preset list includes sounds from all twelve engines.
 The display shows the selected engine and preset.

@@ -1,0 +1,115 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>NES engine — Yanfei</title><style>body{max-width:900px;margin:32px auto;padding:0 20px;font:16px/1.65 system-ui,sans-serif;color:#222}a{color:inherit}img{max-width:100%;height:auto}figure{margin:24px 0}figcaption{color:#444;font-size:15px;max-width:60ch}img.screen{image-rendering:pixelated}h2,h3{scroll-margin-top:100px}nav{display:flex;flex-wrap:wrap;gap:8px 20px;position:sticky;top:0;background:#fff;padding:8px 0;border-bottom:1px solid #ddd;z-index:1}pre{overflow:auto;background:#f4f4f4;padding:16px}table{border-collapse:collapse;display:block;overflow:auto}td,th{border:1px solid #ccc;padding:8px;text-align:left}</style><nav><a href="../index.html">Yanfei home</a><a href="VISUAL_GUIDE.html">Visual guide</a><a href="TRACKER_QUICK_REFERENCE.html">Controls</a><a href="MODE_GUIDE.html">Modes</a><a href="ENGINE_GUIDE.html">Engines</a></nav><main><h1 id="nes-engine">NES engine</h1>
+<p><a href="ENGINE_GUIDE.html">All engines</a> · <a href="MODE_GUIDE.html">Modes and shared controls</a></p>
+<p>Use NES for narrow pulse leads, stepped triangle basses, and console noise hits.</p>
+<h2 id="how-the-sound-is-made">How the sound is made</h2>
+<p>Each note uses a pulse, a stepped triangle, or clocked noise. A separate chip decay can reduce volume in sixteen steps. The common envelope still applies.</p>
+<figure>
+<a href="images/engines/nes-home.png"><img class="screen" src="images/engines/nes-home.png" width="320" alt="NES HOME page showing its four main sound controls and first factory preset."></a>
+<figcaption>NES on HOME. These knobs apply to the selected track unless HOME LEVELS is enabled.</figcaption>
+</figure>
+<h2 id="home-knobs">HOME knobs</h2>
+<table>
+<thead>
+<tr>
+<th>Knob 1</th>
+<th>Knob 2</th>
+<th>Knob 3</th>
+<th>Knob 4</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VOICE</td>
+<td>DUTY</td>
+<td>DCY</td>
+<td>REL</td>
+</tr>
+</tbody>
+</table>
+<p>For HOME LEVELS, see <a href="MODE_GUIDE.html#home-and-mixer">HOME and mixer</a>.</p>
+<h2 id="engine-controls">Engine controls</h2>
+<p>Press the panel <strong>EDIT</strong> button to cycle the engine pages.
+Pause between presses to avoid opening its shortcut layer.
+The musical <strong>EDIT key</strong> is a different control.</p>
+<h3 id="chip-page">CHIP page</h3>
+<figure>
+<a href="images/engines/nes-edit1.png"><img class="screen" src="images/engines/nes-edit1.png" width="320" alt="NES CHIP page from the running firmware, including its four control labels."></a>
+<figcaption>CHIP is engine page 1.</figcaption>
+</figure>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>What it changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VOICE</td>
+<td>Select PULSE, TRI, or NOISE.</td>
+</tr>
+<tr>
+<td>DUTY</td>
+<td>For PULSE, select 12.5%, 25%, 50%, or 75% pulse width.</td>
+</tr>
+<tr>
+<td>SUB</td>
+<td>Mix in a triangle one octave below the main sound.</td>
+</tr>
+<tr>
+<td>NOISE</td>
+<td>Select LONG or SHORT noise feedback. This affects NOISE voice.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="motn-page">MOTN page</h3>
+<figure>
+<a href="images/engines/nes-edit2.png"><img class="screen" src="images/engines/nes-edit2.png" width="320" alt="NES MOTN page from the running firmware, including its four control labels."></a>
+<figcaption>MOTN is engine page 2.</figcaption>
+</figure>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>What it changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SWP</td>
+<td>Increase the downward pitch sweep. Very small settings have little or no effect.</td>
+</tr>
+<tr>
+<td>DCY</td>
+<td>Select CONST, a one-shot D decay, or an L looping decay.</td>
+</tr>
+<tr>
+<td>ARP</td>
+<td>Select OFF, OCT, MAJ, or MIN for the built-in fast pitch pattern.</td>
+</tr>
+<tr>
+<td>TONE</td>
+<td>Remove high frequencies at lower settings; use higher settings for a brighter output.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="voice-and-decay-modes">Voice and decay modes</h2>
+<p>PULSE is the lead voice. TRI uses a 32-position staircase for a rounded bass.
+NOISE uses clocked feedback for snare, hat, and effect sounds.
+DUTY does not change TRI or NOISE.</p>
+<p>CONST keeps the chip volume steady. The common envelope still shapes the note.
+D0 through D15 fade through sixteen volume levels. Higher D numbers take longer between steps.
+L1 through L15 repeat the stepped fade while the note remains active.
+The decay clock is faster than DMG's. Releasing the key still uses REL.</p>
+<p>The engine ARP changes one voice's pitch rapidly. It is separate from the <a href="MODE_GUIDE.html#arpeggiator">shared arpeggiator</a>.</p>
+<h2 id="try-these-changes">Try these changes</h2>
+<h3 id="compare-pulse-widths">Compare pulse widths</h3>
+<p>Load <strong>PULSE LD</strong>. Hold one note and change DUTY. Try 12.5% for a narrow tone and 50% for a square tone.</p>
+<h3 id="make-a-short-noise-hit">Make a short noise hit</h3>
+<p>Load <strong>8BIT SNARE</strong>. Compare LONG and SHORT noise. Adjust DCY and TONE, then change the common envelope if you need a shorter tail.</p>
+<h2 id="factory-presets">Factory presets</h2>
+<p><strong>PULSE LD</strong>, <strong>WAVE BASS</strong>, <strong>NOISE HIT</strong>, <strong>FAMI HERO</strong>, <strong>FAMI LOW</strong>, <strong>FAMI ARP</strong>, <strong>8BIT SNARE</strong>, <strong>DUNGEON PAD</strong>.</p>
+<p>See the <a href="INSPIRED_PRESETS.html">inspired preset catalogue</a> for the references behind the newer sounds.</p>
+<h2 id="limits-and-useful-checks">Limits and useful checks</h2>
+<p>NES is an inspired instrument. It does not reproduce console channel limits or play DPCM samples.</p>
+<p>Save a user preset or project before loading another sound if you want to keep your edits.</p></main></html>

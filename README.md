@@ -15,6 +15,8 @@ Scroll through sections of up to four bars. Use shared phrases and chains to arr
 - [Visual guide: start here](docs/VISUAL_GUIDE.md)
 - [User guide](docs/USER_GUIDE.md)
 - [Tracker quick reference](docs/TRACKER_QUICK_REFERENCE.md)
+- [Modes and shared controls](docs/MODE_GUIDE.md)
+- [Engine guide](docs/ENGINE_GUIDE.md)
 - [Engines and firmware budgets](docs/CORE_ENGINES.md)
 - [Inspired presets](docs/INSPIRED_PRESETS.md)
 - [Tracker implementation](docs/TRACKER.md)

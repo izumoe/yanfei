@@ -1,0 +1,144 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>WAVE engine — Yanfei</title><style>body{max-width:900px;margin:32px auto;padding:0 20px;font:16px/1.65 system-ui,sans-serif;color:#222}a{color:inherit}img{max-width:100%;height:auto}figure{margin:24px 0}figcaption{color:#444;font-size:15px;max-width:60ch}img.screen{image-rendering:pixelated}h2,h3{scroll-margin-top:100px}nav{display:flex;flex-wrap:wrap;gap:8px 20px;position:sticky;top:0;background:#fff;padding:8px 0;border-bottom:1px solid #ddd;z-index:1}pre{overflow:auto;background:#f4f4f4;padding:16px}table{border-collapse:collapse;display:block;overflow:auto}td,th{border:1px solid #ccc;padding:8px;text-align:left}</style><nav><a href="../index.html">Yanfei home</a><a href="VISUAL_GUIDE.html">Visual guide</a><a href="TRACKER_QUICK_REFERENCE.html">Controls</a><a href="MODE_GUIDE.html">Modes</a><a href="ENGINE_GUIDE.html">Engines</a></nav><main><h1 id="wave-engine">WAVE engine</h1>
+<p><a href="ENGINE_GUIDE.html">All engines</a> · <a href="MODE_GUIDE.html">Modes and shared controls</a></p>
+<p>Use WAVE for changing digital pads, hollow leads, glass tones, and wave-table basses.</p>
+<h2 id="how-the-sound-is-made">How the sound is made</h2>
+<p>Each bank has four waves. POS blends between adjacent waves on a line. RATE and SCAN add automatic movement around POS. WARP bends the reading phase for extra harmonics.</p>
+<figure>
+<a href="images/engines/wave-home.png"><img class="screen" src="images/engines/wave-home.png" width="320" alt="WAVE HOME page showing its four main sound controls and first factory preset."></a>
+<figcaption>WAVE on HOME. These knobs apply to the selected track unless HOME LEVELS is enabled.</figcaption>
+</figure>
+<h2 id="home-knobs">HOME knobs</h2>
+<table>
+<thead>
+<tr>
+<th>Knob 1</th>
+<th>Knob 2</th>
+<th>Knob 3</th>
+<th>Knob 4</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BANK</td>
+<td>POS</td>
+<td>RATE</td>
+<td>SCAN</td>
+</tr>
+</tbody>
+</table>
+<p>For HOME LEVELS, see <a href="MODE_GUIDE.html#home-and-mixer">HOME and mixer</a>.</p>
+<h2 id="engine-controls">Engine controls</h2>
+<p>Press the panel <strong>EDIT</strong> button to cycle the engine pages.
+Pause between presses to avoid opening its shortcut layer.
+The musical <strong>EDIT key</strong> is a different control.</p>
+<h3 id="scan-page">SCAN page</h3>
+<figure>
+<a href="images/engines/wave-edit1.png"><img class="screen" src="images/engines/wave-edit1.png" width="320" alt="WAVE SCAN page from the running firmware, including its four control labels."></a>
+<figcaption>SCAN is engine page 1.</figcaption>
+</figure>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>What it changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BANK</td>
+<td>Choose BASIC, COLOR, PPG, ESQ, or VS.</td>
+</tr>
+<tr>
+<td>POS</td>
+<td>Set the position between the bank’s four waves.</td>
+</tr>
+<tr>
+<td>RATE</td>
+<td>Set automatic scan speed. Zero stops the scan clock.</td>
+</tr>
+<tr>
+<td>SCAN</td>
+<td>Set automatic scan depth. Zero removes scan movement.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tone-page">TONE page</h3>
+<figure>
+<a href="images/engines/wave-edit2.png"><img class="screen" src="images/engines/wave-edit2.png" width="320" alt="WAVE TONE page from the running firmware, including its four control labels."></a>
+<figcaption>TONE is engine page 2.</figcaption>
+</figure>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>What it changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>WARP</td>
+<td>Bend the reading phase to change the harmonic shape.</td>
+</tr>
+<tr>
+<td>SUB</td>
+<td>Mix in a sine one octave below.</td>
+</tr>
+<tr>
+<td>BRIT</td>
+<td>Control the available harmonic brightness.</td>
+</tr>
+<tr>
+<td>TONE</td>
+<td>Set output smoothing and brightness.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="banks-and-scanning">Banks and scanning</h2>
+<table>
+<thead>
+<tr>
+<th>Bank</th>
+<th>Four wave characters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BASIC</td>
+<td>Sine, triangle, square, saw.</td>
+</tr>
+<tr>
+<td>COLOR</td>
+<td>Hollow, glass, octaves, bright glass.</td>
+</tr>
+<tr>
+<td>PPG</td>
+<td>Nasal, comb, vocal, metal.</td>
+</tr>
+<tr>
+<td>ESQ</td>
+<td>Bass, reed, keys, hollow reed.</td>
+</tr>
+<tr>
+<td>VS</td>
+<td>Airy, glass, brass, shimmer.</td>
+</tr>
+</tbody>
+</table>
+<p>These are original wave recipes inspired by older digital synth families.
+The names do not indicate imported ROM waves.
+VS uses linear scanning through four waves. It does not add a two-axis vector mixer.</p>
+<p>Set SCAN to zero when you want to hear POS by itself.
+For automatic motion, both RATE and SCAN must be above zero.
+Movement stops at the bank edges rather than wrapping to another bank.
+The scan starts from its initial phase on each new note.</p>
+<h2 id="try-these-changes">Try these changes</h2>
+<h3 id="make-a-slow-pad">Make a slow pad</h3>
+<p>Load <strong>VS AIR</strong>. Keep POS near the middle. Set a low RATE and a moderate SCAN amount. Use a slow common attack and a longer release.</p>
+<h3 id="compare-bright-and-dark-waves">Compare bright and dark waves</h3>
+<p>Load <strong>PPG METAL</strong>. Set SCAN to zero. Move POS slowly, then compare BRIT and TONE. Add a small WARP amount after you find a useful position.</p>
+<h2 id="factory-presets">Factory presets</h2>
+<p><strong>MORPH PAD</strong>, <strong>GLASS WALK</strong>, <strong>WAVE SUB</strong>, <strong>PPG CHOIR</strong>, <strong>ESQ BRASS</strong>, <strong>VS AIR</strong>, <strong>PPG METAL</strong>, <strong>ESQ REED</strong>.</p>
+<p>See the <a href="INSPIRED_PRESETS.html">inspired preset catalogue</a> for the references behind the newer sounds.</p>
+<h2 id="limits-and-useful-checks">Limits and useful checks</h2>
+<p>The bank is built in; custom wave import is not available. High-note WARP is deliberately reduced to control unwanted high-frequency products. The engine does not oversample.</p>
+<p>Save a user preset or project before loading another sound if you want to keep your edits.</p></main></html>

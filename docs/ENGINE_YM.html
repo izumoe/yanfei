@@ -1,0 +1,162 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>YM engine — Yanfei</title><style>body{max-width:900px;margin:32px auto;padding:0 20px;font:16px/1.65 system-ui,sans-serif;color:#222}a{color:inherit}img{max-width:100%;height:auto}figure{margin:24px 0}figcaption{color:#444;font-size:15px;max-width:60ch}img.screen{image-rendering:pixelated}h2,h3{scroll-margin-top:100px}nav{display:flex;flex-wrap:wrap;gap:8px 20px;position:sticky;top:0;background:#fff;padding:8px 0;border-bottom:1px solid #ddd;z-index:1}pre{overflow:auto;background:#f4f4f4;padding:16px}table{border-collapse:collapse;display:block;overflow:auto}td,th{border:1px solid #ccc;padding:8px;text-align:left}</style><nav><a href="../index.html">Yanfei home</a><a href="VISUAL_GUIDE.html">Visual guide</a><a href="TRACKER_QUICK_REFERENCE.html">Controls</a><a href="MODE_GUIDE.html">Modes</a><a href="ENGINE_GUIDE.html">Engines</a></nav><main><h1 id="ym-engine">YM engine</h1>
+<p><a href="ENGINE_GUIDE.html">All engines</a> · <a href="MODE_GUIDE.html">Modes and shared controls</a></p>
+<p>Use YM for Genesis-style FM bass, brass, reeds, bells, and sharp arcade leads.</p>
+<h2 id="how-the-sound-is-made">How the sound is made</h2>
+<p>Four operators use YM2612-style algorithms, envelopes, feedback, and pitch or amplitude modulation. The operator envelopes use chip rates and attenuation levels. This engine is separate from FM6.</p>
+<figure>
+<a href="images/engines/ym-home.png"><img class="screen" src="images/engines/ym-home.png" width="320" alt="YM HOME page showing its four main sound controls and first factory preset."></a>
+<figcaption>YM on HOME. These knobs apply to the selected track unless HOME LEVELS is enabled.</figcaption>
+</figure>
+<h2 id="home-knobs">HOME knobs</h2>
+<table>
+<thead>
+<tr>
+<th>Knob 1</th>
+<th>Knob 2</th>
+<th>Knob 3</th>
+<th>Knob 4</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ALG</td>
+<td>FB</td>
+<td>D2R</td>
+<td>LEVEL</td>
+</tr>
+</tbody>
+</table>
+<p>For HOME LEVELS, see <a href="MODE_GUIDE.html#home-and-mixer">HOME and mixer</a>.</p>
+<h2 id="engine-controls">Engine controls</h2>
+<p>Press the panel <strong>EDIT</strong> button to cycle the engine pages.
+Pause between presses to avoid opening its shortcut layer.
+The musical <strong>EDIT key</strong> is a different control.</p>
+<h3 id="fm4-page">FM4 page</h3>
+<figure>
+<a href="images/engines/ym-edit1.png"><img class="screen" src="images/engines/ym-edit1.png" width="320" alt="YM FM4 page from the running firmware, including its four control labels."></a>
+<figcaption>FM4 is engine page 1.</figcaption>
+</figure>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>What it changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ALG</td>
+<td>Select one of eight operator algorithms, numbered 0–7.</td>
+</tr>
+<tr>
+<td>FB</td>
+<td>Set chip feedback from 0–7.</td>
+</tr>
+<tr>
+<td>D2R</td>
+<td>Set the shared second decay rate, 0–31. Higher rates decay faster; zero holds this stage.</td>
+</tr>
+<tr>
+<td>SSG</td>
+<td>Select OFF or one of eight special envelope shapes.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="opn-page">OPN page</h3>
+<figure>
+<a href="images/engines/ym-edit2.png"><img class="screen" src="images/engines/ym-edit2.png" width="320" alt="YM OPN page from the running firmware, including its four control labels."></a>
+<figcaption>OPN is engine page 2.</figcaption>
+</figure>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>What it changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LFO</td>
+<td>Select OFF or a chip LFO rate.</td>
+</tr>
+<tr>
+<td>PMS</td>
+<td>Set pitch-modulation sensitivity, 0–7.</td>
+</tr>
+<tr>
+<td>AMS</td>
+<td>Set amplitude-modulation sensitivity, 0–3.</td>
+</tr>
+<tr>
+<td>LEVEL</td>
+<td>Set the engine output gain.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="operator-envelopes-and-tone">Operator envelopes and tone</h2>
+<p>The common track ADSR does not set YM's amplitude envelope.
+Use the four OP ENV pages and OP LEVEL.</p>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AR</td>
+<td>Attack rate, 0–31. Higher is faster. Zero does not produce a normal rising attack.</td>
+</tr>
+<tr>
+<td>D1R</td>
+<td>First decay rate, 0–31. Higher is faster.</td>
+</tr>
+<tr>
+<td>D1L</td>
+<td>First decay attenuation, 0–15. Higher is quieter.</td>
+</tr>
+<tr>
+<td>RR</td>
+<td>Release rate, 0–15. Higher is faster.</td>
+</tr>
+<tr>
+<td>TL</td>
+<td>Total attenuation, 0–127. Higher is quieter; zero is the loudest setting.</td>
+</tr>
+<tr>
+<td>MUL</td>
+<td>Operator frequency multiplier, 0–15. Zero means one-half, not silence.</td>
+</tr>
+<tr>
+<td>DT</td>
+<td>Fine detune, −3 through +3.</td>
+</tr>
+<tr>
+<td>KS</td>
+<td>Shared key scaling, 0–3. Higher settings make envelopes speed up more on higher notes.</td>
+</tr>
+<tr>
+<td>AMOPS</td>
+<td>Operator mask, 0–15. Enables amplitude modulation on selected operators.</td>
+</tr>
+</tbody>
+</table>
+<p>OP1 TONE through OP4 TONE select each operator's MUL, DT, and TL.
+KS is shared even when shown on an operator page.
+D2R and SSG are also shared across the operators.</p>
+<p>AMOPS uses bits 1, 2, 4, and 8 for operators 1, 2, 3, and 4.
+For example, 5 enables operators 1 and 3; 15 enables all four.
+AM needs LFO, AMS, and an enabled operator. PMS controls pitch modulation separately.
+An SSG shape can repeat or hold an envelope stage. Try it first on a held note.</p>
+<h2 id="try-these-changes">Try these changes</h2>
+<h3 id="change-bass-bite">Change bass bite</h3>
+<p>Load <strong>MD BASS</strong>. Compare FB values while repeating a short note. Then change D2R to adjust the held part of the envelope.</p>
+<h3 id="add-vibrato">Add vibrato</h3>
+<p>Load <strong>MD REED</strong>. Select a slow LFO rate and increase PMS from zero. For tremolo, use AMS and enable the required operators with AMOPS.</p>
+<h2 id="factory-presets">Factory presets</h2>
+<p><strong>MD BASS</strong>, <strong>FM BRASS</strong>, <strong>METAL BELL</strong>, <strong>MD SLAP</strong>, <strong>MD REED</strong>, <strong>ARCADE LEAD</strong>, <strong>MD EPIANO</strong>, <strong>MD CHIME</strong>.</p>
+<p>See the <a href="INSPIRED_PRESETS.html">inspired preset catalogue</a> for the references behind the newer sounds.</p>
+<h2 id="limits-and-useful-checks">Limits and useful checks</h2>
+<p>YM has at most six voices per track within the shared eight-voice budget. The instrument includes the chip ladder DAC behavior. It does not expose PCM streaming, channel-3 special mode, or CSM timer playback.</p>
+<p>Save a user preset or project before loading another sound if you want to keep your edits.</p></main></html>

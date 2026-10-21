@@ -1,0 +1,170 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>DRUM engine — Yanfei</title><style>body{max-width:900px;margin:32px auto;padding:0 20px;font:16px/1.65 system-ui,sans-serif;color:#222}a{color:inherit}img{max-width:100%;height:auto}figure{margin:24px 0}figcaption{color:#444;font-size:15px;max-width:60ch}img.screen{image-rendering:pixelated}h2,h3{scroll-margin-top:100px}nav{display:flex;flex-wrap:wrap;gap:8px 20px;position:sticky;top:0;background:#fff;padding:8px 0;border-bottom:1px solid #ddd;z-index:1}pre{overflow:auto;background:#f4f4f4;padding:16px}table{border-collapse:collapse;display:block;overflow:auto}td,th{border:1px solid #ccc;padding:8px;text-align:left}</style><nav><a href="../index.html">Yanfei home</a><a href="VISUAL_GUIDE.html">Visual guide</a><a href="TRACKER_QUICK_REFERENCE.html">Controls</a><a href="MODE_GUIDE.html">Modes</a><a href="ENGINE_GUIDE.html">Engines</a></nav><main><h1 id="drum-engine">DRUM engine</h1>
+<p><a href="ENGINE_GUIDE.html">All engines</a> · <a href="MODE_GUIDE.html">Modes and shared controls</a></p>
+<p>Use DRUM for a complete synthesized kit on one track.</p>
+<h2 id="how-the-sound-is-made">How the sound is made</h2>
+<p>Eight lanes can ring together. Each lane owns a drum voice and a new hit on that lane retriggers it. The kick, snare, clap, hats, tom, rim, and bell use their own synthesis envelopes.</p>
+<figure>
+<a href="images/engines/drum-home.png"><img class="screen" src="images/engines/drum-home.png" width="320" alt="DRUM HOME page showing its four main sound controls and first factory preset."></a>
+<figcaption>DRUM on HOME. These knobs apply to the selected track unless HOME LEVELS is enabled.</figcaption>
+</figure>
+<h2 id="home-knobs">HOME knobs</h2>
+<table>
+<thead>
+<tr>
+<th>Knob 1</th>
+<th>Knob 2</th>
+<th>Knob 3</th>
+<th>Knob 4</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TUNE</td>
+<td>TONE</td>
+<td>DECY</td>
+<td>SNAP</td>
+</tr>
+</tbody>
+</table>
+<p>For HOME LEVELS, see <a href="MODE_GUIDE.html#home-and-mixer">HOME and mixer</a>.</p>
+<h2 id="engine-controls">Engine controls</h2>
+<p>Press the panel <strong>EDIT</strong> button to cycle the engine pages.
+Pause between presses to avoid opening its shortcut layer.
+The musical <strong>EDIT key</strong> is a different control.</p>
+<h3 id="kit-page">KIT page</h3>
+<figure>
+<a href="images/engines/drum-edit1.png"><img class="screen" src="images/engines/drum-edit1.png" width="320" alt="DRUM KIT page from the running firmware, including its four control labels."></a>
+<figcaption>KIT is engine page 1.</figcaption>
+</figure>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>What it changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>KIT</td>
+<td>Select the kit model. Available choices include STD, 80, 10, 66, 55, 77, DEEP, TIGHT, and PERC.</td>
+</tr>
+<tr>
+<td>TUNE</td>
+<td>Tune the kit. The middle setting is the designed pitch; the range is approximately one octave down to one octave up.</td>
+</tr>
+<tr>
+<td>TONE</td>
+<td>Change the kit brightness.</td>
+</tr>
+<tr>
+<td>DECY</td>
+<td>Scale the drum decay times. Higher settings give longer tails.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="hit-page">HIT page</h3>
+<figure>
+<a href="images/engines/drum-edit2.png"><img class="screen" src="images/engines/drum-edit2.png" width="320" alt="DRUM HIT page from the running firmware, including its four control labels."></a>
+<figcaption>HIT is engine page 2.</figcaption>
+</figure>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>What it changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SNAP</td>
+<td>Change each lane’s extra character: snare noise, clap spread, hat noise, tom bend, or related attack detail.</td>
+</tr>
+<tr>
+<td>ACC</td>
+<td>Set accent strength at full velocity.</td>
+</tr>
+<tr>
+<td>KICK</td>
+<td>On STD, choose PUNCH or ROUND. Model kits use their own kick variant.</td>
+</tr>
+<tr>
+<td>DRV</td>
+<td>Add soft clipping to drum hits.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="kit-lanes-and-modes">Kit lanes and modes</h2>
+<p>EDIT &gt; LANES and LANES 2 set the eight lane levels.
+A lane level of 100% uses the kit's designed level.
+A closed hat stops an open hat. Releasing a key does not stop a drum hit.</p>
+<p>The current detailed tracker uses these short headers. Its standard lane assignments are:</p>
+<table>
+<thead>
+<tr>
+<th>Header in this release</th>
+<th>Standard lane</th>
+<th>MIDI note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>KD</td>
+<td>Kick</td>
+<td>36</td>
+</tr>
+<tr>
+<td>SD</td>
+<td>Snare</td>
+<td>38</td>
+</tr>
+<tr>
+<td>CH</td>
+<td>Clap</td>
+<td>39</td>
+</tr>
+<tr>
+<td>OH</td>
+<td>Closed hat</td>
+<td>42</td>
+</tr>
+<tr>
+<td>LT</td>
+<td>Open hat</td>
+<td>46</td>
+</tr>
+<tr>
+<td>HT</td>
+<td>Tom</td>
+<td>45</td>
+</tr>
+<tr>
+<td>CP</td>
+<td>Rim</td>
+<td>37</td>
+</tr>
+<tr>
+<td>RM</td>
+<td>Bell</td>
+<td>56</td>
+</tr>
+</tbody>
+</table>
+<p>Some kits substitute a cymbal, conga, or clave in a lane.
+The header abbreviations are not a separate General MIDI map.</p>
+<p>In detailed PHRASE, select a lane and tap the EDIT key to switch its hit on or off.
+EDIT + UP adds accent. EDIT + DOWN removes accent.
+NOTE mode can enter the drum hits whose physical keys are available.
+Use lane editing for hits on keys reserved by the tracker controls.</p>
+<p>The common ADSR, glide, and pitch/filter/shape modulation do not shape these one-shot drum voices.
+Level, pan, effects, velocity, lane accents, and supported amplitude modulation still apply.</p>
+<h2 id="try-these-changes">Try these changes</h2>
+<h3 id="balance-a-kit">Balance a kit</h3>
+<p>Load <strong>DRUM KIT</strong>. Enter a few hits in detailed PHRASE. Use LANES and LANES 2 to lower the hats or clap without changing other lanes.</p>
+<h3 id="make-a-short-electronic-kit">Make a short electronic kit</h3>
+<p>Load <strong>MINIMAL KIT</strong>. Lower DECY, then increase SNAP slightly. Add DRV last and compare the level before saving.</p>
+<h2 id="factory-presets">Factory presets</h2>
+<p><strong>DRUM KIT</strong>, <strong>DEEP KIT</strong>, <strong>TIGHT KIT</strong>, <strong>ELECTRO KIT</strong>, <strong>HOUSE KIT</strong>, <strong>ARCADE KIT</strong>, <strong>DUB KIT</strong>, <strong>MINIMAL KIT</strong>.</p>
+<p>See the <a href="INSPIRED_PRESETS.html">inspired preset catalogue</a> for the references behind the newer sounds.</p>
+<h2 id="limits-and-useful-checks">Limits and useful checks</h2>
+<p>The drums are synthesized. Kit names do not add sampled 707 or DMX instruments. Up to eight lanes can sound on a part, but the total active voice budget across all tracks remains eight.</p>
+<p>Save a user preset or project before loading another sound if you want to keep your edits.</p></main></html>

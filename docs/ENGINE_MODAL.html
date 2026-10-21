@@ -1,0 +1,127 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>MODAL engine — Yanfei</title><style>body{max-width:900px;margin:32px auto;padding:0 20px;font:16px/1.65 system-ui,sans-serif;color:#222}a{color:inherit}img{max-width:100%;height:auto}figure{margin:24px 0}figcaption{color:#444;font-size:15px;max-width:60ch}img.screen{image-rendering:pixelated}h2,h3{scroll-margin-top:100px}nav{display:flex;flex-wrap:wrap;gap:8px 20px;position:sticky;top:0;background:#fff;padding:8px 0;border-bottom:1px solid #ddd;z-index:1}pre{overflow:auto;background:#f4f4f4;padding:16px}table{border-collapse:collapse;display:block;overflow:auto}td,th{border:1px solid #ccc;padding:8px;text-align:left}</style><nav><a href="../index.html">Yanfei home</a><a href="VISUAL_GUIDE.html">Visual guide</a><a href="TRACKER_QUICK_REFERENCE.html">Controls</a><a href="MODE_GUIDE.html">Modes</a><a href="ENGINE_GUIDE.html">Engines</a></nav><main><h1 id="modal-engine">MODAL engine</h1>
+<p><a href="ENGINE_GUIDE.html">All engines</a> · <a href="MODE_GUIDE.html">Modes and shared controls</a></p>
+<p>Use MODAL for bars, bells, plates, struck metal, membranes, and hand-drum tones.</p>
+<h2 id="how-the-sound-is-made">How the sound is made</h2>
+<p>A strike excites several resonant modes. Their frequency relationships and decay form the sound. BAR changes between harmonic and inharmonic structures. MEMB uses a membrane model.</p>
+<figure>
+<a href="images/engines/modal-home.png"><img class="screen" src="images/engines/modal-home.png" width="320" alt="MODAL HOME page showing its four main sound controls and first factory preset."></a>
+<figcaption>MODAL on HOME. These knobs apply to the selected track unless HOME LEVELS is enabled.</figcaption>
+</figure>
+<h2 id="home-knobs">HOME knobs</h2>
+<table>
+<thead>
+<tr>
+<th>Knob 1</th>
+<th>Knob 2</th>
+<th>Knob 3</th>
+<th>Knob 4</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>STRC / HARM</td>
+<td>BRIT</td>
+<td>DAMP</td>
+<td>POS</td>
+</tr>
+</tbody>
+</table>
+<p>For HOME LEVELS, see <a href="MODE_GUIDE.html#home-and-mixer">HOME and mixer</a>.</p>
+<h2 id="engine-controls">Engine controls</h2>
+<p>Press the panel <strong>EDIT</strong> button to cycle the engine pages.
+Pause between presses to avoid opening its shortcut layer.
+The musical <strong>EDIT key</strong> is a different control.</p>
+<h3 id="body-page">BODY page</h3>
+<figure>
+<a href="images/engines/modal-edit1.png"><img class="screen" src="images/engines/modal-edit1.png" width="320" alt="MODAL BODY page from the running firmware, including its four control labels."></a>
+<figcaption>BODY is engine page 1.</figcaption>
+</figure>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>What it changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MODEL</td>
+<td>Select BAR or MEMB.</td>
+</tr>
+<tr>
+<td>STRC / HARM</td>
+<td>BAR: change the spacing of resonances. MEMB: move from an ideal membrane toward more harmonic loaded-membrane modes.</td>
+</tr>
+<tr>
+<td>BRIT</td>
+<td>Set strike brightness and how strongly high modes ring.</td>
+</tr>
+<tr>
+<td>DAMP</td>
+<td>Set model decay. Higher values ring longer.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="exct-page">EXCT page</h3>
+<figure>
+<a href="images/engines/modal-edit2.png"><img class="screen" src="images/engines/modal-edit2.png" width="320" alt="MODAL EXCT page from the running firmware, including its four control labels."></a>
+<figcaption>EXCT is engine page 2.</figcaption>
+</figure>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>What it changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>POS</td>
+<td>Move the strike position and change which modes are excited.</td>
+</tr>
+<tr>
+<td>ACC</td>
+<td>Set the effect of velocity on strike strength, brightness, and decay.</td>
+</tr>
+<tr>
+<td>BOW / BEND</td>
+<td>BAR: add repeated excitation. MEMB: add a downward pitch bend after the strike.</td>
+</tr>
+<tr>
+<td>EXC</td>
+<td>Mix the direct strike signal into the output.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="bar-and-memb">BAR and MEMB</h2>
+<p>BAR covers more than literal bars. STRC changes the resonance relationships for bells,
+metal, plates, and more harmonic struck tones.
+Around the lower-middle STRC range the partials are closer to harmonics.
+Higher settings stretch them into less harmonic relationships.</p>
+<p>MEMB changes STRC to <strong>HARM</strong> and BOW to <strong>BEND</strong> on the device.
+HARM blends an ideal membrane toward a loaded membrane with more harmonic overtones.
+POS moves the strike from the centre toward the rim.
+BEND makes the pitch fall after the strike; it does not sustain the model like BAR's BOW.</p>
+<p>Keep common SUS high to hear the resonator's decay.
+The final amplitude envelope and the model decay both affect how long the sound is heard.</p>
+<figure>
+<a href="images/engines/modal-memb-edit1.png"><img class="screen" src="images/engines/modal-memb-edit1.png" width="320" alt="MODAL MEMB model showing HARM, brightness and model decay."></a>
+<figcaption>MEMB changes STRC into HARM.</figcaption>
+</figure>
+
+<figure>
+<a href="images/engines/modal-memb-edit2.png"><img class="screen" src="images/engines/modal-memb-edit2.png" width="320" alt="MODAL membrane excitation page with position, accent, pitch bend and direct excitation."></a>
+<figcaption>MEMB uses BEND in place of BAR’s sustained BOW excitation.</figcaption>
+</figure>
+
+<h2 id="try-these-changes">Try these changes</h2>
+<h3 id="make-a-bell">Make a bell</h3>
+<p>Load <strong>TOY BELL</strong>. Change STRC in small steps. Adjust POS to alter the strike, then increase DAMP for a longer ring.</p>
+<h3 id="make-a-tuned-membrane">Make a tuned membrane</h3>
+<p>Load <strong>SYNTH TOM</strong>. Compare low and high HARM. Increase BEND, then shorten DAMP if the tail masks later notes.</p>
+<h2 id="factory-presets">Factory presets</h2>
+<p><strong>BELL TREE</strong>, <strong>MARIMBA</strong>, <strong>HAND DRUM</strong>, <strong>VIBE KEYS</strong>, <strong>TOY BELL</strong>, <strong>GAMELAN</strong>, <strong>STEEL TINE</strong>, <strong>SYNTH TOM</strong>.</p>
+<p>See the <a href="INSPIRED_PRESETS.html">inspired preset catalogue</a> for the references behind the newer sounds.</p>
+<h2 id="limits-and-useful-checks">Limits and useful checks</h2>
+<p>MODAL has at most three voices per track within the total eight-voice budget. BAR and MEMB are pitched instruments. Use DRUM when you need independent kit lanes.</p>
+<p>Save a user preset or project before loading another sound if you want to keep your edits.</p></main></html>

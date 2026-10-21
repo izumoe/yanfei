@@ -9,6 +9,9 @@ The top bar shows the firmware version reported by the device.
 <figcaption>The Sound page, shown with a simulated DMG sound. Select the picture to open it at full size.</figcaption>
 </figure>
 
+For the meaning of sound controls, use the [engine guide](ENGINE_GUIDE.md) and
+[mode guide](MODE_GUIDE.md).
+
 ## Select a track and sound
 
 1. Select a track number in the top bar.

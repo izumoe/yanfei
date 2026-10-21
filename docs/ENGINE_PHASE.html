@@ -1,0 +1,137 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>PHASE engine — Yanfei</title><style>body{max-width:900px;margin:32px auto;padding:0 20px;font:16px/1.65 system-ui,sans-serif;color:#222}a{color:inherit}img{max-width:100%;height:auto}figure{margin:24px 0}figcaption{color:#444;font-size:15px;max-width:60ch}img.screen{image-rendering:pixelated}h2,h3{scroll-margin-top:100px}nav{display:flex;flex-wrap:wrap;gap:8px 20px;position:sticky;top:0;background:#fff;padding:8px 0;border-bottom:1px solid #ddd;z-index:1}pre{overflow:auto;background:#f4f4f4;padding:16px}table{border-collapse:collapse;display:block;overflow:auto}td,th{border:1px solid #ccc;padding:8px;text-align:left}</style><nav><a href="../index.html">Yanfei home</a><a href="VISUAL_GUIDE.html">Visual guide</a><a href="TRACKER_QUICK_REFERENCE.html">Controls</a><a href="MODE_GUIDE.html">Modes</a><a href="ENGINE_GUIDE.html">Engines</a></nav><main><h1 id="phase-engine">PHASE engine</h1>
+<p><a href="ENGINE_GUIDE.html">All engines</a> · <a href="MODE_GUIDE.html">Modes and shared controls</a></p>
+<p>Use PHASE for CZ-style basses, brass, resonant digital tones, and glass plucks.</p>
+<h2 id="how-the-sound-is-made">How the sound is made</h2>
+<p>Phase distortion changes how quickly an oscillator reads different parts of its wave. DCW sets this distortion. A second line can mix with the first or ring-modulate it.</p>
+<figure>
+<a href="images/engines/phase-home.png"><img class="screen" src="images/engines/phase-home.png" width="320" alt="PHASE HOME page showing its four main sound controls and first factory preset."></a>
+<figcaption>PHASE on HOME. These knobs apply to the selected track unless HOME LEVELS is enabled.</figcaption>
+</figure>
+<h2 id="home-knobs">HOME knobs</h2>
+<table>
+<thead>
+<tr>
+<th>Knob 1</th>
+<th>Knob 2</th>
+<th>Knob 3</th>
+<th>Knob 4</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DCW</td>
+<td>ENV</td>
+<td>DTN</td>
+<td>REL</td>
+</tr>
+</tbody>
+</table>
+<p>For HOME LEVELS, see <a href="MODE_GUIDE.html#home-and-mixer">HOME and mixer</a>.</p>
+<h2 id="engine-controls">Engine controls</h2>
+<p>Press the panel <strong>EDIT</strong> button to cycle the engine pages.
+Pause between presses to avoid opening its shortcut layer.
+The musical <strong>EDIT key</strong> is a different control.</p>
+<h3 id="phs-page">PHS page</h3>
+<figure>
+<a href="images/engines/phase-edit1.png"><img class="screen" src="images/engines/phase-edit1.png" width="320" alt="PHASE PHS page from the running firmware, including its four control labels."></a>
+<figcaption>PHS is engine page 1.</figcaption>
+</figure>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>What it changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>WAVE</td>
+<td>Select the first phase-distortion shape.</td>
+</tr>
+<tr>
+<td>WAVE2</td>
+<td>Select a second shape, or “-” to turn the second line off.</td>
+</tr>
+<tr>
+<td>DCW</td>
+<td>Set phase-distortion depth. It often acts as a brightness control.</td>
+</tr>
+<tr>
+<td>ENV</td>
+<td>Set how much the common envelope moves phase distortion.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="line-page">LINE page</h3>
+<figure>
+<a href="images/engines/phase-edit2.png"><img class="screen" src="images/engines/phase-edit2.png" width="320" alt="PHASE LINE page from the running firmware, including its four control labels."></a>
+<figcaption>LINE is engine page 2.</figcaption>
+</figure>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>What it changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DTN</td>
+<td>Detune the second line, in cents.</td>
+</tr>
+<tr>
+<td>LINE</td>
+<td>Select MIX or RING for the two lines.</td>
+</tr>
+<tr>
+<td>SUB</td>
+<td>Add the lower sine component.</td>
+</tr>
+<tr>
+<td>FOLD</td>
+<td>Add smooth wavefolding. Zero bypasses it.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="wave-and-line-modes">Wave and line modes</h2>
+<table>
+<thead>
+<tr>
+<th>WAVE</th>
+<th>Character</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SAW, SQR, PLS</td>
+<td>Saw-like, square-like, and pulse-like phase-distortion shapes.</td>
+</tr>
+<tr>
+<td>DSIN</td>
+<td>Double-sine shape.</td>
+</tr>
+<tr>
+<td>SPLS</td>
+<td>Shaped pulse.</td>
+</tr>
+<tr>
+<td>RSAW, RTRI, RTRP</td>
+<td>Resonant saw, triangle, and trapezoid families.</td>
+</tr>
+</tbody>
+</table>
+<p>MIX combines the lines. RING multiplies their signals for extra sum and difference tones.
+Select a WAVE2 before comparing MIX and RING.
+ENV here means distortion-envelope depth, not a second amplitude envelope.
+The common ENV still sets the note's amplitude shape.</p>
+<h2 id="try-these-changes">Try these changes</h2>
+<h3 id="make-a-digital-brass-swell">Make a digital brass swell</h3>
+<p>Load <strong>BRASS</strong>. Compare low and high DCW. Increase ENV and adjust common ATK so the brightness rises with the attack.</p>
+<h3 id="make-a-glass-strike">Make a glass strike</h3>
+<p>Load <strong>CZ GLASS</strong>. Compare MIX and RING with the second line active. Add a small FOLD amount, then lower it if the attack becomes too bright.</p>
+<h2 id="factory-presets">Factory presets</h2>
+<p><strong>BRASS</strong>, <strong>RESO</strong>, <strong>BELL</strong>, <strong>CZ BASS</strong>, <strong>CZ STRINGS</strong>, <strong>CZ GLASS</strong>, <strong>CZ ORGAN</strong>, <strong>CZ WIRE</strong>.</p>
+<p>See the <a href="INSPIRED_PRESETS.html">inspired preset catalogue</a> for the references behind the newer sounds.</p>
+<h2 id="limits-and-useful-checks">Limits and useful checks</h2>
+<p>PHASE is phase-distortion synthesis, not the FM6 or YM algorithm system. Resonant shapes and ring modes can change loudness as well as tone.</p>
+<p>Save a user preset or project before loading another sound if you want to keep your edits.</p></main></html>

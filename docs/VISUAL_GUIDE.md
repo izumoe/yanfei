@@ -2,6 +2,7 @@
 
 Use this guide to find the controls and recognize each screen.
 The pictures come from the y13 browser emulator. Your notes, colors, and sound names can differ. Select a picture to open it at full size.
+For each engine, use the [engine guide](ENGINE_GUIDE.md). For page functions and sound settings, use [modes and shared controls](MODE_GUIDE.md).
 For all procedures, use the [user guide](USER_GUIDE.md). For shortcuts, use the [control reference](TRACKER_QUICK_REFERENCE.md).
 
 - [Find the controls](#find-the-controls)

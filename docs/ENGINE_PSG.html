@@ -1,0 +1,144 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>PSG engine — Yanfei</title><style>body{max-width:900px;margin:32px auto;padding:0 20px;font:16px/1.65 system-ui,sans-serif;color:#222}a{color:inherit}img{max-width:100%;height:auto}figure{margin:24px 0}figcaption{color:#444;font-size:15px;max-width:60ch}img.screen{image-rendering:pixelated}h2,h3{scroll-margin-top:100px}nav{display:flex;flex-wrap:wrap;gap:8px 20px;position:sticky;top:0;background:#fff;padding:8px 0;border-bottom:1px solid #ddd;z-index:1}pre{overflow:auto;background:#f4f4f4;padding:16px}table{border-collapse:collapse;display:block;overflow:auto}td,th{border:1px solid #ccc;padding:8px;text-align:left}</style><nav><a href="../index.html">Yanfei home</a><a href="VISUAL_GUIDE.html">Visual guide</a><a href="TRACKER_QUICK_REFERENCE.html">Controls</a><a href="MODE_GUIDE.html">Modes</a><a href="ENGINE_GUIDE.html">Engines</a></nav><main><h1 id="psg-engine">PSG engine</h1>
+<p><a href="ENGINE_GUIDE.html">All engines</a> · <a href="MODE_GUIDE.html">Modes and shared controls</a></p>
+<p>Use PSG for square leads, two-tone intervals, buzzer basses, and Sega noise percussion.</p>
+<h2 id="how-the-sound-is-made">How the sound is made</h2>
+<p>Two audible square tones mix with noise. CHIP selects an AY-inspired buzzer path or a Sega PSG core. The second tone can be tuned above or below the first.</p>
+<figure>
+<a href="images/engines/psg-home.png"><img class="screen" src="images/engines/psg-home.png" width="320" alt="PSG HOME page showing its four main sound controls and first factory preset."></a>
+<figcaption>PSG on HOME. These knobs apply to the selected track unless HOME LEVELS is enabled.</figcaption>
+</figure>
+<h2 id="home-knobs">HOME knobs</h2>
+<table>
+<thead>
+<tr>
+<th>Knob 1</th>
+<th>Knob 2</th>
+<th>Knob 3</th>
+<th>Knob 4</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TONE2</td>
+<td>N-MIX</td>
+<td>BUZZ / NOISE</td>
+<td>B-RATE / TONE</td>
+</tr>
+</tbody>
+</table>
+<p>For HOME LEVELS, see <a href="MODE_GUIDE.html#home-and-mixer">HOME and mixer</a>.</p>
+<h2 id="engine-controls">Engine controls</h2>
+<p>Press the panel <strong>EDIT</strong> button to cycle the engine pages.
+Pause between presses to avoid opening its shortcut layer.
+The musical <strong>EDIT key</strong> is a different control.</p>
+<h3 id="mix-page">MIX page</h3>
+<figure>
+<a href="images/engines/psg-edit1.png"><img class="screen" src="images/engines/psg-edit1.png" width="320" alt="PSG MIX page from the running firmware, including its four control labels."></a>
+<figcaption>MIX is engine page 1.</figcaption>
+</figure>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>What it changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TONE2</td>
+<td>Blend in the second square tone.</td>
+</tr>
+<tr>
+<td>INT</td>
+<td>Tune the second tone from −24 to +24 semitones.</td>
+</tr>
+<tr>
+<td>N-DIV</td>
+<td>Divide the noise clock. In Sega mode this affects linked noise only.</td>
+</tr>
+<tr>
+<td>N-MIX</td>
+<td>Move from square tones toward noise.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="color-page">COLOR page</h3>
+<figure>
+<a href="images/engines/psg-edit2.png"><img class="screen" src="images/engines/psg-edit2.png" width="320" alt="PSG COLOR page from the running firmware, including its four control labels."></a>
+<figcaption>COLOR is engine page 2.</figcaption>
+</figure>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>What it changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BUZZ / NOISE</td>
+<td>AY: choose a stepped buzzer shape. Sega: choose white or periodic noise and its clock.</td>
+</tr>
+<tr>
+<td>B-RATE / VOL</td>
+<td>AY: set the buzzer clock rate. Sega: set volume on the chip step ladder.</td>
+</tr>
+<tr>
+<td>ARP</td>
+<td>Select OFF, OCT, MAJ, or MIN for the built-in fast pitch pattern.</td>
+</tr>
+<tr>
+<td>TONE</td>
+<td>Set output brightness.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="select-ay-or-sega">Select AY or Sega</h2>
+<ol>
+<li>Select a PSG preset.</li>
+<li>Press EDIT until <strong>CHIP</strong> appears. Pause between presses.</li>
+<li>Turn KNOB 1 to choose AY or SEGA.</li>
+</ol>
+<figure>
+<a href="images/engines/psg-sega-chip.png"><img class="screen" src="images/engines/psg-sega-chip.png" width="320" alt="PSG CHIP page with SEGA selected and noise controls beside it."></a>
+<figcaption>CHIP selects the synthesis path. It is also a separate card in the web editor.</figcaption>
+</figure>
+
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>HOME knobs 1–4</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AY</td>
+<td>TONE2, N-MIX, BUZZ, B-RATE</td>
+</tr>
+<tr>
+<td>SEGA</td>
+<td>TONE2, N-MIX, NOISE, TONE</td>
+</tr>
+</tbody>
+</table>
+<p>AY BUZZ offers FLAT, DOWN, UP, TRI, RTRI, D-HLD, U-HLD, and PULSE.
+FLAT bypasses the buzzer envelope, so B-RATE has no audible effect there.
+DOWN, UP, TRI, RTRI, and PULSE repeat. D-HLD and U-HLD stop at their end level.
+B-RATE can move from a slow volume pattern into an audible buzzer tone.</p>
+<p>Sega NOISE offers W-HI, W-MID, W-LO, W-LNK, P-HI, P-MID, P-LO, and P-LNK.
+W means white noise. P means periodic noise. LNK links the clock to the third tone divider.
+That third tone is silent and supplies the noise clock.
+N-DIV has no effect on the fixed HI, MID, and LO noise clocks.
+VOL stays on the COLOR page and changes in sixteen effective steps, including mute.</p>
+<h2 id="try-these-changes">Try these changes</h2>
+<h3 id="hear-the-ay-buzzer">Hear the AY buzzer</h3>
+<p>Load <strong>AY BUZZ LEAD</strong>. Compare FLAT and TRI. In TRI, turn B-RATE slowly. Leave N-MIX low to hear the tone clearly.</p>
+<h3 id="make-a-sega-hat">Make a Sega hat</h3>
+<p>Load <strong>SEGA HAT</strong>. Confirm CHIP is SEGA. Compare W-HI and P-HI, then try W-LNK and adjust N-DIV. Keep a short common envelope.</p>
+<h2 id="factory-presets">Factory presets</h2>
+<p><strong>BUZZ BASS</strong>, <strong>PSG CHORD</strong>, <strong>SEGA HIT</strong>, <strong>AY BUZZ LEAD</strong>, <strong>AY ZAP</strong>, <strong>SEGA SQUARE</strong>, <strong>SEGA CHORD</strong>, <strong>SEGA HAT</strong>.</p>
+<p>See the <a href="INSPIRED_PRESETS.html">inspired preset catalogue</a> for the references behind the newer sounds.</p>
+<h2 id="limits-and-useful-checks">Limits and useful checks</h2>
+<p>The AY path is inspired synthesis. The Sega path uses a chip core with instrument mixing around it. Neither is a full console or game-music player.</p>
+<p>Save a user preset or project before loading another sound if you want to keep your edits.</p></main></html>

@@ -1,0 +1,145 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>TRIO engine — Yanfei</title><style>body{max-width:900px;margin:32px auto;padding:0 20px;font:16px/1.65 system-ui,sans-serif;color:#222}a{color:inherit}img{max-width:100%;height:auto}figure{margin:24px 0}figcaption{color:#444;font-size:15px;max-width:60ch}img.screen{image-rendering:pixelated}h2,h3{scroll-margin-top:100px}nav{display:flex;flex-wrap:wrap;gap:8px 20px;position:sticky;top:0;background:#fff;padding:8px 0;border-bottom:1px solid #ddd;z-index:1}pre{overflow:auto;background:#f4f4f4;padding:16px}table{border-collapse:collapse;display:block;overflow:auto}td,th{border:1px solid #ccc;padding:8px;text-align:left}</style><nav><a href="../index.html">Yanfei home</a><a href="VISUAL_GUIDE.html">Visual guide</a><a href="TRACKER_QUICK_REFERENCE.html">Controls</a><a href="MODE_GUIDE.html">Modes</a><a href="ENGINE_GUIDE.html">Engines</a></nav><main><h1 id="trio-engine">TRIO engine</h1>
+<p><a href="ENGINE_GUIDE.html">All engines</a> · <a href="MODE_GUIDE.html">Modes and shared controls</a></p>
+<p>Use TRIO for three-oscillator basses, pulse-width leads, sync sweeps, and ring-modulated metal.</p>
+<h2 id="how-the-sound-is-made">How the sound is made</h2>
+<p>Three oscillators feed a multimode filter. WAVE selects a complete oscillator combination. Some combinations use hard sync, ring modulation, or bitwise combined waves.</p>
+<figure>
+<a href="images/engines/trio-home.png"><img class="screen" src="images/engines/trio-home.png" width="320" alt="TRIO HOME page showing its four main sound controls and first factory preset."></a>
+<figcaption>TRIO on HOME. These knobs apply to the selected track unless HOME LEVELS is enabled.</figcaption>
+</figure>
+<h2 id="home-knobs">HOME knobs</h2>
+<table>
+<thead>
+<tr>
+<th>Knob 1</th>
+<th>Knob 2</th>
+<th>Knob 3</th>
+<th>Knob 4</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CUT</td>
+<td>RES</td>
+<td>PW</td>
+<td>INT2</td>
+</tr>
+</tbody>
+</table>
+<p>For HOME LEVELS, see <a href="MODE_GUIDE.html#home-and-mixer">HOME and mixer</a>.</p>
+<h2 id="engine-controls">Engine controls</h2>
+<p>Press the panel <strong>EDIT</strong> button to cycle the engine pages.
+Pause between presses to avoid opening its shortcut layer.
+The musical <strong>EDIT key</strong> is a different control.</p>
+<h3 id="osc-page">OSC page</h3>
+<figure>
+<a href="images/engines/trio-edit1.png"><img class="screen" src="images/engines/trio-edit1.png" width="320" alt="TRIO OSC page from the running firmware, including its four control labels."></a>
+<figcaption>OSC is engine page 1.</figcaption>
+</figure>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>What it changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>WAVE</td>
+<td>Select an oscillator combination. See the groups below.</td>
+</tr>
+<tr>
+<td>INT2</td>
+<td>Tune oscillator 2 relative to the played note, in semitones.</td>
+</tr>
+<tr>
+<td>INT3</td>
+<td>Tune oscillator 3 relative to the played note, in semitones.</td>
+</tr>
+<tr>
+<td>DTN</td>
+<td>Detune oscillator 2 up and oscillator 3 down, in cents.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tone-page">TONE page</h3>
+<figure>
+<a href="images/engines/trio-edit2.png"><img class="screen" src="images/engines/trio-edit2.png" width="320" alt="TRIO TONE page from the running firmware, including its four control labels."></a>
+<figcaption>TONE is engine page 2.</figcaption>
+</figure>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>What it changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MODE</td>
+<td>Select LP, BP, HP, or NOT (notch) filtering.</td>
+</tr>
+<tr>
+<td>CUT</td>
+<td>Set the filter cutoff.</td>
+</tr>
+<tr>
+<td>RES</td>
+<td>Increase emphasis near the filter cutoff.</td>
+</tr>
+<tr>
+<td>PW</td>
+<td>Set pulse width. ENV or LFO routed to SHP moves it.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="oscillator-combinations">Oscillator combinations</h2>
+<table>
+<thead>
+<tr>
+<th>Group</th>
+<th>WAVE choices</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Basic stacks</td>
+<td>SAW3, PLS3, PPT, SST, TRI3</td>
+<td>Three saws, pulses, triangles, or mixed stacks.</td>
+</tr>
+<tr>
+<td>Combined waves</td>
+<td>S&amp;T, P&amp;S</td>
+<td>Bitwise combinations with a more complex harmonic shape.</td>
+</tr>
+<tr>
+<td>Noise</td>
+<td>P+N, NOIS</td>
+<td>Pulse/noise combination or pitched noise.</td>
+</tr>
+<tr>
+<td>Hard sync</td>
+<td>SYNC, SYNCP, SYNC3</td>
+<td>One oscillator restarts another on each cycle.</td>
+</tr>
+<tr>
+<td>Ring modulation</td>
+<td>RING, RING3, R+S, R+SP</td>
+<td>Oscillator interaction for metal and bell-like tones.</td>
+</tr>
+</tbody>
+</table>
+<p>INT2 and INT3 can change the tone as well as the apparent harmony in sync and ring modes.
+A silent oscillator can still act as a ring modulator.</p>
+<h2 id="try-these-changes">Try these changes</h2>
+<h3 id="animate-a-pulse-lead">Animate a pulse lead</h3>
+<p>Load <strong>SID PWM</strong>. On LFO DEST, add a small SHP amount. Compare a slow and fast LFO RATE. Adjust PW to move the centre of the sweep.</p>
+<h3 id="tune-a-metal-sound">Tune a metal sound</h3>
+<p>Load <strong>SID METAL</strong>. Hold a note while changing INT3 by one semitone at a time. Compare simple intervals with less regular ones.</p>
+<h2 id="factory-presets">Factory presets</h2>
+<p><strong>FAT BASS</strong>, <strong>SYNC LEAD</strong>, <strong>RING BELL</strong>, <strong>SID PWM</strong>, <strong>SID RUBBER</strong>, <strong>SID SYNC</strong>, <strong>SID METAL</strong>, <strong>SID CHOIR</strong>.</p>
+<p>See the <a href="INSPIRED_PRESETS.html">inspired preset catalogue</a> for the references behind the newer sounds.</p>
+<h2 id="limits-and-useful-checks">Limits and useful checks</h2>
+<p>TRIO is SID-inspired. It does not reproduce a specific SID revision. Some combined waves can sound rougher at high notes.</p>
+<p>Save a user preset or project before loading another sound if you want to keep your edits.</p></main></html>

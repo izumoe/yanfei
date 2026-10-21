@@ -1,0 +1,123 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>DMG engine — Yanfei</title><style>body{max-width:900px;margin:32px auto;padding:0 20px;font:16px/1.65 system-ui,sans-serif;color:#222}a{color:inherit}img{max-width:100%;height:auto}figure{margin:24px 0}figcaption{color:#444;font-size:15px;max-width:60ch}img.screen{image-rendering:pixelated}h2,h3{scroll-margin-top:100px}nav{display:flex;flex-wrap:wrap;gap:8px 20px;position:sticky;top:0;background:#fff;padding:8px 0;border-bottom:1px solid #ddd;z-index:1}pre{overflow:auto;background:#f4f4f4;padding:16px}table{border-collapse:collapse;display:block;overflow:auto}td,th{border:1px solid #ccc;padding:8px;text-align:left}</style><nav><a href="../index.html">Yanfei home</a><a href="VISUAL_GUIDE.html">Visual guide</a><a href="TRACKER_QUICK_REFERENCE.html">Controls</a><a href="MODE_GUIDE.html">Modes</a><a href="ENGINE_GUIDE.html">Engines</a></nav><main><h1 id="dmg-engine">DMG engine</h1>
+<p><a href="ENGINE_GUIDE.html">All engines</a> · <a href="MODE_GUIDE.html">Modes and shared controls</a></p>
+<p>Use DMG for handheld pulse basses, four-bit wave tones, and short-register noise.</p>
+<h2 id="how-the-sound-is-made">How the sound is made</h2>
+<p>Each note uses a pulse, a fixed 32-position wave, or clocked noise. MOTION can step through the sixteen wave shapes. A stepped chip decay runs with the common envelope.</p>
+<figure>
+<a href="images/engines/dmg-home.png"><img class="screen" src="images/engines/dmg-home.png" width="320" alt="DMG HOME page showing its four main sound controls and first factory preset."></a>
+<figcaption>DMG on HOME. These knobs apply to the selected track unless HOME LEVELS is enabled.</figcaption>
+</figure>
+<h2 id="home-knobs">HOME knobs</h2>
+<table>
+<thead>
+<tr>
+<th>Knob 1</th>
+<th>Knob 2</th>
+<th>Knob 3</th>
+<th>Knob 4</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VOICE</td>
+<td>DUTY / WAV#</td>
+<td>MOTION</td>
+<td>REL</td>
+</tr>
+</tbody>
+</table>
+<p>For HOME LEVELS, see <a href="MODE_GUIDE.html#home-and-mixer">HOME and mixer</a>.</p>
+<h2 id="engine-controls">Engine controls</h2>
+<p>Press the panel <strong>EDIT</strong> button to cycle the engine pages.
+Pause between presses to avoid opening its shortcut layer.
+The musical <strong>EDIT key</strong> is a different control.</p>
+<h3 id="wave-page">WAVE page</h3>
+<figure>
+<a href="images/engines/dmg-edit1.png"><img class="screen" src="images/engines/dmg-edit1.png" width="320" alt="DMG WAVE page from the running firmware, including its four control labels."></a>
+<figcaption>WAVE is engine page 1.</figcaption>
+</figure>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>What it changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VOICE</td>
+<td>Select PULSE, WAVE, or NOISE.</td>
+</tr>
+<tr>
+<td>DUTY / WAV#</td>
+<td>In PULSE, select pulse width. In WAVE, select one of sixteen wave shapes.</td>
+</tr>
+<tr>
+<td>MOTION</td>
+<td>In WAVE, advance through wave shapes. Higher settings advance faster. It does not scan the pulse width.</td>
+</tr>
+<tr>
+<td>NOISE</td>
+<td>Select 15BIT for a longer noise pattern or 7BIT for a shorter, more pitched pattern.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="motn-page">MOTN page</h3>
+<figure>
+<a href="images/engines/dmg-edit2.png"><img class="screen" src="images/engines/dmg-edit2.png" width="320" alt="DMG MOTN page from the running firmware, including its four control labels."></a>
+<figcaption>MOTN is engine page 2.</figcaption>
+</figure>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>What it changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SWP</td>
+<td>Increase the downward pitch sweep. Very small settings have little or no effect.</td>
+</tr>
+<tr>
+<td>DCY</td>
+<td>Select constant volume, a stepped D decay, or a repeating L decay.</td>
+</tr>
+<tr>
+<td>VIB</td>
+<td>Increase the built-in pitch vibrato depth.</td>
+</tr>
+<tr>
+<td>TONE</td>
+<td>Set the output brightness.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="pulse-wave-and-noise-modes">Pulse, wave, and noise modes</h2>
+<p>PULSE has four widths: 12.5%, 25%, 50%, and 75%.
+The saved width range has four adjacent values for each width.
+On the device, the second control is labelled DUTY in PULSE and WAV# in WAVE.
+Some editor views can show WAV# for this same control.</p>
+<p>WAVE contains SQ50, SQ25, SQ12, SINE, TRI, SAW, SAW2, BAS1, BAS2, ORGN,
+HOLW, VOXA, VOXO, VOXE, BUZZ, and STAIR.
+These shapes use 32 samples with sixteen amplitude levels.
+They are fixed built-in waves; this engine does not import custom wave RAM.</p>
+<p>NOISE uses 15BIT or 7BIT feedback. 7BIT produces a shorter repeating pattern.</p>
+<p>DCY uses the same CONST, D0–D15, and L1–L15 choices as NES.
+Higher decay numbers give longer steps. DMG uses a slower decay clock.</p>
+<figure>
+<a href="images/engines/dmg-wave-edit1.png"><img class="screen" src="images/engines/dmg-wave-edit1.png" width="320" alt="DMG WAVE voice selected, with WAV number and motion controls."></a>
+<figcaption>WAVE changes the second control from DUTY to WAV#.</figcaption>
+</figure>
+
+<h2 id="try-these-changes">Try these changes</h2>
+<h3 id="hear-wave-motion">Hear wave motion</h3>
+<p>Load <strong>WAVE LEAD</strong>. Select WAVE. Set MOTION low, then increase it while holding a note. Compare this stepped change with WAVE engine scanning.</p>
+<h3 id="make-a-pitched-noise-hit">Make a pitched noise hit</h3>
+<p>Load <strong>7BIT TOM</strong>. Compare 7BIT with 15BIT. Change SWP and DCY to adjust the falling attack and tail.</p>
+<h2 id="factory-presets">Factory presets</h2>
+<p><strong>HANDHELD</strong>, <strong>WAVE LEAD</strong>, <strong>SHORT HIT</strong>, <strong>POCKET BASS</strong>, <strong>POCKET BELL</strong>, <strong>POCKET WIND</strong>, <strong>7BIT TOM</strong>, <strong>LINK LEAD</strong>.</p>
+<p>See the <a href="INSPIRED_PRESETS.html">inspired preset catalogue</a> for the references behind the newer sounds.</p>
+<h2 id="limits-and-useful-checks">Limits and useful checks</h2>
+<p>DMG is handheld-inspired. Its controls do not emulate a complete Game Boy or its channel allocation.</p>
+<p>Save a user preset or project before loading another sound if you want to keep your edits.</p></main></html>
