@@ -92,6 +92,12 @@ A parent-repository commit does not include uncommitted submodule files.
 When preparing commits, commit engine changes in that repository, then update the
 parent's submodule reference to an accessible commit.
 
+The engine history is published on the `yanfei-engines` branch of
+`izumoe/yanfei`. The submodule URL uses that repository and pins an engine commit.
+Its tree contains the engine library, not the firmware repository. Publish the
+engine branch before pushing a parent commit that refers to it.
+The original upstream remains [hugelton/Felucca-Engines](https://github.com/hugelton/Felucca-Engines).
+
 The generated website is published separately on `gh-pages`.
 That branch intentionally contains the site, firmware download, and source archive.
 A Pages deployment does not commit the working source changes to the source branch.
